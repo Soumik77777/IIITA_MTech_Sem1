@@ -1,6 +1,537 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider
+from matplotlib.animation import FuncAnimation
+
+
+
+
+def get_vector():
+    dim = int(input("Enter vector dimension (2 or 3): "))
+
+    if dim not in [2, 3]:
+        raise ValueError("Dimension must be 2 or 3.")
+
+    vector = []
+
+    for i in range(dim):
+        value = float(input(f"Enter component {i + 1}: "))
+        vector.append(value)
+
+    return np.array(vector)
+
+
+def plot_vector(vector):
+    vector = np.asarray(vector, dtype=float)
+
+    if vector.shape not in [(2,), (3,)]:
+        raise ValueError("Vector must have 2 or 3 components.")
+
+    dim = len(vector)
+
+    # ==================================================
+    # 2D VECTOR
+    # ==================================================
+
+    if dim == 2:
+
+        x, y = vector
+
+        limit = max(np.max(np.abs(vector)) * 1.5, 1)
+
+        fig, ax = plt.subplots(figsize=(4, 4))
+
+        # Vector
+        ax.quiver(
+            0, 0, x, y,
+            angles="xy",
+            scale_units="xy",
+            scale=1,
+            color="red",
+            label="Vector"
+        )
+
+        # Perpendicular projections
+        ax.plot(
+            [x, x], [0, y],
+            color="red",
+            linestyle="--",
+            linewidth=0.8
+        )
+
+        ax.plot(
+            [0, x], [y, y],
+            color="red",
+            linestyle="--",
+            linewidth=0.8
+        )
+
+        # Origin
+        ax.scatter(0, 0, color="black", s=20)
+
+        # Arrowhead coordinate
+        ax.text(
+            x, y,
+            f"  ({x:g}, {y:g})",
+            color="red",
+            fontsize=11,
+            ha="left",
+            va="bottom"
+        )
+
+        # Projection points
+        ax.text(
+            x, 0,
+            f"({x:g}, 0)",
+            color="blue",
+            fontsize=10,
+            ha="center",
+            va="top"
+        )
+
+        ax.text(
+            0, y,
+            f"(0, {y:g})",
+            color="blue",
+            fontsize=10,
+            ha="left",
+            va="bottom"
+        )
+
+        # Axes
+        ax.axhline(0, color="black", linewidth=0.5)
+        ax.axvline(0, color="black", linewidth=0.5)
+
+        ax.set_xlim(-limit, limit)
+        ax.set_ylim(-limit, limit)
+
+        ax.set_xlabel("x")
+        ax.set_ylabel("y")
+
+        ax.set_title("Vector in R²")
+        ax.legend()
+        ax.grid()
+
+        ax.set_aspect("equal")
+
+    # ==================================================
+    # 3D VECTOR
+    # ==================================================
+
+    else:
+
+        x, y, z = vector
+
+        limit = max(np.max(np.abs(vector)) * 1.5, 1)
+
+        fig = plt.figure(figsize=(5, 4))
+
+        ax = fig.add_subplot(111, projection="3d")
+
+        # Vector
+        ax.quiver(
+            0, 0, 0,
+            x, y, z,
+            color="red",
+            arrow_length_ratio=0.08,
+            label="Vector"
+        )
+
+        # Perpendicular projections to coordinate planes
+        ax.plot(
+            [x, x], [y, y], [0, z],
+            color="red",
+            linestyle="--",
+            linewidth=0.8
+        )
+
+        ax.plot(
+            [x, x], [0, y], [z, z],
+            color="red",
+            linestyle="--",
+            linewidth=0.8
+        )
+
+        ax.plot(
+            [0, x], [y, y], [z, z],
+            color="red",
+            linestyle="--",
+            linewidth=0.8
+        )
+
+        # Arrowhead coordinate
+        ax.text(
+            x, y, z,
+            f"  ({x:g}, {y:g}, {z:g})",
+            color="red",
+            fontsize=10
+        )
+
+        # Projection points on axes
+        ax.text(
+            x, 0, 0,
+            f"({x:g}, 0, 0)",
+            color="blue",
+            fontsize=9
+        )
+
+        ax.text(
+            0, y, 0,
+            f"(0, {y:g}, 0)",
+            color="blue",
+            fontsize=9
+        )
+
+        ax.text(
+            0, 0, z,
+            f"(0, 0, {z:g})",
+            color="blue",
+            fontsize=9
+        )
+
+        # Origin
+        ax.scatter(0, 0, 0, color="black", s=20)
+
+        ax.set_xlim(-limit, limit)
+        ax.set_ylim(-limit, limit)
+        ax.set_zlim(-limit, limit)
+
+        ax.set_xlabel("x")
+        ax.set_ylabel("y")
+        ax.set_zlabel("z")
+
+        ax.set_title("Vector in R³")
+        ax.legend()
+
+    plt.tight_layout()
+    plt.show()
+
+
+
+def span_one_vector_2d(vector):
+
+    vector = np.asarray(vector, dtype=float)
+
+    if vector.shape != (2,):
+        raise ValueError("Vector must have 2 components.")
+
+    x, y = vector
+
+    if np.allclose(vector, 0):
+        raise ValueError("Zero vector does not define a line.")
+
+    limit = max(np.max(np.abs(vector)) * 6, 5)
+
+    fig, ax = plt.subplots(figsize=(4, 4))
+
+    ax.set_xlim(-limit, limit)
+    ax.set_ylim(-limit, limit)
+
+    ax.axhline(0, color="black", linewidth=0.5)
+    ax.axvline(0, color="black", linewidth=0.5)
+
+    ax.set_aspect("equal")
+    ax.grid()
+
+    ax.set_xlabel("x")
+    ax.set_ylabel("y")
+
+    ax.set_title("Span of One Vector")
+
+    # Original vector
+    ax.quiver(
+        0, 0, x, y,
+        angles="xy",
+        scale_units="xy",
+        scale=1,
+        color="red",
+        label="Vector v"
+    )
+
+    # Animated span vector
+    span_arrow = ax.quiver(
+        0, 0, 0, 0,
+        angles="xy",
+        scale_units="xy",
+        scale=1,
+        color="blue",
+        label="c v"
+    )
+
+    # Span line
+    span_line, = ax.plot(
+        [], [],
+        color="blue",
+        linewidth=2,
+        alpha=0.7,
+        label="Span"
+    )
+
+    span_text = ax.text(
+        0.02, 0.95,
+        "",
+        transform=ax.transAxes,
+        color="blue",
+        fontsize=11,
+        verticalalignment="top"
+    )
+
+    ax.legend()
+
+    # Coefficients from negative to positive
+    coefficients = np.linspace(-6, 6, 150)
+
+    def update(frame):
+
+        c = coefficients[frame]
+
+        result = c * vector
+
+        span_arrow.set_offsets(
+            np.array([[0, 0]])
+        )
+
+        span_arrow.set_UVC(
+            result[0],
+            result[1]
+        )
+
+        # Show the line segment revealed so far
+        line_scale = abs(c)
+
+        if line_scale == 0:
+            span_line.set_data([], [])
+
+        else:
+            t = np.linspace(-line_scale, line_scale, 100)
+
+            span_line.set_data(
+                t * x,
+                t * y
+            )
+
+        span_text.set_text(
+            f"c = {c:.2f}\n"
+            f"c v = ({result[0]:.2f}, "
+            f"{result[1]:.2f})"
+        )
+
+        return span_arrow, span_line, span_text
+
+    animation = FuncAnimation(
+        fig,
+        update,
+        frames=len(coefficients),
+        interval=40,
+        blit=False,
+        repeat=True
+    )
+
+    plt.tight_layout()
+    plt.show()
+
+
+
+def span_two_vectors_2d(v1, v2):
+
+    v1 = np.asarray(v1, dtype=float)
+    v2 = np.asarray(v2, dtype=float)
+
+    if v1.shape != (2,) or v2.shape != (2,):
+        raise ValueError("Both vectors must be 2D.")
+
+    x1, y1 = v1
+    x2, y2 = v2
+
+    limit = max(
+        np.max(np.abs(v1)),
+        np.max(np.abs(v2)),
+        1
+    ) * 6
+
+    fig, ax = plt.subplots(figsize=(4, 4))
+
+    ax.set_xlim(-limit, limit)
+    ax.set_ylim(-limit, limit)
+
+    ax.axhline(0, color="black", linewidth=0.5)
+    ax.axvline(0, color="black", linewidth=0.5)
+
+    ax.set_aspect("equal")
+    ax.grid()
+
+    ax.set_xlabel("x")
+    ax.set_ylabel("y")
+
+    ax.set_title("Span of Two Vectors")
+
+    # Original vectors
+    ax.quiver(
+        0, 0, x1, y1,
+        angles="xy",
+        scale_units="xy",
+        scale=1,
+        color="red",
+        label="v₁"
+    )
+
+    ax.quiver(
+        0, 0, x2, y2,
+        angles="xy",
+        scale_units="xy",
+        scale=1,
+        color="blue",
+        label="v₂"
+    )
+
+    # Scaled vectors
+    arrow1 = ax.quiver(
+        0, 0, 0, 0,
+        angles="xy",
+        scale_units="xy",
+        scale=1,
+        color="red",
+        alpha=0.7
+    )
+
+    arrow2 = ax.quiver(
+        0, 0, 0, 0,
+        angles="xy",
+        scale_units="xy",
+        scale=1,
+        color="blue",
+        alpha=0.7
+    )
+
+    # Resultant
+    result_arrow = ax.quiver(
+        0, 0, 0, 0,
+        angles="xy",
+        scale_units="xy",
+        scale=1,
+        color="purple",
+        label="Combination"
+    )
+
+    # Parallelogram
+    parallelogram, = ax.plot(
+        [], [],
+        color="green",
+        linewidth=1.5,
+        alpha=0.7
+    )
+
+    # Spanned region
+    span_region = ax.fill(
+        [], [],
+        color="green",
+        alpha=0.15
+    )[0]
+
+    result_text = ax.text(
+        0.02, 0.95,
+        "",
+        transform=ax.transAxes,
+        color="purple",
+        fontsize=11,
+        verticalalignment="top"
+    )
+
+    ax.legend()
+
+    # Coefficients
+    steps = 100
+
+    coeff1 = np.linspace(-5000, 5000, steps)
+    coeff2 = np.linspace(-5000, 5000, steps)
+
+    def update(frame):
+
+        c1 = coeff1[frame]
+        c2 = coeff2[frame]
+
+        a = c1 * v1
+        b = c2 * v2
+
+        result = a + b
+
+        # Scaled arrows
+        arrow1.set_offsets(
+            np.array([[0, 0]])
+        )
+
+        arrow1.set_UVC(
+            a[0], a[1]
+        )
+
+        arrow2.set_offsets(
+            np.array([[0, 0]])
+        )
+
+        arrow2.set_UVC(
+            b[0], b[1]
+        )
+
+        # Resultant
+        result_arrow.set_offsets(
+            np.array([[0, 0]])
+        )
+
+        result_arrow.set_UVC(
+            result[0],
+            result[1]
+        )
+
+        # Parallelogram corners
+        corners = np.array([
+            [0, 0],
+            a,
+            a + b,
+            b,
+            [0, 0]
+        ])
+
+        parallelogram.set_data(
+            corners[:, 0],
+            corners[:, 1]
+        )
+
+        # Filled region
+        span_region.set_xy(corners)
+
+        result_text.set_text(
+            f"c₁ = {c1:.2f}, c₂ = {c2:.2f}\n"
+            f"Combination = "
+            f"({result[0]:.2f}, {result[1]:.2f})"
+        )
+
+        return (
+            arrow1,
+            arrow2,
+            result_arrow,
+            parallelogram,
+            span_region,
+            result_text
+        )
+
+    animation = FuncAnimation(
+        fig,
+        update,
+        frames=steps,
+        interval=50,
+        blit=False,
+        repeat=True
+    )
+
+    plt.tight_layout()
+    plt.show()
+
+
+
+
+
+# ---------------------------------------------------------
+
 
 def get_system():
     dim = int(input("Enter dimension (2 or 3): "))
