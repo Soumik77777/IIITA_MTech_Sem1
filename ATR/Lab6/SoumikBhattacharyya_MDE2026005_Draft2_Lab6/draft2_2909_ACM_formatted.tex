@@ -1,0 +1,102 @@
+%% ACM Computing Surveys format for this manuscript.
+%% Based on ACM's official acmsmall template and the organization of
+%% "Explainable AI (XAI): Core Ideas, Techniques, and Solutions."
+%%
+%% Compile this file from either the project root or the figures directory.
+%% For a submission-only single-column review copy, ACM currently recommends
+%% replacing the class options below with: \documentclass[manuscript,review]{acmart}
+
+\documentclass[acmsmall,screen,review]{acmart}
+
+\usepackage{docmute}
+\usepackage{tabularx}
+
+\AtBeginDocument{%
+  \providecommand\BibTeX{{Bib\TeX}}%
+}
+
+%% Journal metadata known at manuscript preparation time.
+%% ACM supplies volume, issue, article number, DOI, dates, and rights metadata
+%% after acceptance; do not invent those values for a submission draft.
+\acmJournal{CSUR}
+\acmDOI{}
+\setcopyright{none}
+\settopmatter{printacmref=false, printccs=false}
+\citestyle{acmnumeric}
+
+\title[Single-LLM Versus Multi-Agent Debate Systems]
+  {Single-LLM Versus Multi-Agent Debate Systems for Scientific Hypothesis Generation}
+
+\author{Soumik Bhattacharyya}
+\email{mde2026005@iiita.ac.in}
+\affiliation{%
+  \department{Department of Information Technology}
+  \institution{Indian Institute of Information Technology Allahabad}
+  \city{Prayagraj}
+  \state{Uttar Pradesh}
+  \country{India}
+}
+
+\begin{document}
+
+\begin{abstract}
+Large language models (LLMs) are increasingly being used to propose scientific hypotheses,
+retrieve and synthesize literature, critique candidate explanations, and support experimental design.
+Two broad paradigms have emerged: single-LLM systems that rely on one model with prompting,
+retrieval, self-reflection, or tool use; and multi-agent systems in which several model instances
+interact through debate, role specialization, iterative review, or consensus formation. This review
+compares these paradigms for scientific hypothesis generation. Rather than treating multi-agent
+interaction as automatically superior, the literature is organized around five themes: hypothesis
+generation and novelty, evidence grounding and verification, critique and debate, evaluation of
+scientific quality, and integration with autonomous research workflows. The reviewed studies
+suggest that single-LLM systems offer simplicity, lower cost, easier control, and strong
+performance when supplied with suitable literature or domain tools. Multi-agent systems can
+improve exploration, criticism, and the explicit comparison of competing ideas, particularly when
+agents are genuinely diverse and are assigned complementary roles. However, debate introduces
+substantial costs and can amplify shared model errors, sycophancy, premature consensus, and
+problem drift. The strongest direction is therefore not a binary choice but a conditional hybrid
+architecture: independent generation followed by evidence retrieval, targeted adversarial review,
+selective debate, and experimental validation. Important gaps remain in standardized benchmarks,
+causal attribution of multi-agent gains, calibration, diversity measurement, and real-world
+laboratory validation.
+\end{abstract}
+
+%% Generate appropriate ACM CCS concepts at https://dl.acm.org/ccs and add
+%% the resulting CCSXML and \ccsdesc commands here before submission.
+
+\keywords{large language models, scientific hypothesis generation,
+  multi-agent systems, debate, literature-based discovery,
+  autonomous science, evaluation}
+
+\maketitle
+
+%% Reuse the maintained body of main.tex while discarding its article-class
+%% title material and bibliography commands. The first \section ends the
+%% discarded front-matter box and begins the ACM-formatted manuscript body.
+\let\ACMSection\section
+\let\ACMBibliography\bibliography
+\let\ACMBibliographyStyle\bibliographystyle
+
+\renewcommand{\maketitle}{\setbox0=\vbox\bgroup}
+\renewenvironment{abstract}{}{}
+\renewcommand{\section}[1]{%
+  \egroup
+  \let\section\ACMSection
+  \section{#1}%
+}
+\renewcommand{\bibliography}[1]{}
+\renewcommand{\bibliographystyle}[1]{}
+
+\graphicspath{{../}{./}}
+\IfFileExists{draft2_2509.tex}
+  {\input{draft2_2509.tex}}
+  {\input{../draft2_2509.tex}}
+
+\let\bibliography\ACMBibliography
+\let\bibliographystyle\ACMBibliographyStyle
+\bibliographystyle{ACM-Reference-Format}
+\IfFileExists{references.bib}
+  {\bibliography{references}}
+  {\bibliography{../references}}
+
+\end{document}
