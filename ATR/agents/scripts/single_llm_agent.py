@@ -7,15 +7,15 @@ import time
 from datetime import datetime, timezone
 
 
-def extract_pdf_text(pdf_path: Path) -> str:
-    """Extract selectable text from a PDF. Scanned PDFs may need OCR later."""
+def extract_pdf_text(pdf_path: Path):
     reader = PdfReader(str(pdf_path))
-    pages = []
-    for page in reader.pages:
-        pages.append(page.extract_text() or "")
+    pages = [page.extract_text() or "" for page in reader.pages]
     text = "\n".join(pages).strip()
+
     if not text:
-        raise ValueError("No selectable text found; this may be a scanned PDF.")
+        print(f"[WARNING] No text extracted from {pdf_path}. Skipping this PDF.")
+        return None
+
     return text
 
 
@@ -114,6 +114,8 @@ def run_single_agent(
     for pdf_path in pdf_paths:
         pdf_path = Path(pdf_path)
         paper_text = extract_pdf_text(pdf_path)
+        if not paper_text:
+            continue
         prompt = f"""
 You are assisting with scientific hypothesis generation.
 

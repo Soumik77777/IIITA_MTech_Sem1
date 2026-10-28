@@ -12,13 +12,14 @@ Install dependencies and set GOOGLE_API_KEY before running.
 """
 
 from pathlib import Path
+import inspect
 import json
 
 from langchain_google_genai import ChatGoogleGenerativeAI
 from single_llm_agent import run_single_agent
 
 # -------------------- CONFIGURATION --------------------
-MODE = "single"  # "single" for now; multi-agent is not implemented yet
+MODE = "single"
 TOPIC = "Enter the scientific research topic here"
 ADDITIONAL_PROMPT = ""
 MODEL_NAME = "gemini-3-flash-preview"  # or "gemini-3.5-flash-lite"
@@ -74,6 +75,11 @@ def main():
     )
 
     print(json.dumps(result, indent=2, ensure_ascii=False))
+
+    Path("output").mkdir(parents=True, exist_ok=True)
+    Path("output/run_single_agent_snapshot.py").write_text(
+        inspect.getsource(run_single_agent), encoding="utf-8"
+    )
 
     # Later: save result as a separate structured output file if desired.
     # output_path = Path("output/latest_result.json")
