@@ -14,22 +14,27 @@ Install dependencies and set GOOGLE_API_KEY before running.
 from pathlib import Path
 import inspect
 import json
+from dotenv import load_dotenv
+load_dotenv()
 
 from langchain_google_genai import ChatGoogleGenerativeAI
 from single_llm_agent import run_single_agent
 
 # -------------------- CONFIGURATION --------------------
 MODE = "single"
-TOPIC = "Enter the scientific research topic here"
+TOPIC = "Modelling the drag torque in common envelope evolution"
 ADDITIONAL_PROMPT = ""
 MODEL_NAME = "gemini-3-flash-preview"  # or "gemini-3.5-flash-lite"
-KNOWLEDGE_CUTOFF_YEAR = 2024
+KNOWLEDGE_CUTOFF_YEAR = 2026
 
-PAPERS_ROOT = Path("papers")
-USAGE_LOG_PATH = Path("output/api_usage.jsonl")
+PAPERS_ROOT = Path("ATR/agents/dataset/papers/astro_cee")
+USAGE_LOG_PATH = Path("ATR/agents/output/api_usage.jsonl")
+Path("ATR/agents/output/run_single_agent_snapshot.py").write_text(
+    inspect.getsource(run_single_agent), encoding="utf-8"
+)
 
-# Fill these in from the current official pricing page if you want monetary
-# estimates. Keep as None rather than silently reporting an inaccurate cost.
+
+# Fill these in from the current official pricing page if you want monetary estimates. Keep as None rather than silently reporting an inaccurate cost.
 # Values are USD per 1 million tokens.
 PRICE_PER_MILLION_TOKENS = {
     "gemini-3-flash-preview": {"input": None, "output": None},
@@ -76,10 +81,6 @@ def main():
 
     print(json.dumps(result, indent=2, ensure_ascii=False))
 
-    Path("output").mkdir(parents=True, exist_ok=True)
-    Path("output/run_single_agent_snapshot.py").write_text(
-        inspect.getsource(run_single_agent), encoding="utf-8"
-    )
 
     # Later: save result as a separate structured output file if desired.
     # output_path = Path("output/latest_result.json")

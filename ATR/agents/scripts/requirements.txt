@@ -1,2 +1,3 @@
 langchain-google-genai
 pypdf
+python-dotenv
