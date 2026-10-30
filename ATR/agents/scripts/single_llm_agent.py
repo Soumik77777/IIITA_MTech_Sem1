@@ -1,22 +1,16 @@
 """Single-LLM PDF analysis pipeline. Returns logs to main.py; writes no files."""
 
 from pathlib import Path
-from pypdf import PdfReader
 import base64
 import json
 import time
 from datetime import datetime, timezone
 from langchain_core.messages import HumanMessage
 
-
-def extract_pdf_text(pdf_path: Path):
-    """Optional legacy helper; the agent submits PDFs directly instead."""
-    reader = PdfReader(str(pdf_path))
-    text = "\n".join(page.extract_text() or "" for page in reader.pages).strip()
-    if not text:
-        print(f"[WARNING] No text extracted from {pdf_path}.")
-        return None
-    return text
+# Minimum delay between consecutive API attempts; tune for quota experiments.
+pause_sec = 10
+MAX_RETRIES = 3
+_last_request_time = None
 
 
 def _usage_from_response(response):
@@ -29,13 +23,49 @@ def _usage_from_response(response):
     return input_tokens, output_tokens, total_tokens
 
 
+def _response_to_text(content):
+    """Normalize LangChain string/list content for the next pipeline stage."""
+    if isinstance(content, str):
+        return content
+    if isinstance(content, list):
+        parts = []
+        for block in content:
+            if isinstance(block, dict):
+                if block.get("text") is not None:
+                    parts.append(str(block["text"]))
+            elif isinstance(block, str):
+                parts.append(block)
+            elif getattr(block, "text", None) is not None:
+                parts.append(str(block.text))
+        return "\n".join(parts).strip()
+    return str(content)
+
+
+def _wait_for_request_slot():
+    global _last_request_time
+    if _last_request_time is not None:
+        remaining = pause_sec - (time.monotonic() - _last_request_time)
+        if remaining > 0:
+            print(f"[RATE LIMIT] Waiting {remaining:.1f}s before next API request.")
+            time.sleep(remaining)
+    _last_request_time = time.monotonic()
+
+
+def _is_retryable_error(exc):
+    message = str(exc).lower()
+    return any(term in message for term in (
+        "429", "resource_exhausted", "rate limit", "too many requests",
+        "503", "service unavailable", "502", "504",
+    ))
+
+
 def _invoke_pdf(llm, pdf_path, prompt, model_name, price_table, stage,
                 inference_history, api_usage, paper=None):
-    start = time.perf_counter()
     timestamp = datetime.now(timezone.utc).isoformat()
     event = {"timestamp_utc": timestamp, "stage": stage, "paper": paper,
              "prompt": prompt, "status": "started"}
     inference_history.append(event)
+
     try:
         if pdf_path is None:
             message = HumanMessage(content=prompt)
@@ -45,40 +75,54 @@ def _invoke_pdf(llm, pdf_path, prompt, model_name, price_table, stage,
                 {"type": "text", "text": prompt},
                 {"type": "media", "mime_type": "application/pdf", "data": encoded_pdf},
             ])
-        response = llm.invoke([message])
-        runtime = round(time.perf_counter() - start, 3)
-        in_tokens, out_tokens, total_tokens = _usage_from_response(response)
-        prices = price_table or {}
-        cost = None
-        if in_tokens is not None and out_tokens is not None:
-            if prices.get("input") is not None and prices.get("output") is not None:
-                cost = (in_tokens * prices["input"] + out_tokens * prices["output"]) / 1_000_000
-        api_usage.append({
-            "timestamp_utc": timestamp, "stage": stage, "paper": paper,
-            "model": model_name, "status": "success", "runtime_seconds": runtime,
-            "input_tokens": in_tokens, "output_tokens": out_tokens,
-            "total_tokens": total_tokens, "estimated_cost_usd": cost, "error": None,
-        })
-        event.update({"status": "success", "response": response.content,
-                      "runtime_seconds": runtime})
-        content = response.content
-        if isinstance(content, list):
-            content = "\n".join(
-                block.get("text", "") if isinstance(block, dict) else str(block)
-                for block in content
-            )
-        return content
     except Exception as exc:
-        runtime = round(time.perf_counter() - start, 3)
-        api_usage.append({
-            "timestamp_utc": timestamp, "stage": stage, "paper": paper,
-            "model": model_name, "status": "error", "runtime_seconds": runtime,
-            "input_tokens": None, "output_tokens": None, "total_tokens": None,
-            "estimated_cost_usd": None, "error": f"{type(exc).__name__}: {exc}",
-        })
-        event.update({"status": "error", "error": f"{type(exc).__name__}: {exc}",
-                      "runtime_seconds": runtime})
-        raise
+        error = f"{type(exc).__name__}: {exc}"
+        event.update({"status": "error", "error": error})
+        print(f"[ERROR] Could not prepare {paper or stage}: {error}")
+        return None
+
+    for attempt in range(1, MAX_RETRIES + 1):
+        _wait_for_request_slot()
+        start = time.perf_counter()
+        try:
+            response = llm.invoke([message])
+            runtime = round(time.perf_counter() - start, 3)
+            in_tokens, out_tokens, total_tokens = _usage_from_response(response)
+            prices = price_table or {}
+            cost = None
+            if in_tokens is not None and out_tokens is not None:
+                if prices.get("input") is not None and prices.get("output") is not None:
+                    cost = (in_tokens * prices["input"] + out_tokens * prices["output"]) / 1_000_000
+            api_usage.append({
+                "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+                "stage": stage, "paper": paper, "model": model_name,
+                "attempt": attempt, "status": "success", "runtime_seconds": runtime,
+                "input_tokens": in_tokens, "output_tokens": out_tokens,
+                "total_tokens": total_tokens, "estimated_cost_usd": cost, "error": None,
+            })
+            content = _response_to_text(response.content)
+            event.update({"status": "success", "response": content,
+                          "runtime_seconds": runtime, "attempts": attempt})
+            return content
+        except Exception as exc:
+            runtime = round(time.perf_counter() - start, 3)
+            error = f"{type(exc).__name__}: {exc}"
+            api_usage.append({
+                "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+                "stage": stage, "paper": paper, "model": model_name,
+                "attempt": attempt, "status": "error", "runtime_seconds": runtime,
+                "input_tokens": None, "output_tokens": None, "total_tokens": None,
+                "estimated_cost_usd": None, "error": error,
+            })
+            if _is_retryable_error(exc) and attempt < MAX_RETRIES:
+                backoff = pause_sec * (2 ** (attempt - 1))
+                print(f"[RATE LIMIT] {stage}, attempt {attempt}/{MAX_RETRIES}; retrying in {backoff}s: {error}")
+                time.sleep(backoff)
+                continue
+            event.update({"status": "error", "error": error, "attempts": attempt})
+            print(f"[ERROR] {stage} failed: {error}")
+            return None
+    return None
 
 
 def deduplicate_hypotheses(hypotheses):
@@ -87,13 +131,8 @@ def deduplicate_hypotheses(hypotheses):
 
 
 def _parse_final_output(text):
-    if isinstance(text, list):
-        text = "\n".join(
-            block.get("text", "") if isinstance(block, dict) else str(block)
-            for block in text
-        )
+    text = _response_to_text(text)
     cleaned = text.strip()
-    
     if cleaned.startswith("```"):
         cleaned = cleaned.split("\n", 1)[-1]
         if cleaned.endswith("```"):
@@ -114,6 +153,7 @@ def run_single_agent(llm, topic, additional_prompt, pdf_paths, model_name,
     inference_history, api_usage, paper_analyses = [], [], []
     total_start = time.perf_counter()
 
+    # Each PDF is sent in its own sequential request, not as one combined batch.
     for pdf_path in pdf_paths:
         pdf_path = Path(pdf_path)
         prompt = f"""
@@ -129,12 +169,19 @@ evidence and page/section references where possible. Be concise but useful for s
 """
         content = _invoke_pdf(llm, pdf_path, prompt, model_name, price_table,
                               "paper_analysis", inference_history, api_usage, pdf_path.name)
+        if content is None:
+            print(f"[WARNING] Skipping failed paper request: {pdf_path.name}")
+            inference_history.append({"stage": "paper_analysis_skipped", "paper": pdf_path.name,
+                                      "message": "No analysis generated for this paper."})
+            continue
         paper_analyses.append({"paper": pdf_path.name, "analysis": content})
         print(f"Analyzed: {pdf_path.name}")
         inference_history.append({"stage": "paper_analysis_log", "paper": pdf_path.name,
                                   "message": f"Analyzed: {pdf_path.name}"})
 
-    synthesis_prompt = f"""
+    parsed = {"historical_analysis": "", "research_gaps": [], "hypotheses": []}
+    if paper_analyses:
+        synthesis_prompt = f"""
 Synthesize the following paper-level analyses for the topic: {topic}
 Additional instructions: {additional_prompt or 'None'}
 Use only supplied evidence; distinguish speculation. Return ONLY valid JSON, no Markdown,
@@ -150,10 +197,10 @@ Do not claim novelty beyond these papers; broader literature review is required 
 PAPER ANALYSES:
 {json.dumps(paper_analyses, ensure_ascii=False)}
 """
-    synthesis = _invoke_pdf(llm, None, synthesis_prompt, model_name, price_table,
-                            "hypothesis_synthesis", inference_history, api_usage)
-
-    critique_prompt = f"""
+        synthesis = _invoke_pdf(llm, None, synthesis_prompt, model_name, price_table,
+                                "hypothesis_synthesis", inference_history, api_usage)
+        if synthesis is not None:
+            critique_prompt = f"""
 Critically review and refine this draft for topic: {topic}
 Additional instructions: {additional_prompt or 'None'}
 Check unsupported claims, vague/non-falsifiable hypotheses, duplicates, hidden assumptions,
@@ -164,11 +211,17 @@ Do not claim novelty beyond the supplied papers.
 DRAFT:
 {synthesis}
 """
-    final_raw = _invoke_pdf(llm, None, critique_prompt, model_name, price_table,
-                            "self_critique_refinement", inference_history, api_usage)
-    parsed = _parse_final_output(final_raw)
-    parsed["hypotheses"] = deduplicate_hypotheses(parsed.get("hypotheses", []))
+            final_raw = _invoke_pdf(llm, None, critique_prompt, model_name, price_table,
+                                    "self_critique_refinement", inference_history, api_usage)
+            if final_raw is not None:
+                parsed = _parse_final_output(final_raw)
+            else:
+                parsed = _parse_final_output(synthesis)
+                parsed["critique_warning"] = "Critique request failed; showing synthesis output."
+        else:
+            parsed["synthesis_warning"] = "Synthesis request failed."
 
+    parsed["hypotheses"] = deduplicate_hypotheses(parsed.get("hypotheses", []))
     successful = [x for x in api_usage if x["status"] == "success"]
     costs = [x["estimated_cost_usd"] for x in successful if x["estimated_cost_usd"] is not None]
     usage_summary = {

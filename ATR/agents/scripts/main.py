@@ -16,7 +16,8 @@ from single_llm_agent import run_single_agent
 MODE = "single"
 TOPIC = "Modelling the drag torque in common envelope evolution"
 ADDITIONAL_PROMPT = ""
-MODEL_NAME = "gemini-3-flash-preview"  # or "gemini-3.5-flash-lite"
+# MODEL_NAME = "gemini-3-flash-preview"  # "gemini-3.5-flash-lite"
+MODEL_NAME = "gemini-3.5-flash-lite"
 KNOWLEDGE_CUTOFF_YEAR = 2026
 PAPERS_ROOT = Path("ATR/agents/dataset/papers/astro_cee")
 OUTPUT_ROOT = Path("ATR/agents/output")
