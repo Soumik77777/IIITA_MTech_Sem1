@@ -1,0 +1,3 @@
+- G003: Vulnerability of Robust k-Means Variants to Low Universal Breakdown Points under Arbitrary Contamination [Papers: /media/soumik/storage/MTech//media/soumik/storage/MTech/ATR/agents/dataset/papers/trimmed_k_means/2016/NIPS-2016-robust-k-means-a-theoretical-revisit-Paper.pdf]
+
+- G004: Lack of standardized experimental frameworks to evaluate affine-transformation invariance and feature-scaling dependencies in heuristic outlier trimming algorithms. [Papers: /media/soumik/storage/MTech//media/soumik/storage/MTech/ATR/agents/dataset/papers/trimmed_k_means/2004/ci030295a.pdf]

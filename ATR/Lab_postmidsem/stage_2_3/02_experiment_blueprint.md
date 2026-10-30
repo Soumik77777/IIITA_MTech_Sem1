@@ -20,7 +20,7 @@ The system will use LLM-based agents to identify research gaps and generate poss
 **Output**
 
 - Identified research gaps or potential directions for exploration.
-- Cost, including token usage and computational requirements such as runtime.
+- Cost, including token usage and computational requirements such as runtime and GPU.
 - Paper context and intermediate LLM outputs/logs from the different stages.
 
 **Modules**

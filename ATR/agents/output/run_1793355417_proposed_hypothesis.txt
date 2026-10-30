@@ -1,0 +1,5 @@
+- Replacing the static global multiplier $q$ with an iterative, cluster-specific adaptive threshold parameter will simultaneously achieve low clustering error and high precision without manual tuning in K-means#.
+
+- Expressing the null distribution of pseudo-isolations $Y$ via chi-square mixture approximations under a multivariate Gaussian assumption will yield tighter false-alarm bounds compared to conservative inequalities.
+
+- Replacing standard sample mean and covariance estimators beneath the Mahalanobis distance with robust estimators will preserve anomaly recall under initial anchor contamination exceeding 5% in federated architectures.

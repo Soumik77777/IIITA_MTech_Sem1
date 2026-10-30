@@ -1,0 +1,7 @@
+- Lack of automated, data-driven methods to dynamically determine the expected outlier fraction ($\alpha$) and cluster cardinality/membership constraints ($s$) during optimization in relaxed robust frameworks.
+
+- Absence of exact parametric closed-form distributions for pseudo-isolation scores, forcing current non-parametric frameworks to rely on conservative bounds like Cantelli's inequality rather than exact hypothesis testing.
+
+- The computational intractability and high fixed-parameter tractable (FPT) exponential dependence on the number of outliers $m$ when seeking optimal approximation guarantees in generalized metric spaces.
+
+- Vulnerability of initial coordinate updates and covariance estimates to contamination in resource-constrained federated baseline architectures.
