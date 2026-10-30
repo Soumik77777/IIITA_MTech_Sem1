@@ -1,0 +1,72 @@
+{
+  "run_timestamp": "1793348627",
+  "model": "gemini-3.5-flash-lite",
+  "usage_summary": {
+    "api_calls_logged": 4,
+    "successful_calls": 4,
+    "failed_calls": 0,
+    "input_tokens": 26517,
+    "output_tokens": 5598,
+    "total_tokens": 32115,
+    "estimated_cost_usd": null,
+    "total_runtime_seconds": 104.9
+  },
+  "calls": [
+    {
+      "timestamp_utc": "2026-10-30T08:24:04.768348+00:00",
+      "stage": "paper_analysis",
+      "paper": "Eytan_2025_arXiv_2509.15632v1.pdf",
+      "model": "gemini-3.5-flash-lite",
+      "attempt": 1,
+      "status": "success",
+      "runtime_seconds": 15.959,
+      "input_tokens": 11055,
+      "output_tokens": 1380,
+      "total_tokens": 12435,
+      "estimated_cost_usd": null,
+      "error": null
+    },
+    {
+      "timestamp_utc": "2026-10-30T08:25:20.492505+00:00",
+      "stage": "paper_analysis",
+      "paper": "Bhattacharyya_et_al_2025_PASA.pdf",
+      "model": "gemini-3.5-flash-lite",
+      "attempt": 1,
+      "status": "success",
+      "runtime_seconds": 75.669,
+      "input_tokens": 10388,
+      "output_tokens": 2190,
+      "total_tokens": 12578,
+      "estimated_cost_usd": null,
+      "error": null
+    },
+    {
+      "timestamp_utc": "2026-10-30T08:25:24.074915+00:00",
+      "stage": "hypothesis_synthesis",
+      "paper": null,
+      "model": "gemini-3.5-flash-lite",
+      "attempt": 1,
+      "status": "success",
+      "runtime_seconds": 3.581,
+      "input_tokens": 3910,
+      "output_tokens": 1042,
+      "total_tokens": 4952,
+      "estimated_cost_usd": null,
+      "error": null
+    },
+    {
+      "timestamp_utc": "2026-10-30T08:25:33.701305+00:00",
+      "stage": "self_critique_refinement",
+      "paper": null,
+      "model": "gemini-3.5-flash-lite",
+      "attempt": 1,
+      "status": "success",
+      "runtime_seconds": 3.207,
+      "input_tokens": 1164,
+      "output_tokens": 986,
+      "total_tokens": 2150,
+      "estimated_cost_usd": null,
+      "error": null
+    }
+  ]
+}
