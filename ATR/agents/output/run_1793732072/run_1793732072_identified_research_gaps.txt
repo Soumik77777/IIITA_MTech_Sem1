@@ -1,0 +1,9 @@
+- G001: Universal Breakdown Point Characterization and Improvement for Non-Convex and Proximal-Map-Based Robust K-Means Variants [Papers: P002 (Section 5); P005 (3.2 Unbiased proximal maps: the case of non-convex f_lambda)]
+
+- G002: Asymptotic Consistency and Skewness-Adaptive Tail Bounds for Non-Parametric Pseudo-Isolation and Trimming Functionals [Papers: P002 (Section 3); P015 (Section 3.1, Section 3.2)]
+
+- G003: Lack of formal theoretical guarantees on the finite-sample false-alarm rate and consistency of data-driven auto-thresholds when combined with non-convex or non-spherical cluster geometries [Papers: P006 (Section IV-A, Section V); P015 (Section 3.1, Section 3.2, Section 6); P017 (Section 6, Section 7.4)]
+
+- G004: Evaluating robust and trimmed K-means variants under domain-specific feature-space skew and complex real-world target transformations (e.g., job linearity and multi-target classification trade-offs) [Papers: P004 (RESULTS AND DISCUSSION, CONCLUSION); P016 (4. CONCLUSION)]
+
+- G005: Integration and empirical validation of trimmed and robust K-means algorithms under non-IID feature-space drift in federated IoT edge deployments [Papers: P017 (Section 6.7, Section 7.4)]
