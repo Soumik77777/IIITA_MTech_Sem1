@@ -21,85 +21,6 @@ MAX_RETRIES = 3
 _last_request_completed_at = None
 
 
-
-JSON_OUTPUT_RULES = """
-Return exactly one valid JSON object. No Markdown fences, comments, trailing commas,
-or explanatory text. Inside JSON strings, escape backslashes as \\\\ and line breaks
-as \\n. Use only standard JSON escape sequences.
-"""
-
-
-def _loads_json_safely(raw):
-    """Strict parse, then repair common invalid escapes and raw control characters."""
-    raw = _response_to_text(raw).strip()
-    if not raw:
-        return None, "empty response"
-    if raw.startswith("```"):
-        raw = raw.split("\n", 1)[-1]
-        if raw.rstrip().endswith("```"):
-            raw = raw.rstrip()[:-3].rstrip()
-
-    candidates = [raw]
-    for opening, closing in (("{", "}"), ("[", "]")):
-        start = raw.find(opening)
-        while start >= 0:
-            depth, quoted, escaped = 0, False, False
-            for pos in range(start, len(raw)):
-                c = raw[pos]
-                if quoted:
-                    if escaped:
-                        escaped = False
-                    elif c == "\\":
-                        escaped = True
-                    elif c == '"':
-                        quoted = False
-                elif c == '"':
-                    quoted = True
-                elif c == opening:
-                    depth += 1
-                elif c == closing:
-                    depth -= 1
-                    if depth == 0:
-                        candidates.append(raw[start:pos + 1])
-                        break
-            start = raw.find(opening, start + 1)
-
-    for candidate in candidates:
-        try:
-            return json.loads(candidate), None
-        except (json.JSONDecodeError, TypeError):
-            pass
-
-    for candidate in candidates:
-        out, quoted, escaped = [], False, False
-        for c in candidate:
-            if quoted:
-                if escaped:
-                    if c not in '"\\/bfnrtu':
-                        out.append("\\")
-                    out.append(c)
-                    escaped = False
-                elif c == "\\":
-                    out.append(c)
-                    escaped = True
-                elif c == '"':
-                    out.append(c)
-                    quoted = False
-                elif ord(c) < 32:
-                    out.append("\\n" if c in "\r\n" else "\\t" if c == "\t" else " ")
-                else:
-                    out.append(c)
-            else:
-                out.append(c)
-                if c == '"':
-                    quoted = True
-        try:
-            return json.loads("".join(out)), "repaired invalid escapes/control characters"
-        except json.JSONDecodeError:
-            pass
-    return None, "response was not recoverable as JSON"
-
-
 def _usage_from_response(response):
     usage = getattr(response, "usage_metadata", None) or {}
     input_tokens = usage.get("input_tokens")
@@ -148,7 +69,6 @@ def _invoke(llm, prompt, model_name, price_table, stage,
             inference_history, api_usage, paper_loc=None, pdf_path=None):
     global _last_request_completed_at
 
-    prompt = prompt.rstrip() + "\n\n" + JSON_OUTPUT_RULES
     event = {
         "event_id": f"E{len(inference_history)+1:04d}",
         "timestamp_utc": datetime.now(timezone.utc).isoformat(),
@@ -218,50 +138,6 @@ def _invoke(llm, prompt, model_name, price_table, stage,
             "total_tokens": total_tokens, "estimated_cost_usd": cost, "error": None,
         })
         content = _response_to_text(response.content)
-        parsed, parse_warning = _loads_json_safely(content)
-        if parsed is None:
-            repair_prompt = (
-                "Repair ONLY the JSON syntax below. Preserve all content exactly; "
-                "do not add, remove, summarize, or reinterpret. Return valid JSON only.\n\n"
-                + content
-            )
-            _wait_after_previous_response()
-            repair_start = time.perf_counter()
-            try:
-                repair_response = llm.invoke([HumanMessage(content=repair_prompt)])
-                repair_runtime = round(time.perf_counter() - repair_start, 3)
-                _last_request_completed_at = time.monotonic()
-                rin, rout, rtotal = _usage_from_response(repair_response)
-                rcost = None
-                if rin is not None and rout is not None and price_table.get("input") is not None and price_table.get("output") is not None:
-                    rcost = (rin * price_table["input"] + rout * price_table["output"]) / 1_000_000
-                api_usage.append({
-                    "timestamp_utc": datetime.now(timezone.utc).isoformat(),
-                    "stage": f"{stage}_json_repair", "paper_loc": paper_loc,
-                    "model": model_name, "attempt": 1, "status": "success",
-                    "runtime_seconds": repair_runtime, "input_tokens": rin,
-                    "output_tokens": rout, "total_tokens": rtotal,
-                    "estimated_cost_usd": rcost, "error": None,
-                })
-                repair_content = _response_to_text(repair_response.content)
-                repaired, repair_warning = _loads_json_safely(repair_content)
-                event["json_repair"] = {
-                    "status": "success" if repaired is not None else "failed",
-                    "response": repair_content, "parse_warning": repair_warning,
-                }
-                if repaired is not None:
-                    content = repair_content
-                else:
-                    event["parse_warning"] = "Invalid JSON; original raw response retained."
-            except Exception as repair_exc:
-                _last_request_completed_at = time.monotonic()
-                event["json_repair"] = {
-                    "status": "error",
-                    "error": f"{type(repair_exc).__name__}: {repair_exc}",
-                }
-                event["parse_warning"] = "Invalid JSON; original raw response retained."
-        elif parse_warning:
-            event["parse_warning"] = parse_warning
         event.update({
             "status": "success", "response": content,
             "runtime_seconds": runtime, "attempts": attempt,
@@ -271,20 +147,45 @@ def _invoke(llm, prompt, model_name, price_table, stage,
 
 
 def _parse_json_response(text):
-    parsed, warning = _loads_json_safely(text)
-    if isinstance(parsed, dict):
-        if warning:
-            parsed["_parse_warning"] = warning
-        return parsed
-    if isinstance(parsed, list):
-        return {"_unstructured_output": parsed,
-                "_parse_warning": "Model returned a JSON array; preserved."}
-    cleaned = _response_to_text(text)
+    """Parse model JSON, repairing invalid JSON escapes such as LaTeX \\alpha."""
+    import re
+
+    cleaned = _response_to_text(text).strip()
+    cleaned = re.sub(r"^```(?:json)?\s*|\s*```$", "", cleaned,
+                     flags=re.IGNORECASE | re.DOTALL).strip()
+
+    candidates = [cleaned]
+    start, end = cleaned.find("{"), cleaned.rfind("}")
+    if start >= 0 and end > start and cleaned[start:end + 1] != cleaned:
+        candidates.append(cleaned[start:end + 1])
+
+    last_error = None
+    for candidate in candidates:
+        try:
+            parsed = json.loads(candidate)
+            if isinstance(parsed, dict):
+                return parsed
+        except json.JSONDecodeError as exc:
+            last_error = exc
+
+        # JSON permits only a small set of escapes. Preserve valid escapes and
+        # double only backslashes that would otherwise create invalid escapes.
+        repaired = re.sub(r'\\(?!["\\/bfnrtu])', r'\\\\', candidate)
+        try:
+            parsed = json.loads(repaired)
+            if isinstance(parsed, dict):
+                return parsed
+        except json.JSONDecodeError as exc:
+            last_error = exc
+
     return {
         "historical_analysis": cleaned,
         "research_gaps": [],
         "hypotheses": [],
-        "parse_warning": "Invalid JSON; raw response is retained in inference_history.",
+        "parse_warning": (
+            "Could not parse model response as JSON after escape repair. "
+            f"Last parser error: {last_error}"
+        ),
     }
 
 
@@ -407,8 +308,7 @@ where possible. Do not claim novelty beyond this paper.
             continue
         paper_data = _parse_json_response(content)
         if "parse_warning" in paper_data:
-            paper_data = {"raw_analysis": content,
-                          "parse_warning": paper_data["parse_warning"]}
+            paper_data = {"raw_analysis": content}
         paper_analyses.append({"paper_id": f"P{len(paper_analyses)+1:03d}",
                                "paper_loc": paper_loc, "paper_filename": pdf_path.name,
                                "analysis": paper_data})
@@ -538,14 +438,42 @@ SUPPLIED PAPER ANALYSES:
                 llm, critique_prompt, model_name, price_table,
                 "self_critique_refinement", inference_history, api_usage,
             )
-            if final_raw is not None:
-                valid_papers = {p["paper_loc"]: p["paper_id"] for p in paper_analyses}
-                parsed = _normalise_result(_parse_json_response(final_raw), valid_papers)
+            valid_papers = {p["paper_loc"]: p["paper_id"] for p in paper_analyses}
+            synthesis_parsed = _parse_json_response(synthesis)
+            refinement_parsed = _parse_json_response(final_raw) if final_raw is not None else None
+
+            refinement_usable = (
+                isinstance(refinement_parsed, dict)
+                and "parse_warning" not in refinement_parsed
+                and isinstance(refinement_parsed.get("research_gaps"), list)
+                and isinstance(refinement_parsed.get("hypotheses"), list)
+            )
+            synthesis_has_results = (
+                isinstance(synthesis_parsed.get("research_gaps"), list)
+                and isinstance(synthesis_parsed.get("hypotheses"), list)
+                and bool(synthesis_parsed.get("research_gaps") or synthesis_parsed.get("hypotheses"))
+            )
+            refinement_has_results = (
+                refinement_usable
+                and bool(refinement_parsed.get("research_gaps") or refinement_parsed.get("hypotheses"))
+            )
+
+            if refinement_usable and (refinement_has_results or not synthesis_has_results):
+                parsed = _normalise_result(refinement_parsed, valid_papers)
+            elif synthesis_has_results:
+                parsed = _normalise_result(synthesis_parsed, valid_papers)
+                reason = (
+                    "Refinement response was invalid or empty; preserved the successful synthesis output."
+                    if final_raw is not None else
+                    "Critique/refinement request failed; preserved the successful synthesis output."
+                )
+                parsed["critique_warning"] = reason
             else:
-                valid_papers = {p["paper_loc"]: p["paper_id"] for p in paper_analyses}
-                parsed = _normalise_result(_parse_json_response(synthesis), valid_papers)
+                source = refinement_parsed if refinement_parsed is not None else synthesis_parsed
+                parsed = _normalise_result(source, valid_papers)
                 parsed["critique_warning"] = (
-                    "Critique/refinement request failed; using synthesis without refinement."
+                    "Neither refinement nor synthesis produced recoverable gap/hypothesis records. "
+                    "Raw responses are retained in inference_history."
                 )
         else:
             parsed["synthesis_warning"] = "Cross-paper synthesis request failed."
@@ -572,7 +500,7 @@ SUPPLIED PAPER ANALYSES:
         "event_id": f"E{len(inference_history)+1:04d}",
         "timestamp_utc": datetime.now(timezone.utc).isoformat(),
         "stage": "final_result", "agent": "Orchestrator", "status": "success",
-        "message": f"{len(parsed.get('research_gap_records', []))} gaps and {len(parsed.get('hypotheses', []))} hypotheses.",
+        "message": f"{len(parsed.get('research_gaps', []))} gaps and {len(parsed.get('hypotheses', []))} hypotheses.",
     })
     return {
         "agent_params": {

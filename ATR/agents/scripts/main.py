@@ -15,7 +15,7 @@ from multi_agent_debate import run_multi_debate
 
 
 # -------------------- CONFIGURATION --------------------
-MODE = "single"  # "single" or "multi"
+MODE = "multi"  # "single" or "multi"
 TOPIC = "Status and direction of outlier trimming in K-means and similar algorithms"
 ADDITIONAL_PROMPT = ""
 MODEL_NAME = "gemini-3.5-flash-lite"  # or "gemini-3-flash-preview"
@@ -90,13 +90,42 @@ def main():
     )
     result = normalize_paper_fields(result, pdf_paths)
 
+    research_gaps = result.get("research_gaps", [])
+    hypotheses = result.get("hypotheses", [])
+    if not research_gaps and not hypotheses:
+        warnings = [result.get(key) for key in
+                    ("parse_warning", "synthesis_warning", "critique_warning", "analysis_warning")]
+        warning_text = "; ".join(str(x) for x in warnings if x)
+        raise RuntimeError(
+            "No research gaps or hypotheses were recovered; refusing to write empty output files. "
+            + warning_text
+        )
+
     gaps_path = run_output_dir / f"run_{RUN_TIMESTAMP}_identified_research_gaps.txt"
-    gaps_path.write_text("\n\n".join(f"- {x}" for x in result.get("research_gaps", [])) + "\n", encoding="utf-8")
+    gaps_path.write_text(
+        "\n\n".join(f"- {item}" for item in research_gaps) + "\n",
+        encoding="utf-8",
+    )
+
     hypotheses_path = run_output_dir / f"run_{RUN_TIMESTAMP}_proposed_hypothesis.txt"
-    hypotheses_path.write_text("\n\n".join(
-        f"- {x.get('hypothesis', x) if isinstance(x, dict) else x}"
-        for x in result.get("hypotheses", [])
-    ) + "\n", encoding="utf-8")
+    hypothesis_blocks = []
+    for item in hypotheses:
+        if isinstance(item, dict):
+            text = f"{item.get('id', '')}: {item.get('hypothesis', '')}".strip()
+            if item.get("rationale"):
+                text += f"\nRationale: {item['rationale']}"
+            if item.get("testable_prediction"):
+                text += f"\nTestable prediction: {item['testable_prediction']}"
+            if item.get("caveats"):
+                text += f"\nCaveats: {item['caveats']}"
+            refs = item.get("supporting_papers", [])
+            paper_ids = [ref.get("paper_id") for ref in refs if isinstance(ref, dict) and ref.get("paper_id")]
+            if paper_ids:
+                text += "\nReferences: " + ", ".join(paper_ids)
+        else:
+            text = str(item)
+        hypothesis_blocks.append("- " + text)
+    hypotheses_path.write_text("\n\n".join(hypothesis_blocks) + "\n", encoding="utf-8")
 
     usage_path = run_output_dir / f"run_{RUN_TIMESTAMP}_api_usage.json"
     save_json(usage_path, {

@@ -20,86 +20,6 @@ EXAMPLE_PERSPECTIVES = {
 _last_request_completed_at = None
 
 
-
-
-JSON_OUTPUT_RULES = """
-Return exactly one valid JSON object. No Markdown fences, comments, trailing commas,
-or explanatory text. Inside JSON strings, escape backslashes as \\\\ and line breaks
-as \\n. Use only standard JSON escape sequences.
-"""
-
-
-def _loads_json_safely(raw):
-    """Strict parse, then repair common invalid escapes and raw control characters."""
-    raw = _text(raw).strip()
-    if not raw:
-        return None, "empty response"
-    if raw.startswith("```"):
-        raw = raw.split("\n", 1)[-1]
-        if raw.rstrip().endswith("```"):
-            raw = raw.rstrip()[:-3].rstrip()
-
-    candidates = [raw]
-    for opening, closing in (("{", "}"), ("[", "]")):
-        start = raw.find(opening)
-        while start >= 0:
-            depth, quoted, escaped = 0, False, False
-            for pos in range(start, len(raw)):
-                c = raw[pos]
-                if quoted:
-                    if escaped:
-                        escaped = False
-                    elif c == "\\":
-                        escaped = True
-                    elif c == '"':
-                        quoted = False
-                elif c == '"':
-                    quoted = True
-                elif c == opening:
-                    depth += 1
-                elif c == closing:
-                    depth -= 1
-                    if depth == 0:
-                        candidates.append(raw[start:pos + 1])
-                        break
-            start = raw.find(opening, start + 1)
-
-    for candidate in candidates:
-        try:
-            return json.loads(candidate), None
-        except (json.JSONDecodeError, TypeError):
-            pass
-
-    for candidate in candidates:
-        out, quoted, escaped = [], False, False
-        for c in candidate:
-            if quoted:
-                if escaped:
-                    if c not in '"\\/bfnrtu':
-                        out.append("\\")
-                    out.append(c)
-                    escaped = False
-                elif c == "\\":
-                    out.append(c)
-                    escaped = True
-                elif c == '"':
-                    out.append(c)
-                    quoted = False
-                elif ord(c) < 32:
-                    out.append("\\n" if c in "\r\n" else "\\t" if c == "\t" else " ")
-                else:
-                    out.append(c)
-            else:
-                out.append(c)
-                if c == '"':
-                    quoted = True
-        try:
-            return json.loads("".join(out)), "repaired invalid escapes/control characters"
-        except json.JSONDecodeError:
-            pass
-    return None, "response was not recoverable as JSON"
-
-
 def _now():
     return datetime.now(timezone.utc).isoformat()
 
@@ -116,9 +36,45 @@ def _text(content):
 
 
 def _parse(raw):
-    parsed, warning = _loads_json_safely(raw)
-    if isinstance(parsed, (dict, list)):
-        return parsed
+    """Parse JSON with recovery for invalid backslash escapes in model output."""
+    raw = re.sub(r"^```(?:json)?\s*|\s*```$", "", (raw or "").strip(), flags=re.I | re.S)
+    candidates = [raw]
+
+    # Extract the first balanced JSON object/array rather than slicing from the
+    # first opening brace to the final closing brace (which may include prose).
+    for left, right in (("{", "}"), ("[", "]")):
+        start = raw.find(left)
+        if start < 0:
+            continue
+        depth, quoted, escaped = 0, False, False
+        for i in range(start, len(raw)):
+            char = raw[i]
+            if quoted:
+                if escaped:
+                    escaped = False
+                elif char == "\\":
+                    escaped = True
+                elif char == '"':
+                    quoted = False
+            elif char == '"':
+                quoted = True
+            elif char == left:
+                depth += 1
+            elif char == right:
+                depth -= 1
+                if depth == 0:
+                    candidates.append(raw[start:i + 1])
+                    break
+
+    for candidate in candidates:
+        try:
+            return json.loads(candidate)
+        except json.JSONDecodeError:
+            repaired = re.sub(r'\\(?!["\\/bfnrtu])', r'\\\\', candidate)
+            try:
+                return json.loads(repaired)
+            except json.JSONDecodeError:
+                continue
     return None
 
 
@@ -138,7 +94,6 @@ def _wait():
 def _call(llm, prompt, *, stage, agent, model_name, prices, history, usage_log,
           paper_path=None, round_no=None):
     global _last_request_completed_at
-    prompt = prompt.rstrip() + "\n\n" + JSON_OUTPUT_RULES
     event = {
         "event_id": f"E{len(history)+1:04d}", "timestamp_utc": _now(),
         "stage": stage, "agent": agent, "round": round_no,
@@ -184,67 +139,12 @@ def _call(llm, prompt, *, stage, agent, model_name, prices, history, usage_log,
                 "estimated_cost_usd": cost, "error": None,
             })
             raw = _text(response.content)
-            parsed, parse_warning = _loads_json_safely(raw)
-            if parsed is not None:
-                if parse_warning:
-                    event["parse_warning"] = parse_warning
-                event.update(status="success", response=raw, parsed_output=parsed,
-                             runtime_seconds=runtime, attempts=attempt)
-                return parsed
-
-            # One syntax-repair request preserves the original content; it does not
-            # ask the model to regenerate or reinterpret the scientific analysis.
-            repair_prompt = (
-                "Repair ONLY the JSON syntax in the response below. Preserve every "
-                "field, value, claim, and list item exactly. Do not summarize, add, "
-                "remove, or reinterpret content. Return one valid JSON object/array only.\n\n"
-                + raw
-            )
-            _wait()
-            repair_started = time.perf_counter()
-            try:
-                repair_response = llm.invoke([HumanMessage(content=repair_prompt)])
-                repair_runtime = round(time.perf_counter() - repair_started, 3)
-                _last_request_completed_at = time.monotonic()
-                repair_usage = getattr(repair_response, "usage_metadata", None) or {}
-                rin, rout = repair_usage.get("input_tokens"), repair_usage.get("output_tokens")
-                rtotal = repair_usage.get("total_tokens")
-                if rtotal is None and rin is not None and rout is not None:
-                    rtotal = rin + rout
-                rcost = None
-                if rin is not None and rout is not None and prices.get("input") is not None and prices.get("output") is not None:
-                    rcost = (rin * prices["input"] + rout * prices["output"]) / 1_000_000
-                usage_log.append({
-                    "timestamp_utc": _now(), "stage": f"{stage}_json_repair",
-                    "agent": agent, "round": round_no, "paper_loc": event["paper_loc"],
-                    "model": model_name, "attempt": 1, "status": "success",
-                    "runtime_seconds": repair_runtime, "input_tokens": rin,
-                    "output_tokens": rout, "total_tokens": rtotal,
-                    "estimated_cost_usd": rcost, "error": None,
-                })
-                repair_raw = _text(repair_response.content)
-                repaired, repair_warning = _loads_json_safely(repair_raw)
-                event["json_repair"] = {
-                    "status": "success" if repaired is not None else "failed",
-                    "response": repair_raw, "parse_warning": repair_warning,
-                }
-                if repaired is not None:
-                    event.update(status="success", response=raw, parsed_output=repaired,
-                                 runtime_seconds=runtime + repair_runtime, attempts=attempt)
-                    return repaired
-            except Exception as repair_exc:
-                _last_request_completed_at = time.monotonic()
-                event["json_repair"] = {
-                    "status": "error",
-                    "error": f"{type(repair_exc).__name__}: {repair_exc}",
-                }
-
-            event.update(status="success", response=raw, parsed_output=None,
-                         runtime_seconds=runtime, attempts=attempt,
-                         parse_warning="Invalid JSON after local repair and one model repair; raw response retained.")
-            # Preserve a failed reader response as data so the paper is not silently
-            # removed from the corpus. Downstream summaries can still inspect it.
-            return {"_parse_failed": True, "_raw_response": raw}
+            parsed = _parse(raw)
+            event.update(status="success", response=raw, parsed_output=parsed,
+                         runtime_seconds=runtime, attempts=attempt)
+            if parsed is None:
+                event["parse_warning"] = "Invalid JSON; raw response retained."
+            return parsed
         except Exception as exc:
             runtime = round(time.perf_counter() - started, 3)
             _last_request_completed_at = time.monotonic()
@@ -283,8 +183,6 @@ def _paper_cards(papers):
             "limitations_explicit": a.get("limitations_explicit", []),
             "potential_open_questions": a.get("potential_open_questions", []),
             "paper_loc": p["paper_loc"],
-            "raw_analysis": a.get("_raw_response") or a.get("raw_analysis", ""),
-            "parse_warning": a.get("parse_warning", ""),
         })
     return cards
 
@@ -744,9 +642,6 @@ def run_multi_debate(llm, topic, additional_prompt, pdf_paths, model_name,
             model_name=model_name, prices=prices, history=history,
             usage_log=usage, paper_path=path,
         )
-        if isinstance(parsed, list):
-            parsed = {"unstructured_output": parsed,
-                      "parse_warning": "Model returned a JSON array; preserved without discarding."}
         if not isinstance(parsed, dict):
             history.append({
                 "event_id": f"E{len(history)+1:04d}", "timestamp_utc": _now(),

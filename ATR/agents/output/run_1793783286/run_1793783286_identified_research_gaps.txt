@@ -1,0 +1,18 @@
+RESEARCH GAP 1
+Absence of deterministic, polynomial-time global optimization algorithms for trimmed K-means and robust K-means objectives that avoid reliance on stochastic heuristics or combinatorial search over exponential subsets.
+
+Evidence: Cuesta-Albertos et al. (1997) and García-Escudero et al. (2003) highlight the lack of a deterministic nonexhaustive optimal algorithm, forcing reliance on simulated annealing or random initializations. While Agrawal et al. (2023) introduce FPT reductions for clustering with outliers, their running time scales exponentially with the outlier count $m$ via $((k+m)/\varepsilon)^{O(m)}$.
+Why unresolved: The combinatorial nature of simultaneously selecting $k$ centers and trimming $z$ or $\alpha$ outliers creates a non-convex optimization landscape with local minima, leaving open whether an efficient deterministic global solver exists without exponential dependence on parameters.
+References: P002 (1031833664.pdf), P003 (Trimming Tools in Exploratory Data Analysis.pdf), P013 (14883wPg#s.pdf)
+
+--------------------------------------------------------------------------------
+
+RESEARCH GAP 2
+Theoretical limitations in handling non-spherical, heterogeneous, or overlapping cluster geometries within trimmed and robust K-means frameworks without enforcing uniform spherical dispersion constraints.
+
+Evidence: Cuesta-Albertos et al. (1997) and García-Escudero et al. (2003) explicitly note that optimal trimming regions in standard trimmed K-means are constrained to unions of balls with equal radii, making them suboptimal for non-spherical geometries. Iannaccio and Vichi (2026) acknowledge that their baseline ODK-means relies on spherical J-class assumptions unless extended to GMMs.
+Why unresolved: Most trimmed and robust K-means variants derive their analytical tractability and optimality proofs by assuming Euclidean distances and spherical cluster boundaries, leaving robust trimming for complex elliptical or arbitrary manifold structures largely heuristic.
+References: P002 (1031833664.pdf), P003 (Trimming Tools in Exploratory Data Analysis.pdf), P015 (2609.08494v1.pdf)
+
+--------------------------------------------------------------------------------
+

@@ -1,0 +1,20 @@
+HYPOTHESIS 1
+Varying the trimming percentage in K-means least trimmed square (LTS) algorithms directly alters cluster separation boundaries and silhouette scores, with moderate trimming thresholds (e.g., 30%) yielding optimal cluster separation for highly skewed real-world datasets.
+
+Rationale: Ghayatrie and Fitrianah (2026) demonstrated that applying K-means LTS with a 30% trimming percentage significantly improved silhouette scores compared to standard K-means when handling heavy-tailed academic alumni records.
+Testable prediction: Increasing the trimming rate beyond the optimal contamination proportion will cause a degradation in silhouette scores due to the inadvertent removal of valid inlier data points near cluster boundaries.
+Caveats: The optimal trimming percentage is data-dependent and requires prior estimation of the true noise or outlier ratio.
+References: P016 (5c185872a7f1b8dd0442b9b3bcbc6455460e.pdf)
+
+--------------------------------------------------------------------------------
+
+HYPOTHESIS 2
+Integrating nonparametric pseudo-isolation score thresholding into flexible Gaussian Mixture Models (GMMs) or subspace clustering algorithms preserves probabilistic false-alarm rate control while successfully accommodating non-spherical geometries.
+
+Rationale: Iannaccio and Vichi (2026) established a nonparametric pseudo-isolation framework with formal Cantelli-based probability bounds for spherical K-means, but noted limitations when applied to complex non-spherical clusters.
+Testable prediction: Extending pseudo-isolation scoring to covariance-adaptive GMMs will achieve an F1-score greater than 0.95 in detecting outliers across highly elliptical synthetic benchmark distributions where standard trimmed K-means fails.
+Caveats: Estimating full covariance matrices increases parameter complexity and risks overfitting on small sample sizes.
+References: P015 (2609.08494v1.pdf)
+
+--------------------------------------------------------------------------------
+

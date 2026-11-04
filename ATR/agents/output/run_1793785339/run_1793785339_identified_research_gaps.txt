@@ -1,0 +1,11 @@
+- G001: Scalable algorithmic optimization and deterministic structural convergence for multi-scale, non-spherical trimmed K-means formulations [Papers: P002 (Section 3, Section 4, Section 5); P009 (3.2. Robust trimmed k-means, 6. Conclusions and future work); P014 (III. GENERALIZING K-MEANS, IV. COMPLEX PROBLEMS: A K-MEANS VIEW)]
+
+- G002: Non-parametric calibration of false-alarm rates for cluster-specific outlier detection using generalized pseudo-isolation score distributions [Papers: P015 (Section 8)]
+
+- G003: Impact of alternative robust dispersion and covariance estimators on thresholding sensitivity and breakdown performance in contaminated high-dimensional spaces [Papers: P006 (Section V, Section VI); P017 (Section 6.7, Section 7.4)]
+
+- G004: Empirical Validation Gap of Outlier Trimming Pipelines Across Non-Spherical and Multi-Scale Domain Datasets [Papers: P002 (Section 3, Section 4, Section 5); P004 (RESULTS AND DISCUSSION, CONCLUSION); P011 (3.1 Data Set, 3.3 Experiment and Result Analysis)]
+
+- G005: Lack of Adaptive, Parameter-Free Trimming Proportion Estimation in Applied Unsupervised Deployment [Papers: P009 (3.2. Robust trimmed k-means, 6. Conclusions and future work); P010 (6. Challenges and limitations, 7. Conclusion and future work); P015 (Section 8)]
+
+- G006: Computational Scalability and Runtime Validation of Recursive Outlier Trimming in Big Data and IoT Environments [Papers: P010 (6. Challenges and limitations, 7. Conclusion and future work); P017 (Section 6.7, Section 7.4)]
