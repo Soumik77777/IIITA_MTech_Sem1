@@ -53,7 +53,7 @@ def _wait_after_previous_response():
         return
     remaining = pause_sec - (time.monotonic() - _last_request_completed_at)
     if remaining > 0:
-        print(f"Waiting {remaining:.1f}s before the next model request.")
+        print(f"[WAIT] {remaining:.1f}s before next API call")
         time.sleep(remaining)
 
 
@@ -90,7 +90,7 @@ def _invoke(llm, prompt, model_name, price_table, stage,
     except Exception as exc:
         error = f"{type(exc).__name__}: {exc}"
         event.update({"status": "error", "error": error})
-        print(f"[ERROR] Could not prepare {paper_loc or stage}: {error}")
+        print(f"[SINGLE] {stage.replace('_', ' ').title()}: FAILED — {error}")
         return None
 
     for attempt in range(1, MAX_RETRIES + 1):
@@ -111,12 +111,12 @@ def _invoke(llm, prompt, model_name, price_table, stage,
             })
             if _is_retryable_error(exc) and attempt < MAX_RETRIES:
                 backoff = pause_sec * (2 ** (attempt - 1))
-                print(f"[RETRY] {stage}, attempt {attempt}/{MAX_RETRIES}; retrying in {backoff}s: {error}")
+                print(f"[WAIT] {backoff:.1f}s before retrying {stage}")
                 time.sleep(backoff)
                 _last_request_completed_at = time.monotonic()
                 continue
             event.update({"status": "error", "error": error, "attempts": attempt})
-            print(f"[ERROR] {stage} failed: {error}")
+            print(f"[SINGLE] {stage.replace('_', ' ').title()}: FAILED — {error}")
             return None
 
         runtime = round(time.perf_counter() - start, 3)
@@ -142,6 +142,10 @@ def _invoke(llm, prompt, model_name, price_table, stage,
             "status": "success", "response": content,
             "runtime_seconds": runtime, "attempts": attempt,
         })
+        label = {"paper_analysis": "PAPER ANALYSIS", "hypothesis_synthesis": "SYNTHESIS",
+                 "self_critique_refinement": "SELF-CRITIQUE + REFINEMENT"}.get(stage, stage.upper())
+        subject = Path(paper_loc).name if paper_loc else "Single Researcher"
+        print(f"[SINGLE] {label} — {subject}: SUCCESS ({runtime:.1f}s)")
         return content
     return None
 
@@ -192,17 +196,21 @@ def _parse_json_response(text):
 def _normalise_result(parsed, valid_papers):
     gaps = parsed.get("research_gaps", [])
     hypotheses = parsed.get("hypotheses", [])
-    if not isinstance(gaps, list): gaps = [gaps]
-    if not isinstance(hypotheses, list): hypotheses = [hypotheses]
+    if not isinstance(gaps, list):
+        gaps = [gaps]
+    if not isinstance(hypotheses, list):
+        hypotheses = [hypotheses]
 
     def refs_for(values):
         refs = []
-        if not isinstance(values, list): values = [values] if values else []
+        if not isinstance(values, list):
+            values = [values] if values else []
         for value in values:
             loc = value.get("paper_loc") if isinstance(value, dict) else value
             if loc:
                 pid = valid_papers.get(str(Path(str(loc)).resolve()))
-                if pid: refs.append({"paper_id": pid, "sections": [], "evidence": ""})
+                if pid:
+                    refs.append({"paper_id": pid, "sections": [], "evidence": ""})
         return refs
 
     gap_records = []
@@ -218,6 +226,7 @@ def _normalise_result(parsed, valid_papers):
             "origin_perspectives": [], "supporting_papers": refs_for(item.get("supporting_papers", [])),
             "related_papers": [], "status": "accepted",
         })
+
     hypothesis_records = []
     for i, item in enumerate(hypotheses, 1):
         item = item if isinstance(item, dict) else {"hypothesis": str(item)}
@@ -230,6 +239,7 @@ def _normalise_result(parsed, valid_papers):
             "testable_prediction": item.get("testable_prediction", ""),
             "caveats": item.get("caveats", ""), "status": "accepted",
         })
+
     return {
         "historical_analysis": parsed.get("historical_analysis", ""),
         "research_gaps": [
@@ -250,11 +260,16 @@ def _history_text(topic, events):
     for e in events:
         head = f"[{e.get('event_id')}] {e.get('stage')} | {e.get('agent')}"
         lines += [head, "-" * min(len(head), 80)]
-        if e.get("paper_loc"): lines.append(f"Paper: {e['paper_loc']}")
-        if e.get("status"): lines.append(f"Status: {e['status']}")
-        if e.get("message"): lines.append(e["message"])
-        if e.get("error"): lines.append(f"Error: {e['error']}")
-        if e.get("response"): lines += ["", e["response"]]
+        if e.get("paper_loc"):
+            lines.append(f"Paper: {e['paper_loc']}")
+        if e.get("status"):
+            lines.append(f"Status: {e['status']}")
+        if e.get("message"):
+            lines.append(e["message"])
+        if e.get("error"):
+            lines.append(f"Error: {e['error']}")
+        if e.get("response"):
+            lines += ["", e["response"]]
         lines.append("")
     return "\n".join(lines)
 
@@ -272,9 +287,9 @@ def run_single_agent(llm, topic, additional_prompt, pdf_paths, model_name,
     total_papers = len(pdf_paths)
 
     # Stage 1: each paper is analyzed in its own sequential request.
+    print(f"[SINGLE] Reading {total_papers} papers sequentially.")
     for index, pdf_path in enumerate(pdf_paths, start=1):
         paper_loc = str(pdf_path)
-        print(f"Sent paper {pdf_path.name} to model ({index}/{total_papers}).")
         prompt = f"""
 You are a careful scientific research assistant.
 Research topic: {topic}
@@ -297,7 +312,6 @@ where possible. Do not claim novelty beyond this paper.
             inference_history, api_usage, paper_loc=paper_loc, pdf_path=pdf_path,
         )
         if content is None:
-            print(f"Could not analyse {pdf_path.name}; skipping this paper.")
             inference_history.append({
                 "event_id": f"E{len(inference_history)+1:04d}",
                 "timestamp_utc": datetime.now(timezone.utc).isoformat(),
@@ -306,13 +320,16 @@ where possible. Do not claim novelty beyond this paper.
                 "status": "warning", "message": "No analysis generated for this paper.",
             })
             continue
+
         paper_data = _parse_json_response(content)
         if "parse_warning" in paper_data:
             paper_data = {"raw_analysis": content}
-        paper_analyses.append({"paper_id": f"P{len(paper_analyses)+1:03d}",
-                               "paper_loc": paper_loc, "paper_filename": pdf_path.name,
-                               "analysis": paper_data})
-        print(f"Analysed {pdf_path.name} ({index}/{total_papers}).")
+        paper_analyses.append({
+            "paper_id": f"P{len(paper_analyses)+1:03d}",
+            "paper_loc": paper_loc,
+            "paper_filename": pdf_path.name,
+            "analysis": paper_data,
+        })
         inference_history.append({
             "event_id": f"E{len(inference_history)+1:04d}",
             "timestamp_utc": datetime.now(timezone.utc).isoformat(),
@@ -369,7 +386,6 @@ Return ONLY valid JSON, no Markdown:
 PAPER ANALYSES:
 {json.dumps(paper_analyses, ensure_ascii=False)}
 """
-        print("Sending paper analyses for cross-paper synthesis.")
         synthesis = _invoke(
             llm, synthesis_prompt, model_name, price_table, "hypothesis_synthesis",
             inference_history, api_usage,
@@ -433,7 +449,6 @@ DRAFT:
 SUPPLIED PAPER ANALYSES:
 {json.dumps(paper_analyses, ensure_ascii=False)}
 """
-            print("Performing one self-critique and one refinement.")
             final_raw = _invoke(
                 llm, critique_prompt, model_name, price_table,
                 "self_critique_refinement", inference_history, api_usage,

@@ -15,7 +15,7 @@ from multi_agent_debate import run_multi_debate
 
 
 # -------------------- CONFIGURATION --------------------
-MODE = "multi"  # "single" or "multi"
+MODE = "single"  # "single" or "multi"
 TOPIC = "Status and direction of outlier trimming in K-means and similar algorithms"
 ADDITIONAL_PROMPT = ""
 MODEL_NAME = "gemini-3.5-flash-lite"  # or "gemini-3-flash-preview"

@@ -87,8 +87,57 @@ def _wait():
     if _last_request_completed_at is not None:
         delay = PAUSE_SEC - (time.monotonic() - _last_request_completed_at)
         if delay > 0:
-            print(f"[RATE LIMIT] Waiting {delay:.1f}s.")
+            print(f"[WAIT] {delay:.1f}s before next API call")
             time.sleep(delay)
+
+
+def _print_call_result(stage, agent, parsed, paper_loc=None, runtime=None, error=None):
+    role = {
+        "paper_reading": "READER", "perspective_discovery": "PERSPECTIVE FINDER",
+        "research_gap_generation": "GAPS GENERATOR",
+        "initial_gap_curation_and_corpus_analysis": "CURATOR",
+        "research_gap_challenger": "CHALLENGER",
+        "research_gap_defender": "DEFENDER",
+        "research_gap_adjudication": "ADJUDICATOR",
+        "hypothesis_generation": "HYPOTHESES GENERATOR",
+        "hypothesis_challenger": "CHALLENGER",
+        "hypothesis_defender": "DEFENDER",
+        "hypothesis_adjudication": "ADJUDICATOR",
+        "final_curation": "FINAL CURATOR",
+    }.get(stage, agent.upper())
+    if error:
+        detail = f"FAILED — {error}"
+    elif parsed is None:
+        detail = "FAILED — invalid JSON response"
+    else:
+        count = None
+        if stage == "research_gap_generation":
+            count = len(parsed.get("research_gaps", [])) if isinstance(parsed, dict) and isinstance(parsed.get("research_gaps", []), list) else 0
+            detail = f"Generated {count} gaps"
+        elif stage == "hypothesis_generation":
+            count = len(parsed.get("hypotheses", [])) if isinstance(parsed, dict) and isinstance(parsed.get("hypotheses", []), list) else 0
+            detail = f"Generated {count} hypotheses"
+        elif stage == "perspective_discovery":
+            count = len(parsed.get("perspectives", [])) if isinstance(parsed, dict) and isinstance(parsed.get("perspectives", []), list) else 0
+            detail = f"Generated {count} perspectives"
+        elif stage.endswith("_challenger"):
+            count = len(parsed.get("proposed_changes", [])) if isinstance(parsed, dict) and isinstance(parsed.get("proposed_changes", []), list) else 0
+            detail = f"Challenged {count} proposals"
+        elif stage.endswith("_defender"):
+            count = len(parsed.get("responses", [])) if isinstance(parsed, dict) and isinstance(parsed.get("responses", []), list) else 0
+            detail = f"Defended {count} proposals"
+        elif stage.endswith("_adjudication"):
+            count = len(parsed.get("decisions", [])) if isinstance(parsed, dict) and isinstance(parsed.get("decisions", []), list) else 0
+            detail = f"Adjudicated {count} proposals"
+        elif stage == "paper_reading":
+            detail = "Analysed paper"
+        elif stage == "final_curation":
+            detail = "Final curation completed"
+        else:
+            detail = "Completed"
+    subject = Path(paper_loc).name if paper_loc else agent
+    timing = f" ({runtime:.1f}s)" if runtime is not None else ""
+    print(f"[{role}] {subject}: {detail}{timing}")
 
 
 def _call(llm, prompt, *, stage, agent, model_name, prices, history, usage_log,
@@ -113,6 +162,7 @@ def _call(llm, prompt, *, stage, agent, model_name, prices, history, usage_log,
             message = HumanMessage(content=prompt)
     except Exception as exc:
         event.update(status="error", error=f"{type(exc).__name__}: {exc}")
+        _print_call_result(stage, agent, None, event.get("paper_loc"), error=event["error"])
         return None
 
     for attempt in range(1, MAX_RETRIES + 1):
@@ -144,6 +194,7 @@ def _call(llm, prompt, *, stage, agent, model_name, prices, history, usage_log,
                          runtime_seconds=runtime, attempts=attempt)
             if parsed is None:
                 event["parse_warning"] = "Invalid JSON; raw response retained."
+            _print_call_result(stage, agent, parsed, event.get("paper_loc"), runtime)
             return parsed
         except Exception as exc:
             runtime = round(time.perf_counter() - started, 3)
@@ -161,11 +212,14 @@ def _call(llm, prompt, *, stage, agent, model_name, prices, history, usage_log,
                             ("429", "resource_exhausted", "rate limit", "503",
                              "service unavailable", "502", "504"))
             if retryable and attempt < MAX_RETRIES:
-                time.sleep(PAUSE_SEC * (2 ** (attempt - 1)))
+                backoff = PAUSE_SEC * (2 ** (attempt - 1))
+                print(f"[WAIT] {backoff:.1f}s before retrying {agent}")
+                time.sleep(backoff)
+                _last_request_completed_at = time.monotonic()
                 continue
             event.update(status="error", error=error, runtime_seconds=runtime,
                          attempts=attempt)
-            print(f"[ERROR] {agent}: {error}")
+            _print_call_result(stage, agent, None, event.get("paper_loc"), error=error)
             return None
     return None
 
@@ -501,7 +555,6 @@ def _run_debate(llm, topic, kind, records, perspectives, cards, model_name,
         current = _active(records)
         if not current:
             break
-        print(f"[DEBATE] {kind}, round {rnd}/{DEBATE_ROUNDS}")
         challenges = _call(
             llm, _challenger_prompt(topic, kind, rnd, current, perspectives, cards),
             stage=f"{kind}_challenger", agent=f"{kind.title()} Challenger",
@@ -658,7 +711,6 @@ def run_multi_debate(llm, topic, additional_prompt, pdf_paths, model_name,
     valid_ids = {x["paper_id"] for x in cards}
 
     # 2. Topic-adaptive perspective finder.
-    print("[PERSPECTIVES] Discovering topic-specific perspectives.")
     perspective_data = _call(
         llm, _finder_prompt(topic, additional_prompt, cards),
         stage="perspective_discovery", agent="Topic-Adaptive Perspective Finder",
@@ -675,7 +727,6 @@ def run_multi_debate(llm, topic, additional_prompt, pdf_paths, model_name,
     # 3. Gap generation: one call per discovered perspective; global IDs.
     candidates, next_id = [], 1
     for perspective in perspectives:
-        print(f"[GAPS] {perspective['name']}")
         parsed = _call(
             llm, _gap_prompt(topic, additional_prompt, perspective, cards),
             stage="research_gap_generation",
@@ -688,7 +739,6 @@ def run_multi_debate(llm, topic, additional_prompt, pdf_paths, model_name,
         candidates.extend(new)
 
     # 4. Curator/analyser checks every candidate against every paper card.
-    print("[CURATOR] Curating gaps and checking the complete corpus.")
     curated = _call(
         llm, _curator_prompt(topic, candidates, cards),
         stage="initial_gap_curation_and_corpus_analysis",
@@ -707,7 +757,6 @@ def run_multi_debate(llm, topic, additional_prompt, pdf_paths, model_name,
     hypotheses, next_hid = [], 1
     if gaps:
         for perspective in perspectives:
-            print(f"[HYPOTHESES] {perspective['name']}")
             parsed = _call(
                 llm, _hypothesis_prompt(topic, additional_prompt, perspective, gaps, cards),
                 stage="hypothesis_generation",
@@ -781,7 +830,7 @@ def run_multi_debate(llm, topic, additional_prompt, pdf_paths, model_name,
     })
     return {
         "agent_params": {
-            "mode": "adaptive_multi_agent", "topic": topic,
+            "mode": "multi", "topic": topic,
             "additional_prompt": additional_prompt, "model": model_name,
             "papers": [{"paper_id": p["paper_id"], "paper_loc": p["paper_loc"]}
                        for p in papers],

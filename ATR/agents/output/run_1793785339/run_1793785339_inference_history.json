@@ -1,7 +1,7 @@
 {
   "run_timestamp": "1793785339",
   "agent_params": {
-    "mode": "adaptive_multi_agent",
+    "mode": "multi",
     "topic": "Status and direction of outlier trimming in K-means and similar algorithms",
     "additional_prompt": "",
     "model": "gemini-3.5-flash-lite",
