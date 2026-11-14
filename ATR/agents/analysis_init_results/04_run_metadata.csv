@@ -1,3 +1,0 @@
-﻿Run ID,Dataset ID,Mode,LLM Model,Parameters,Architecture ID,Total API Calls,Failed Calls,Runtime (seconds),Pause Between Calls (seconds),Input Tokens,Output Tokens,Total Tokens
-R01,D01,single,gemini-3.5-flash-lite,"{""debate_rounds_max"": 0, ""temperature"": 0.2}",S01,19,0,422.341,10,201201,21821,223022
-R02,D02,multi,gemini-3.5-flash-lite,"{""debate_rounds_max"": 3, ""temperature"": 0.2}",M01,33,0,580.394,5,452348,54979,507327

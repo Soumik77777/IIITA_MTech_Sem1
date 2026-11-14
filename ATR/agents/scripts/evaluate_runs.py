@@ -21,12 +21,12 @@ SCORE_DIMENSIONS = ["Novelty", "Significance", "Feasibility", "Testability"]
 
 # Add the run output folders to analyse, in order you want for R01, R02, ...
 RUN_FOLDERS = [
-    Path("ATR/agents/output/init_runs/run_1793735809"),
-    Path("ATR/agents/output/init_runs/run_1793785339"),
+    Path("ATR/agents/output/run_1793735809"),
+    Path("ATR/agents/output/run_1793785339"),
 ]
 
 # All five CSV files will be written here.
-ANALYSIS_OUTPUT_FOLDER = Path("ATR/agents/analysis_init_results")
+ANALYSIS_OUTPUT_FOLDER = Path("ATR/agents/analysis")
 
 
 def load_json(path: Path) -> dict[str, Any] | None:
@@ -180,11 +180,10 @@ def extract_params(params: dict[str, Any], usage: dict[str, Any]) -> str:
     for source in (params, usage):
         if not isinstance(source, dict):
             continue
-        if temperature == "NA":
-            for key in ("temperature", "temperature_requested"):
-                if key in source and source[key] is not None:
-                    temperature = source[key]
-                    break
+        if temperature == "NA" and source.get("temperature_applied"):
+            value = source.get("temperature_requested")
+            if value is not None:
+                temperature = value
         if debate_rounds_max == "NA":
             value = source.get("debate_rounds_max")
             if value is not None:
@@ -287,8 +286,8 @@ def main() -> None:
     architecture_mapping: list[list[Any]] = [["Architecture ID", "Mode", "Prompt Snapshot"]]
     metadata_rows: list[list[Any]] = [[
         "Run ID", "Dataset ID", "Mode", "LLM Model", "Parameters",
-        "Architecture ID", "Total API Calls", "Failed Calls", "Runtime (seconds)",
-        "Pause Between Calls (seconds)", "Input Tokens", "Output Tokens", "Total Tokens",
+        "Architecture ID", "Total API Calls", "Failed Calls", "Input Tokens", "Output Tokens", "Total Tokens",
+        "Runtime (seconds)", "Pause Between Calls (seconds)",
     ]]
 
     dataset_ids: dict[str, str] = {}
@@ -356,9 +355,9 @@ def main() -> None:
             human_run_id, dataset_id, mode, model,
             extract_params(params, usage_data), architecture_id,
             run_metrics["api_calls"], run_metrics["failed_calls"],
-            run_metrics["runtime_seconds"], run_metrics["pause_between_calls_seconds"],
             run_metrics["input_tokens"], run_metrics["output_tokens"],
             run_metrics["total_tokens"],
+            run_metrics["runtime_seconds"], run_metrics["pause_between_calls_seconds"],
         ])
 
         gaps, hypotheses = extract_items(history)
