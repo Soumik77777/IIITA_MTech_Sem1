@@ -1,0 +1,19 @@
+- H001: The breakdown point of alpha-trimmed k-means is explicitly bounded by a function of the minimum inter-cluster separation and maximum cluster eccentricity, transitioning sharply from high robustness to complete estimation bias when outlier contamination exceeds a geometric threshold.
+Rationale: Understanding the exact mathematical threshold where breakdown occurs under varying geometric configurations bridges the gap between empirical instability observations and formal robustness guarantees.
+Testable prediction: Mathematical derivation will show explicit dependency thresholds of breakdown points on cluster eccentricity.
+References: P002
+
+- H002: Asymptotic convergence of k-means processes holds in separable metric spaces equipped with a valid Radon probability measure, provided that compact containment and absolute continuity conditions are satisfied.
+Rationale: Extending martingale-based convergence proofs beyond Euclidean spaces enables rigorous application of partitioning algorithms to infinite-dimensional or non-Euclidean functional data domains.
+Testable prediction: Proof frameworks relying on martingale properties can be extended to metric spaces satisfying specific compactness conditions.
+References: P001
+
+- H003: Implementing deterministic local search procedures with polynomial-time relaxation approximations can efficiently identify optimal trimming sets without requiring exhaustive combinatorial searches or stochastic heuristics like simulated annealing.
+Rationale: Given the absence of deterministic non-exhaustive algorithms for optimal trimming set selection (G003) and the reliance on heuristic search methods (P002), formulating continuous relaxations of the trimmed k-variation objective function can bridge the gap between computational feasibility and optimality guarantees.
+Testable prediction: A deterministic relaxation algorithm will achieve cluster recovery accuracy within 95% of simulated annealing benchmarks while reducing execution time by at least an order of magnitude on synthetic contaminated multivariate datasets.
+References: P002
+
+- H004: The breakdown point of trimmed k-means exhibits sharp phase transitions dependent on cluster eccentricity and inter-cluster distance ratios, which can be computationally mapped using systematic numerical simulation benchmarks.
+Rationale: While the breakdown point is known to depend heavily on data structure and cluster counts (G001, P002), complete quantitative characterization across arbitrary geometries remains open. Empirical sensitivity analysis via procedural simulation can map exact numerical breakdown thresholds.
+Testable prediction: Empirically measured breakdown points will drop abruptly below the theoretical trimming proportion alpha whenever cluster overlap exceeds a quantifiable eccentricity threshold.
+References: P002

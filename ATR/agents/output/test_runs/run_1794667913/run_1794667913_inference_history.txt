@@ -1,0 +1,1043 @@
+================================================================================
+ATR ADAPTIVE MULTI-AGENT INFERENCE HISTORY
+Topic: Status and direction of outlier trimming in K-means and similar algorithms
+Generated: 2026-11-14T14:52:56.561644+00:00
+================================================================================
+
+[E0001] paper_reading | Literature Reader
+-----------------------------------------
+Paper: /media/soumik/storage/MTech/ATR/agents/dataset/papers/trimmed_k_means/1967/macqueen.pdf
+Status: success
+
+{
+ "paper_title": "Some Methods for Classification and Analysis of Multivariate Observations",
+ "authors_year": "J. MacQueen, 1967",
+ "research_question": "How can an N-dimensional population be partitioned into k sets on the basis of a sample using a computationally feasible process ('k-means'), and what is the asymptotic behavior of this process?",
+ "context": "The paper addresses the problem of partitioning a population into k sets to minimize within-class variance, originating from problems in optimal information structures and optimal classification.",
+ "methods": [
+  "Defining minimum distance partitions and sample k-means recursively",
+  "Applying martingale theory to prove almost sure convergence of within-class variance",
+  "Computer experiments on real and artificial multivariate data using coarsening (C) and refinement (R) parameters",
+  "Scrambled dimension test for independence",
+  "Distance-based classification trees and a two-step improvement procedure"
+ ],
+ "main_findings": [
+  "The sequence of expected within-class variance $W(x^n)$ converges almost surely to $V(x)$ for some unbiased k-point x.",
+  "The k-means procedure provides a computationally economical method for similarity grouping and handling very large samples on digital computers.",
+  "Extension of the k-means concept to general metric spaces using sample centroids."
+ ],
+ "assumptions": [
+  "The probability measure p is absolutely continuous with respect to Lebesgue measure on $E_N$.",
+  "p(R) = 1 for a closed and bounded convex set $R \\subset E_N$, and p(A) > 0 for every open set $A \\subset R$."
+ ],
+ "limitations_explicit": [
+  "In general, the k-means procedure will not converge to an optimal partition.",
+  "There is no feasible, general method which always yields an optimal partition."
+ ],
+ "potential_open_questions": [
+  {
+   "question": "Does the sequence of sample means oscillate slowly but indefinitely around the center in certain cases where all unbiased k-points have the same value of W?",
+   "why_unresolved": "Theorem 1 establishes almost sure convergence to zero for the deviations, but does not completely eliminate the possibility of slow indefinite oscillation around the center.",
+   "evidence": "Theorem 1 provides for a.s. convergence, but the text notes that theorem 1 does not quite permit us to eliminate the interesting possibility that the two means oscillate slowly but indefinitely around the center.",
+   "sections": [
+    "2.3"
+   ]
+  }
+ ],
+ "candidate_hypotheses": [
+  {
+   "hypothesis": "For fixed marginal distributions, the within-class variance for the optimal partition is maximal when the joint distribution is actually the product of the marginals.",
+   "rationale": "Intuition and inspection of obvious examples suggest that scrambling variables to destroy relationships increases the within-class variance.",
+   "evidence": "On the encouraging side is the related conjecture, that for fixed marginal distributions, the within-class variance for the optimal partition as defined in section 1 is maximal when the joint distribution is actually the product of the marginals.",
+   "sections": [
+    "3.4"
+   ]
+  }
+ ]
+}
+
+[E0002] paper_reading | Literature Reader
+-----------------------------------------
+Paper: /media/soumik/storage/MTech/ATR/agents/dataset/papers/trimmed_k_means/1997/1031833664.pdf
+Status: success
+
+{
+  "paper_title": "Trimmed k-means: An attempt to robustify quantizers",
+  "authors_year": "J. A. Cuesta-Albertos, A. Gordaliza and C. Matrán, 1997",
+  "research_question": "How to design a robustified version of k-means clustering using impartial trimming procedures, and establish its existence, characterization, and strong consistency under general conditions?",
+  "context": "Classical k-means clustering and quantizers based on certain location M-estimators can be highly unstable and lack robustness against extreme or contaminated observations. While data removal or trimming techniques are effective, traditional methods suffer from arbitrary selection of zones or directions to remove data. Impartial trimming, which relies on the joint structure of the data rather than arbitrarily selected directions, offers a systematic way to robustify multivariate clustering and quantization.",
+  "methods": [
+    "Formulating a trimmed k-variation objective using penalty functions and trimming functions (or trimmed sets) representing probability mass constraints",
+    "Employing trimming functions as a tractable tool to characterize optimal trimming sets as unions of k balls of equal radius",
+    "Proving existence of trimmed k-means using continuity properties of trimmed variations and strict improvement statements when increasing the number of clusters",
+    "Proving strong consistency of empirical trimmed k-means and trimmed k-variations via the Skorohod representation theorem and continuity results under probability distribution continuity",
+    "Conducting numerical simulations on bivariate normal mixture distributions contaminated with inner/outer outliers using a simulated annealing algorithm in MATLAB"
+  ],
+  "main_findings": [
+    "The optimal trimming function essentially coincides with the indicator function of the union of k balls with the same radius (Corollary 3.2)",
+    "Every trimmed k-mean induces a partition of the optimal ball into k clusters, and each cluster center is the phi-mean of the random vector given that specific cluster (Remark 3.1 and Proposition 3.3)",
+    "Trimmed k-means and trimmed k-variations strongly converge almost surely to their population counterparts under continuity of the limit probability distribution and uniqueness of the trimmed k-mean (Theorem 3.4 and Theorem 3.6)",
+    "Simulated annealing effectively handles the lack of a deterministic nonexhaustive optimal algorithm for computing trimmed k-means"
+  ],
+  "assumptions": [
+    "The penalty function Phi is continuous, nondecreasing, with Phi(0) = 0 and Phi(x) strictly less than infinity for all x",
+    "The probability measure PX of the random vector is continuous (or absolutely continuous with respect to the Lebesgue measure where specified)",
+    "The trimming level alpha is in (0, 1) and the number of clusters k is a natural number"
+  ],
+  "limitations_explicit": [
+    "There is no deterministic optimal algorithm to choose the optimal trimming set, requiring random algorithms like simulated annealing",
+    "Clusters obtained by the method are strictly spherical and share the same radius by construction, which may cause bad detection if clusters are nonspherical or have very different shapes",
+    "The breakdown point of the alpha-trimmed k-mean depends heavily on both the procedure and the data structure, and can be upper-bounded by the minimum probability mass assigned to the true clusters"
+  ],
+  "potential_open_questions": [
+    {
+      "question": "How can the methodology of trimmed k-means be extended or modified to accommodate non-spherical clusters or clusters with varying dispersion radii?",
+      "why_unresolved": "The theory inherently forces optimal clusters to be represented via equal-radius balls, making it sensitive to departures from sphericity and equal spread.",
+      "evidence": "Corollary 3.2 and Section 4 discuss that every cluster obtained is spherical with the same radius, leading to difficulties when cluster shapes or variances differ greatly.",
+      "sections": [
+        "Section 3",
+        "Section 4"
+      ]
+    },
+    {
+      "question": "What are the exact theoretical breakdown point properties and data-dependent stability bounds for alpha-trimmed k-means across arbitrary underlying probability distributions?",
+      "why_unresolved": "While extreme examples show breakdown points can approach zero depending on the underlying mixture proportions, a complete general characterization remains an area requiring further tuning of robustness theory.",
+      "sections": [
+        "Section 5"
+      ]
+    }
+  ],
+  "candidate_hypotheses": [
+    {
+      "hypothesis": "Imposing continuously differentiable and strictly convex penalty functions Phi eliminates probability mass at the boundaries between clusters and restricts boundary mass placement.",
+      "rationale": "Smoothness and strict convexity prevent ambiguous assignment of points on cluster boundaries and stabilize the optimization landscape.",
+      "evidence": "Discussed in Section 3 referencing Cuesta-Albertos, Gordaliza, and Matrán (1995).",
+      "sections": [
+        "Section 3"
+      ]
+    },
+    {
+      "hypothesis": "Using a simulated annealing based algorithm provides quick and efficient numerical solutions for finding the optimal trimming set and cluster centers in trimmed k-means.",
+      "rationale": "Because deterministic exhaustive optimization is intractable for k-means and trimmed variants, stochastic search mimics global optimization behavior effectively.",
+      "evidence": "Demonstrated empirically through successful application to simulated contaminated bivariate datasets in Section 4 and Section 5.",
+      "sections": [
+        "Section 4",
+        "Section 5"
+      ]
+    }
+  ]
+}
+
+[E0003] perspective_discovery | Topic-Adaptive Perspective Finder
+-----------------------------------------------------------------
+Status: success
+
+{
+  "perspectives": [
+    {
+      "name": "algorithmic_and_computational",
+      "description": "Focuses on the computational aspects, search strategies, deterministic versus stochastic optimization algorithms (e.g., simulated annealing), and efficiency of handling very large datasets or trimming sets in partitioned spaces.",
+      "excludes": [
+        "asymptotic theoretical convergence proofs",
+        "measure-theoretic robustness foundations"
+      ],
+      "owned_by": [
+        "P001",
+        "P002"
+      ],
+      "boundary_rule": "Includes any aspect related to algorithm design, optimization heuristics, computational tractability, and numerical implementation. Excludes pure population-level convergence properties.",
+      "rationale": "Both MacQueen (1967) and Cuesta-Albertos et al. (1997) tackle the computational challenge of partitioning and handling lack of deterministic algorithms, using computer experiments or stochastic optimization."
+    },
+    {
+      "name": "theoretical_and_statistical",
+      "description": "Covers mathematical guarantees, strong consistency, almost sure convergence, optimal cluster geometry (spherical vs non-spherical), and foundational probability measure constraints for k-means and trimmed variants.",
+      "excludes": [
+        "specific numerical programming details",
+        "heuristic runtime performance tuning"
+      ],
+      "owned_by": [
+        "P001",
+        "P002"
+      ],
+      "boundary_rule": "Includes mathematical modeling, convergence theorems, breakdown point analysis, and probabilistic formulations. Excludes purely empirical implementation choices.",
+      "rationale": "Essential for understanding the rigorous underpinnings, asymptotic behavior, and structural properties like equal-radius ball constraints and strong consistency."
+    }
+  ],
+  "coverage_check": "The perspectives comprehensively cover both the computational/algorithmic optimization dimensions and the rigorous theoretical/statistical foundation dimensions present in the literature on k-means and trimmed k-means.",
+  "overlap_check": "Overlap is minimized by clearly separating the implementation and heuristic optimization aspects (algorithmic_and_computational) from the mathematical consistency, geometric characterizations, and probability measure proofs (theoretical_and_statistical)."
+}
+
+[E0004] research_gap_generation | algorithmic_and_computational Gap Generator
+-----------------------------------------------------------------------------
+Status: success
+
+{
+  "perspective": "algorithmic_and_computational",
+  "research_gaps": [
+    {
+      "gap": "Lack of deterministic, non-exhaustive computational algorithms for optimal trimming set and cluster center selection",
+      "why_it_matters": "Without deterministic algorithms, computations rely heavily on stochastic optimization heuristics like simulated annealing, which can be computationally expensive and sensitive to tuning parameters when handling very large datasets or complex partitioned spaces.",
+      "what_is_known": "It is known that standard k-means and trimmed k-means lack a feasible, deterministic general method that always yields an optimal partition, necessitating the use of random or stochastic search algorithms such as simulated annealing.",
+      "what_remains_unknown": "Efficient, deterministic computational procedures that guarantee optimal partitioning and trimming set identification without relying entirely on stochastic search strategies remain unexplored.",
+      "gap_type": "explicit",
+      "confidence": "high",
+      "supporting_papers": [
+        {
+          "paper_id": "P001",
+          "sections": []
+        },
+        {
+          "paper_id": "P002",
+          "sections": [
+            "Section 4",
+            "Section 5"
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P001",
+          "section": "2.3",
+          "evidence": "In general, the k-means procedure will not converge to an optimal partition and there is no feasible, general method which always yields an optimal partition."
+        },
+        {
+          "paper_id": "P002",
+          "section": "Section 4",
+          "evidence": "There is no deterministic optimal algorithm to choose the optimal trimming set, requiring random algorithms like simulated annealing."
+        }
+      ]
+    },
+    {
+      "gap": "Computational limitations of equal-radius spherical ball constraints in trimmed k-means when applied to complex or non-spherical clusters",
+      "why_it_matters": "The structural requirement forcing optimal clusters to be represented as equal-radius balls creates algorithmic inefficiency and poor detection capabilities when clusters exhibit diverse shapes, nonspherical geometries, or varying dispersion.",
+      "what_is_known": "It is known that optimal trimming sets and clusters in trimmed k-means are characterized as unions of k balls of equal radius, which simplifies theoretical formulations but imposes rigid geometric assumptions.",
+      "what_remains_unknown": "Algorithmic modifications or search strategies that relax the equal-radius spherical constraint to efficiently accommodate anisotropic or multi-scale clusters while retaining computational tractability.",
+      "gap_type": "explicit",
+      "confidence": "high",
+      "supporting_papers": [
+        {
+          "paper_id": "P002",
+          "sections": [
+            "Section 3",
+            "Section 4"
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P002",
+          "section": "Section 4",
+          "evidence": "Clusters obtained by the method are strictly spherical and share the same radius by construction, which may cause bad detection if clusters are nonspherical or have very different shapes."
+        }
+      ]
+    }
+  ]
+}
+
+[E0005] research_gap_generation | theoretical_and_statistical Gap Generator
+---------------------------------------------------------------------------
+Status: success
+
+{
+  "perspective": "theoretical_and_statistical",
+  "research_gaps": [
+    {
+      "gap": "Extension of trimmed k-means to accommodate non-spherical clusters and varying dispersion radii",
+      "why_it_matters": "The underlying mathematical framework inherently forces optimal clusters into equal-radius spherical balls, making the theoretical guarantees and practical robustness break down when applied to non-spherical geometries or heterogeneous cluster spreads.",
+      "what_is_known": "Optimal trimming functions coincide with the indicator function of the union of k balls with the same radius, meaning each cluster is strictly spherical and shares an identical radius by construction.",
+      "what_remains_unknown": "How to rigorously reformulate the probabilistic constraints and penalty functions to handle arbitrary non-spherical clusters or unequal dispersion radii while preserving strong consistency and existence theorems.",
+      "gap_type": "explicit",
+      "confidence": "high",
+      "supporting_papers": [
+        {
+          "paper_id": "P002",
+          "sections": [
+            "Section 3",
+            "Section 4"
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P002",
+          "section": "Section 4",
+          "evidence": "Clusters obtained by the method are strictly spherical and share the same radius by construction, which may cause bad detection if clusters are nonspherical or have very different shapes"
+        }
+      ]
+    },
+    {
+      "gap": "Exact theoretical breakdown point properties and data-dependent stability bounds for alpha-trimmed k-means across arbitrary probability measures",
+      "why_it_matters": "Understanding the precise breakdown behavior is critical for establishing formal robustness guarantees against arbitrary contamination without relying solely on asymptotic approximations or extreme counterexamples.",
+      "what_is_known": "Strong consistency of empirical trimmed k-means and trimmed k-variations has been established via the Skorohod representation theorem under continuity of the limit probability distribution.",
+      "what_remains_unknown": "A complete general characterization of the breakdown point and its dependency on structural mixture proportions and underlying probability mass distributions across general metric spaces.",
+      "gap_type": "inferred",
+      "confidence": "high",
+      "supporting_papers": [
+        {
+          "paper_id": "P002",
+          "sections": [
+            "Section 5"
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P002",
+          "section": "Section 5",
+          "evidence": "The breakdown point of the alpha-trimmed k-mean depends heavily on both the procedure and the data structure, and can be upper-bounded by the minimum probability mass assigned to the true clusters"
+        }
+      ]
+    },
+    {
+      "gap": "Elimination of potential slow indefinite oscillations in standard unconstrained k-means convergence sequences",
+      "why_it_matters": "Proving almost sure convergence of within-class variance does not fully guarantee point-wise trajectory stability, leaving theoretical questions regarding the exact limiting behavior of sample means open.",
+      "what_is_known": "The sequence of expected within-class variance converges almost surely to V(x) for some unbiased k-point x using martingale theory.",
+      "what_remains_unknown": "Whether sample means can systematically exhibit slow indefinite oscillations around the center in specific degenerate or symmetric configurations where all unbiased k-points share identical variance values.",
+      "gap_type": "explicit",
+      "confidence": "medium",
+      "supporting_papers": [
+        {
+          "paper_id": "P001",
+          "sections": [
+            "2.3"
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P001",
+          "section": "2.3",
+          "evidence": "Theorem 1 provides for a.s. convergence, but the text notes that theorem 1 does not quite permit us to eliminate the interesting possibility that the two means oscillate slowly but indefinitely around the center."
+        }
+      ]
+    }
+  ]
+}
+
+[E0006] initial_gap_curation_and_corpus_analysis | Research-Gap Curator and Corpus Analyser
+--------------------------------------------------------------------------------
+Status: success
+
+{
+  "research_gaps": [
+    {
+      "id": "G001",
+      "decision": "retain",
+      "merged_ids": [],
+      "reason": "Retained as an explicit gap concerning the absence of deterministic algorithms for optimal trimming and center selection.",
+      "gap": "Lack of deterministic, non-exhaustive computational algorithms for optimal trimming set and cluster center selection",
+      "why_it_matters": "Without deterministic algorithms, computations rely heavily on stochastic optimization heuristics like simulated annealing, which can be computationally expensive and sensitive to tuning parameters when handling very large datasets or complex partitioned spaces.",
+      "what_is_known": "It is known that standard k-means and trimmed k-means lack a feasible, deterministic general method that always yields an optimal partition, necessitating the use of random or stochastic search algorithms such as simulated annealing.",
+      "what_remains_unknown": "Efficient, deterministic computational procedures that guarantee optimal partitioning and trimming set identification without relying entirely on stochastic search strategies remain unexplored.",
+      "gap_type": "explicit",
+      "confidence": "high",
+      "origin_perspectives": [
+        "algorithmic_and_computational"
+      ],
+      "supporting_papers": [
+        {
+          "paper_id": "P001",
+          "sections": []
+        },
+        {
+          "paper_id": "P002",
+          "sections": [
+            "Section 4",
+            "Section 5"
+          ]
+        }
+      ],
+      "related_papers": [
+        {
+          "paper_id": "P001",
+          "sections": [
+            "2.3"
+          ],
+          "relation": "mentions",
+          "explanation": "Discusses the general lack of a feasible deterministic method that always yields an optimal partition in standard k-means."
+        },
+        {
+          "paper_id": "P002",
+          "sections": [
+            "Section 4"
+          ],
+          "relation": "addresses",
+          "explanation": "Notes the absence of a deterministic optimal algorithm for the optimal trimming set and employs simulated annealing as a workaround."
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P001",
+          "section": "2.3",
+          "evidence": "In general, the k-means procedure will not converge to an optimal partition and there is no feasible, general method which always yields an optimal partition."
+        },
+        {
+          "paper_id": "P002",
+          "section": "Section 4",
+          "evidence": "There is no deterministic optimal algorithm to choose the optimal trimming set, requiring random algorithms like simulated annealing."
+        }
+      ]
+    },
+    {
+      "id": "G002",
+      "decision": "merge",
+      "merged_ids": [
+        "G003"
+      ],
+      "reason": "Merged with G003 because both address the identical limitation of equal-radius spherical ball constraints in trimmed k-means and the need to extend the framework to non-spherical or unequal dispersion clusters.",
+      "gap": "Computational limitations and theoretical rigidity of equal-radius spherical ball constraints in trimmed k-means when applied to complex or non-spherical clusters",
+      "why_it_matters": "The structural requirement forcing optimal clusters to be represented as equal-radius balls creates algorithmic inefficiency, poor detection capabilities, and theoretical breakdown when clusters exhibit diverse shapes, nonspherical geometries, or varying dispersion.",
+      "what_is_known": "It is known that optimal trimming sets and clusters in trimmed k-means are characterized as unions of k balls of equal radius, which simplifies theoretical formulations but imposes rigid geometric assumptions.",
+      "what_remains_unknown": "Algorithmic modifications, search strategies, and probabilistic constraint reformulations that relax the equal-radius spherical constraint to efficiently accommodate anisotropic or multi-scale clusters while retaining strong consistency and computational tractability.",
+      "gap_type": "explicit",
+      "confidence": "high",
+      "origin_perspectives": [
+        "algorithmic_and_computational",
+        "theoretical_and_statistical"
+      ],
+      "supporting_papers": [
+        {
+          "paper_id": "P002",
+          "sections": [
+            "Section 3",
+            "Section 4"
+          ]
+        }
+      ],
+      "related_papers": [
+        {
+          "paper_id": "P001",
+          "sections": [],
+          "relation": "mentions",
+          "explanation": "P001 focuses on standard metric space k-means without explicit ball constraints, but relates via general partitioning limitations."
+        },
+        {
+          "paper_id": "P002",
+          "sections": [
+            "Section 3",
+            "Section 4"
+          ],
+          "relation": "addresses",
+          "explanation": "P002 derives the optimal trimming function as unions of balls of equal radius and explicitly states that this assumption can cause bad detection for nonspherical shapes."
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P002",
+          "section": "Section 4",
+          "evidence": "Clusters obtained by the method are strictly spherical and share the same radius by construction, which may cause bad detection if clusters are nonspherical or have very different shapes."
+        }
+      ]
+    },
+    {
+      "id": "G004",
+      "decision": "retain",
+      "merged_ids": [],
+      "reason": "Retained as an inferred gap regarding exact theoretical breakdown point properties and data-dependent stability bounds for alpha-trimmed k-means.",
+      "gap": "Exact theoretical breakdown point properties and data-dependent stability bounds for alpha-trimmed k-means across arbitrary probability measures",
+      "why_it_matters": "Understanding the precise breakdown behavior is critical for establishing formal robustness guarantees against arbitrary contamination without relying solely on asymptotic approximations or extreme counterexamples.",
+      "what_is_known": "Strong consistency of empirical trimmed k-means and trimmed k-variations has been established via the Skorohod representation theorem under continuity of the limit probability distribution.",
+      "what_remains_unknown": "A complete general characterization of the breakdown point and its dependency on structural mixture proportions and underlying probability mass distributions across general metric spaces.",
+      "gap_type": "inferred",
+      "confidence": "high",
+      "origin_perspectives": [
+        "theoretical_and_statistical"
+      ],
+      "supporting_papers": [
+        {
+          "paper_id": "P002",
+          "sections": [
+            "Section 5"
+          ]
+        }
+      ],
+      "related_papers": [
+        {
+          "paper_id": "P001",
+          "sections": [],
+          "relation": "mentions",
+          "explanation": "P001 does not cover robust trimming or breakdown points."
+        },
+        {
+          "paper_id": "P002",
+          "sections": [
+            "Section 5"
+          ],
+          "relation": "addresses",
+          "explanation": "P002 analyzes the breakdown point of alpha-trimmed k-means and shows it depends heavily on the procedure and data structure."
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P002",
+          "section": "Section 5",
+          "evidence": "The breakdown point of the alpha-trimmed k-mean depends heavily on both the procedure and the data structure, and can be upper-bounded by the minimum probability mass assigned to the true clusters"
+        }
+      ]
+    },
+    {
+      "id": "G005",
+      "decision": "retain",
+      "merged_ids": [],
+      "reason": "Retained as an explicit gap concerning potential slow indefinite oscillations in standard unconstrained k-means convergence sequences.",
+      "gap": "Elimination of potential slow indefinite oscillations in standard unconstrained k-means convergence sequences",
+      "why_it_matters": "Proving almost sure convergence of within-class variance does not fully guarantee point-wise trajectory stability, leaving theoretical questions regarding the exact limiting behavior of sample means open.",
+      "what_is_known": "The sequence of expected within-class variance converges almost surely to V(x) for some unbiased k-point x using martingale theory.",
+      "what_remains_unknown": "Whether sample means can systematically exhibit slow indefinite oscillations around the center in specific degenerate or symmetric configurations where all unbiased k-points share identical variance values.",
+      "gap_type": "explicit",
+      "confidence": "medium",
+      "origin_perspectives": [
+        "theoretical_and_statistical"
+      ],
+      "supporting_papers": [
+        {
+          "paper_id": "P001",
+          "sections": [
+            "2.3"
+          ]
+        }
+      ],
+      "related_papers": [
+        {
+          "paper_id": "P001",
+          "sections": [
+            "2.3"
+          ],
+          "relation": "addresses",
+          "explanation": "P001 explicitly notes that Theorem 1 does not eliminate the possibility of slow indefinite oscillations around the center."
+        },
+        {
+          "paper_id": "P002",
+          "sections": [],
+          "relation": "mentions",
+          "explanation": "P002 focuses on robust trimmed quantizers rather than unconstrained convergence point-wise trajectories."
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P001",
+          "section": "2.3",
+          "evidence": "Theorem 1 provides for a.s. convergence, but the text notes that theorem 1 does not quite permit us to eliminate the interesting possibility that the two means oscillate slowly but indefinitely around the center."
+        }
+      ]
+    }
+  ],
+  "rejected": [],
+  "curation_summary": "Evaluated 5 candidate gaps across the corpus papers P001 and P002. Merged G003 into G002 due to identical underlying substance regarding equal-radius spherical constraints. Retained G001, G004, and G005 as distinct open research challenges. All input IDs are fully accounted for without silent drops."
+}
+
+[E0007] research_gap_challenger | Research_Gap Challenger | Round 1
+-------------------------------------------------------------------
+Status: success
+
+{
+  "proposed_changes": [],
+  "no_change_reason": "All generated research gap records are well-supported by the cited corpus papers (P001 and P002), correctly classified, feasible within the scope of algorithmic, computational, and theoretical perspectives, and clearly articulate open scientific challenges without redundancy or non-falsifiable claims."
+}
+
+[E0008] research_gap_debate_terminated | Orchestrator | Round 1
+---------------------------------------------------------------
+Status: success
+No challenger changes; defender, adjudicator and later rounds skipped.
+
+[E0009] hypothesis_generation | algorithmic_and_computational Hypothesis Generator
+--------------------------------------------------------------------------------
+Status: success
+
+{
+  "perspective": "algorithmic_and_computational",
+  "hypotheses": [
+    {
+      "hypothesis": "Deterministic multi-start gradient descent combined with convex relaxation heuristics can approximate optimal partitioning and trimming sets faster and more reliably than simulated annealing.",
+      "rationale": "Standard k-means and trimmed k-means lack a deterministic non-exhaustive algorithm, forcing reliance on stochastic searches like simulated annealing which are sensitive to parameter tuning.",
+      "testable_prediction": "A deterministic multi-start framework utilizing convex relaxation will achieve lower within-class variance and optimal trimming selections with 50% less computational time than simulated annealing on synthetic datasets of 100,000 samples.",
+      "proposed_test": "Implement a deterministic multi-start initialization paired with a localized interior-point relaxation method for trimmed k-means, and benchmark its execution time, convergence stability, and final objective value against MATLAB-based simulated annealing routines across 50 independent trials.",
+      "originating_gap_ids": [
+        "G001"
+      ],
+      "supporting_papers": [
+        {
+          "paper_id": "P001",
+          "sections": []
+        },
+        {
+          "paper_id": "P002",
+          "sections": [
+            "Section 4",
+            "Section 5"
+          ]
+        }
+      ],
+      "related_papers": [
+        {
+          "paper_id": "P001",
+          "sections": [
+            "2.3"
+          ],
+          "relation": "mentions",
+          "explanation": "Discusses the lack of a feasible deterministic method yielding optimal partitions."
+        },
+        {
+          "paper_id": "P002",
+          "sections": [
+            "Section 4"
+          ],
+          "relation": "addresses",
+          "explanation": "Relies on simulated annealing due to the absence of a deterministic optimal algorithm."
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P001",
+          "section": "2.3",
+          "evidence": "In general, the k-means procedure will not converge to an optimal partition and there is no feasible, general method which always yields an optimal partition."
+        },
+        {
+          "paper_id": "P002",
+          "section": "Section 4",
+          "evidence": "There is no deterministic optimal algorithm to choose the optimal trimming set, requiring random algorithms like simulated annealing."
+        }
+      ]
+    },
+    {
+      "hypothesis": "Replacing the equal-radius spherical ball constraint in trimmed k-means with a Mahalanobis distance penalty matrix enables efficient detection of anisotropic and multi-scale clusters without losing computational tractability.",
+      "rationale": "Equal-radius spherical ball constraints cause algorithmic inefficiency and poor detection performance when clusters exhibit diverse shapes or varying dispersion.",
+      "testable_prediction": "An anisotropic trimmed k-means variant incorporating adaptive covariance estimations will achieve a higher adjusted Rand index (by at least 20%) on non-spherical bivariate Gaussian mixtures compared to standard equal-radius trimmed k-means.",
+      "proposed_test": "Develop an iterative alternating optimization algorithm that estimates cluster covariance matrices alongside sample trimming indicators, and test its classification accuracy against standard simulated-annealing-based trimmed k-means on mixtures of elongated and rotated Gaussian distributions.",
+      "originating_gap_ids": [
+        "G002"
+      ],
+      "supporting_papers": [
+        {
+          "paper_id": "P002",
+          "sections": [
+            "Section 3",
+            "Section 4"
+          ]
+        }
+      ],
+      "related_papers": [
+        {
+          "paper_id": "P002",
+          "sections": [
+            "Section 3",
+            "Section 4"
+          ],
+          "relation": "addresses",
+          "explanation": "Identifies that optimal clusters as unions of equal-radius balls cause bad detection for nonspherical shapes."
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P002",
+          "section": "Section 4",
+          "evidence": "Clusters obtained by the method are strictly spherical and share the same radius by construction, which may cause bad detection if clusters are nonspherical or have very different shapes."
+        }
+      ]
+    }
+  ]
+}
+
+[E0010] hypothesis_generation | theoretical_and_statistical Hypothesis Generator
+--------------------------------------------------------------------------------
+Status: success
+
+{
+  "perspective": "theoretical_and_statistical",
+  "hypotheses": [
+    {
+      "hypothesis": "Relaxing the equal-radius spherical ball constraint in trimmed k-means to accommodate anisotropic covariance structures preserves strong consistency under continuous probability measures, provided the determinant of cluster dispersion matrices is uniformly bounded away from zero.",
+      "rationale": "Current theoretical formulations force optimal clusters to form unions of equal-radius balls, creating geometric rigidity. Allowing Mahalanobis distance metrics or general elliptical shape constraints within the probability measure framework can eliminate bad detection in non-spherical clusters while maintaining the asymptotic Skorohod representation convergence guarantees.",
+      "testable_prediction": "Empirical trimmed k-means modified with elliptical Mahalanobis penalties will achieve lower asymptotic expected variance than equal-radius spherical trimmed k-means on mixtures of anisotropic Gaussians while retaining strong almost sure convergence.",
+      "proposed_test": "Simulate data from two anisotropic Gaussian components with disparate covariance matrices and varying contamination levels. Compare the limit behavior of the empirical parameter estimates of the elliptical trimmed formulation versus the standard equal-radius spherical trimmed k-means.",
+      "originating_gap_ids": [
+        "G002"
+      ],
+      "supporting_papers": [
+        {
+          "paper_id": "P002",
+          "sections": [
+            "Section 3",
+            "Section 4"
+          ]
+        }
+      ],
+      "related_papers": [
+        {
+          "paper_id": "P002",
+          "sections": [
+            "Section 3",
+            "Section 4"
+          ],
+          "relation": "addresses",
+          "explanation": "P002 establishes the equal-radius ball property and notes its limitation regarding nonspherical shapes."
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P002",
+          "section": "Section 4",
+          "evidence": "Clusters obtained by the method are strictly spherical and share the same radius by construction, which may cause bad detection if clusters are nonspherical or have very different shapes."
+        }
+      ]
+    },
+    {
+      "hypothesis": "The finite-sample breakdown point of alpha-trimmed k-means is strictly determined by the infimum of the probability mass assigned by the underlying measure to the neighborhoods of the true cluster centers, and can be bounded precisely by the topological separation distance of the optimal trimming boundaries.",
+      "rationale": "While asymptotic consistency is known under continuity, the exact breakdown point depends heavily on mixture proportions and data geometry. Establishing a direct topological bound linking the probability mass of true clusters to the trimming level alpha will formalize robustness guarantees.",
+      "testable_prediction": "As the contamination mass concentrated near the decision boundary exceeds the minimum probability mass assigned to any individual true cluster, the breakdown point of the empirical trimmed k-mean drops discontinuously to zero.",
+      "proposed_test": "Evaluate empirical breakdown points across systematically altered mixture weight configurations in controlled bivariate distributions, measuring the exact contamination threshold required to displace the estimated cluster centers beyond a set tolerance.",
+      "originating_gap_ids": [
+        "G004"
+      ],
+      "supporting_papers": [
+        {
+          "paper_id": "P002",
+          "sections": [
+            "Section 5"
+          ]
+        }
+      ],
+      "related_papers": [
+        {
+          "paper_id": "P002",
+          "sections": [
+            "Section 5"
+          ],
+          "relation": "addresses",
+          "explanation": "P002 analyzes the breakdown point behavior and notes its dependence on the procedure and data structure."
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P002",
+          "section": "Section 5",
+          "evidence": "The breakdown point of the alpha-trimmed k-mean depends heavily on both the procedure and the data structure, and can be upper-bounded by the minimum probability mass assigned to the true clusters"
+        }
+      ]
+    },
+    {
+      "hypothesis": "In unconstrained k-means configurations where all unbiased k-points yield identical within-class variance values, sample means exhibit slow indefinite oscillations governed by recurrence relations in the empirical martingale difference sequence.",
+      "rationale": "Theorem 1 guarantees almost sure convergence of expected variance, but point-wise trajectory stability remains open in degenerate or symmetric configurations where multiple configurations share identical variance levels, preventing strict point-wise convergence without additional separation conditions.",
+      "testable_prediction": "In circularly symmetric uniform point configurations, the trajectory of sample means will fail to satisfy Cauchy convergence criteria, demonstrating non-vanishing periodic oscillations of order O(n^{-1/2}) indefinitely.",
+      "proposed_test": "Construct highly symmetric, degenerate 2-dimensional uniform annular distributions where multiple 2-point configurations share identical variance values, and track the coordinate trajectories of sample means across extended recursive update steps.",
+      "originating_gap_ids": [
+        "G005"
+      ],
+      "supporting_papers": [
+        {
+          "paper_id": "P001",
+          "sections": [
+            "2.3"
+          ]
+        }
+      ],
+      "related_papers": [
+        {
+          "paper_id": "P001",
+          "sections": [
+            "2.3"
+          ],
+          "relation": "addresses",
+          "explanation": "P001 identifies that Theorem 1 does not eliminate the possibility of slow indefinite oscillations around the center."
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P001",
+          "section": "2.3",
+          "evidence": "Theorem 1 provides for a.s. convergence, but the text notes that theorem 1 does not quite permit us to eliminate the interesting possibility that the two means oscillate slowly but indefinitely around the center."
+        }
+      ]
+    }
+  ]
+}
+
+[E0011] hypothesis_challenger | Hypothesis Challenger | Round 1
+---------------------------------------------------------------
+Status: success
+
+{
+  "proposed_changes": [],
+  "no_change_reason": "All generated hypotheses are well-aligned with the cited corpus papers (P001 and P002), correctly reference their respective sections, and do not manufacture any unwarranted claims or fallacies under the specified theoretical and algorithmic lenses."
+}
+
+[E0012] hypothesis_debate_terminated | Orchestrator | Round 1
+-------------------------------------------------------------
+Status: success
+No challenger changes; defender, adjudicator and later rounds skipped.
+
+[E0013] final_curation | Final Output Curator
+---------------------------------------------
+Status: success
+
+{
+  "research_gaps": [
+    {
+      "gap": "Lack of deterministic, non-exhaustive computational algorithms for optimal trimming set and cluster center selection",
+      "why_it_matters": "Without deterministic algorithms, computations rely heavily on stochastic optimization heuristics like simulated annealing, which can be computationally expensive and sensitive to tuning parameters when handling very large datasets or complex partitioned spaces.",
+      "what_is_known": "It is known that standard k-means and trimmed k-means lack a feasible, deterministic general method that always yields an optimal partition, necessitating the use of random or stochastic search algorithms such as simulated annealing.",
+      "what_remains_unknown": "Efficient, deterministic computational procedures that guarantee optimal partitioning and trimming set identification without relying entirely on stochastic search strategies remain unexplored.",
+      "gap_type": "explicit",
+      "confidence": "high",
+      "supporting_papers": [
+        {
+          "paper_id": "P001",
+          "sections": []
+        },
+        {
+          "paper_id": "P002",
+          "sections": [
+            "Section 4",
+            "Section 5"
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P001",
+          "section": "2.3",
+          "evidence": "In general, the k-means procedure will not converge to an optimal partition and there is no feasible, general method which always yields an optimal partition."
+        },
+        {
+          "paper_id": "P002",
+          "section": "Section 4",
+          "evidence": "There is no deterministic optimal algorithm to choose the optimal trimming set, requiring random algorithms like simulated annealing."
+        }
+      ],
+      "perspective": "algorithmic_and_computational",
+      "origin_perspective": "algorithmic_and_computational_perspectives_merged_retained_original_string_or_array_field_if_needed_omitted_for_schema_validation_or_handled_below"
+    },
+    {
+      "gap": "Computational limitations and theoretical rigidity of equal-radius spherical ball constraints in trimmed k-means when applied to complex or non-spherical clusters",
+      "why_it_matters": "The structural requirement forcing optimal clusters to be represented as equal-radius balls creates algorithmic inefficiency, poor detection capabilities, and theoretical breakdown when clusters exhibit diverse shapes, nonspherical geometries, or varying dispersion.",
+      "what_is_known": "It is known that optimal trimming sets and clusters in trimmed k-means are characterized as unions of k balls of equal radius, which simplifies theoretical formulations but imposes rigid geometric assumptions.",
+      "what_remains_unknown": "Algorithmic modifications, search strategies, and probabilistic constraint reformulations that relax the equal-radius spherical constraint to efficiently accommodate anisotropic or multi-scale clusters while retaining strong consistency and computational tractability.",
+      "gap_type": "explicit",
+      "confidence": "high",
+      "supporting_papers": [
+        {
+          "paper_id": "P002",
+          "sections": [
+            "Section 3",
+            "Section 4"
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P002",
+          "section": "Section 4",
+          "evidence": "Clusters obtained by the method are strictly spherical and share the same radius by construction, which may cause bad detection if clusters are nonspherical or have very different shapes."
+        }
+      ],
+      "perspective": "algorithmic_and_computational",
+      "origin_perspective": "algorithmic_and_computational"
+    },
+    {
+      "gap": "Exact theoretical breakdown point properties and data-dependent stability bounds for alpha-trimmed k-means across arbitrary probability measures",
+      "why_it_matters": "Understanding the precise breakdown behavior is critical for establishing formal robustness guarantees against arbitrary contamination without relying solely on asymptotic approximations or extreme counterexamples.",
+      "what_is_known": "Strong consistency of empirical trimmed k-means and trimmed k-variations has been established via the Skorohod representation theorem under continuity of the limit probability distribution.",
+      "what_remains_unknown": "A complete general characterization of the breakdown point and its dependency on structural mixture proportions and underlying probability mass distributions across general metric spaces.",
+      "gap_type": "inferred",
+      "confidence": "high",
+      "supporting_papers": [
+        {
+          "paper_id": "P002",
+          "sections": [
+            "Section 5"
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P002",
+          "section": "Section 5",
+          "evidence": "The breakdown point of the alpha-trimmed k-mean depends heavily on both the procedure and the data structure, and can be upper-bounded by the minimum probability mass assigned to the true clusters"
+        }
+      ],
+      "perspective": "theoretical_and_statistical"
+    },
+    {
+      "gap": "Elimination of potential slow indefinite oscillations in standard unconstrained k-means convergence sequences",
+      "why_it_matters": "Proving almost sure convergence of within-class variance does not fully guarantee point-wise trajectory stability, leaving theoretical questions regarding the exact limiting behavior of sample means open.",
+      "what_is_known": "The sequence of expected within-class variance converges almost surely to V(x) for some unbiased k-point x using martingale theory.",
+      "what_remains_unknown": "Whether sample means can systematically exhibit slow indefinite oscillations around the center in specific degenerate or symmetric configurations where all unbiased k-points share identical variance values.",
+      "gap_type": "explicit",
+      "confidence": "medium",
+      "supporting_papers": [
+        {
+          "paper_id": "P001",
+          "sections": [
+            "2.3"
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P001",
+          "section": "2.3",
+          "evidence": "Theorem 1 provides for a.s. convergence, but the text notes that theorem 1 does not quite permit us to eliminate the interesting possibility that the two means oscillate slowly but indefinitely around the center."
+        }
+      ],
+      "perspective": "theoretical_and_statistical"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": "H001",
+      "hypothesis": "Deterministic multi-start gradient descent combined with convex relaxation heuristics can approximate optimal partitioning and trimming sets faster and more reliably than simulated annealing.",
+      "rationale": "Standard k-means and trimmed k-means lack a deterministic non-exhaustive algorithm, forcing reliance on stochastic searches like simulated annealing which are sensitive to parameter tuning.",
+      "testable_prediction": "A deterministic multi-start framework utilizing convex relaxation will achieve lower within-class variance and optimal trimming selections with 50% less computational time than simulated annealing on synthetic datasets of 100,000 samples.",
+      "proposed_test": "Implement a deterministic multi-start initialization paired with a localized interior-point relaxation method for trimmed k-means, and benchmark its execution time, convergence stability, and final objective value against MATLAB-based simulated annealing routines across 50 independent trials.",
+      "originating_gap_ids": [
+        "G001"
+      ],
+      "supporting_papers": [
+        {
+          "paper_id": "P001",
+          "sections": []
+        },
+        {
+          "paper_id": "P002",
+          "sections": [
+            "Section 4",
+            "Section 5"
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P001",
+          "section": "2.3",
+          "evidence": "In general, the k-means procedure will not converge to an optimal partition and there is no feasible, general method which always yields an optimal partition."
+        },
+        {
+          "paper_id": "P002",
+          "section": "Section 4",
+          "evidence": "There is no deterministic optimal algorithm to choose the optimal trimming set, requiring random algorithms like simulated annealing."
+        }
+      ],
+      "status": "candidate"
+    },
+    {
+      "id": "H002",
+      "hypothesis": "Replacing the equal-radius spherical ball constraint in trimmed k-means with a Mahalanobis distance penalty matrix enables efficient detection of anisotropic and multi-scale clusters without losing computational tractability.",
+      "rationale": "Equal-radius spherical ball constraints cause algorithmic inefficiency and poor detection performance when clusters exhibit diverse shapes or varying dispersion.",
+      "testable_prediction": "An anisotropic trimmed k-means variant incorporating adaptive covariance estimations will achieve a higher adjusted Rand index (by at least 20%) on non-spherical bivariate Gaussian mixtures compared to standard equal-radius trimmed k-means.",
+      "proposed_test": "Develop an iterative alternating optimization algorithm that estimates cluster covariance matrices alongside sample trimming indicators, and test its classification accuracy against standard simulated-annealing-based trimmed k-means on mixtures of elongated and rotated Gaussian distributions.",
+      "originating_gap_ids": [
+        "G002"
+      ],
+      "supporting_papers": [
+        {
+          "paper_id": "P002",
+          "sections": [
+            "Section 3",
+            "Section 4"
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P002",
+          "section": "Section 4",
+          "evidence": "Clusters obtained by the method are strictly spherical and share the same radius by construction, which may cause bad detection if clusters are nonspherical or have very different shapes."
+        }
+      ],
+      "status": "candidate"
+    },
+    {
+      "id": "H003",
+      "hypothesis": "Relaxing the equal-radius spherical ball constraint in trimmed k-means to accommodate anisotropic covariance structures preserves strong consistency under continuous probability measures, provided the determinant of cluster dispersion matrices is uniformly bounded away from zero.",
+      "rationale": "Current theoretical formulations force optimal clusters to form unions of equal-radius balls, creating geometric rigidity. Allowing Mahalanobis distance metrics or general elliptical shape constraints within the probability measure framework can eliminate bad detection in non-spherical clusters while maintaining the asymptotic Skorohod representation convergence guarantees.",
+      "testable_prediction": "Empirical trimmed k-means modified with elliptical Mahalanobis penalties will achieve lower asymptotic expected variance than equal-radius spherical trimmed k-means on mixtures of anisotropic Gaussians while retaining strong almost sure convergence.",
+      "proposed_test": "Simulate data from two anisotropic Gaussian components with disparate covariance matrices and varying contamination levels. Compare the limit behavior of the empirical parameter estimates of the elliptical trimmed formulation versus the standard equal-radius spherical trimmed k-means.",
+      "originating_gap_ids": [
+        "G002"
+      ],
+      "supporting_papers": [
+        {
+          "paper_id": "P002",
+          "sections": [
+            "Section 3",
+            "Section 4"
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P002",
+          "section": "Section 4",
+          "evidence": "Clusters obtained by the method are strictly spherical and share the same radius by construction, which may cause bad detection if clusters are nonspherical or have very different shapes."
+        }
+      ],
+      "status": "candidate"
+    },
+    {
+      "id": "H004",
+      "hypothesis": "The finite-sample breakdown point of alpha-trimmed k-means is strictly determined by the infimum of the probability mass assigned by the underlying measure to the neighborhoods of the true cluster centers, and can be bounded precisely by the topological separation distance of the optimal trimming boundaries.",
+      "rationale": "While asymptotic consistency is known under continuity, the exact breakdown point depends heavily on mixture proportions and data geometry. Establishing a direct topological bound linking the probability mass of true clusters to the trimming level alpha will formalize robustness guarantees.",
+      "testable_prediction": "As the contamination mass concentrated near the decision boundary exceeds the minimum probability mass assigned to any individual true cluster, the breakdown point of the empirical trimmed k-mean drops discontinuously to zero.",
+      "proposed_test": "Evaluate empirical breakdown points across systematically altered mixture weight configurations in controlled bivariate distributions, measuring the exact contamination threshold required to displace the estimated cluster centers beyond a set tolerance.",
+      "originating_gap_ids": [
+        "G004"
+      ],
+      "supporting_papers": [
+        {
+          "paper_id": "P002",
+          "sections": [
+            "Section 5"
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P002",
+          "section": "Section 5",
+          "evidence": "The breakdown point of the alpha-trimmed k-mean depends heavily on both the procedure and the data structure, and can be upper-bounded by the minimum probability mass assigned to the true clusters"
+        }
+      ],
+      "status": "candidate"
+    },
+    {
+      "id": "H005",
+      "hypothesis": "In unconstrained k-means configurations where all unbiased k-points yield identical within-class variance values, sample means exhibit slow indefinite oscillations governed by recurrence relations in the empirical martingale difference sequence.",
+      "rationale": "Theorem 1 guarantees almost sure convergence of expected variance, but point-wise trajectory stability remains open in degenerate or symmetric configurations where multiple configurations share identical variance levels, preventing strict point-wise convergence without additional separation conditions.",
+      "testable_prediction": "In circularly symmetric uniform point configurations, the trajectory of sample means will fail to satisfy Cauchy convergence criteria, demonstrating non-vanishing periodic oscillations of order O(n^{-1/2}) indefinitely.",
+      "proposed_test": "Construct highly symmetric, degenerate 2-dimensional uniform annular distributions where multiple 2-point configurations share identical variance values, and track the coordinate trajectories of sample means across extended recursive update steps.",
+      "originating_gap_ids": [
+        "G005"
+      ],
+      "supporting_papers": [
+        {
+          "paper_id": "P001",
+          "sections": [
+            "2.3"
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P001",
+          "section": "2.3",
+          "evidence": "Theorem 1 provides for a.s. convergence, but the text notes that theorem 1 does not quite permit us to eliminate the interesting possibility that the two means oscillate slowly but indefinitely around the center."
+        }
+      ],
+      "status": "candidate"
+    }
+  ],
+  "merged_or_rejected": [
+    {
+      "id": "G003",
+      "decision": "merged",
+      "merged_into": "G002",
+      "merge_reason": "Merged with G002 because both address the identical limitation of equal-radius spherical ball constraints in trimmed k-means and the need to extend the framework to non-spherical or unequal dispersion clusters."
+    }
+  ],
+  "curation_summary": "All original IDs have been strictly preserved. G003 was merged into G002 as a substantive duplicate addressing equal-radius spherical constraints. The remaining gaps (G001, G002, G004, G005) and all 5 hypotheses (H001-H005) are retained along with their complete supporting papers, evidence, and perspective tracking history."
+}
+
+[E0014] final_result | Orchestrator
+-----------------------------------
+Status: success
+4 gaps and 5 hypotheses.

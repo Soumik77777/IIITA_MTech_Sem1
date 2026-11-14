@@ -1,0 +1,19 @@
+- H001: The finite-sample breakdown point of alpha-trimmed k-means is invariant under measure-preserving affine transformations of non-spherical elliptically contoured distributions if and only if the trimming radius function is scaled by the corresponding covariance metric.
+Rationale: Trimmed k-means relies on generalized balls of the same radius to define optimal trimming sets. When distributions depart from spherical to elliptical configurations, uniform radius balls fail to capture the probability mass, distorting the empirical breakdown bounds from the theoretical trimming proportion alpha.
+Testable prediction: Under a family of bivariate normal mixtures with varying eccentricity, the empirical breakdown point will deviate from min(alpha, q1, ..., qk) proportionally to the condition number of the covariance matrix unless an affine Mahalanobis-based distance metric replaces the standard Euclidean distance in the trimming definition.
+References: P002
+
+- H002: Introducing a strictly positive lower bound on the density function within the convex hull of the cluster centers eliminates slow indefinite oscillations and non-optimal stable points in iterative partitioning.
+Rationale: MacQueen's convergence proof ensures almost sure convergence under absolute continuity, yet local oscillations persist due to zero-density boundaries or saddle points in the potential function. Enforcing a strictly positive density measure eliminates flat regions in the empirical potential surface.
+Testable prediction: For probability measures satisfying inf_{x in R} p(x) > epsilon > 0, the number of iterations required for the empirical k-means sequence to reach an epsilon-stable partition is bounded almost surely by a polynomial function of the sample size, avoiding indefinite slow oscillations.
+References: P001
+
+- H003: Deterministic branch-and-bound optimization strategies leveraging spatial partitioning can achieve global optimality for trimmed k-means faster than simulated annealing in moderate dimensions, provided the search space of trimming fractions is constrained using lower bounds derived from cluster probability distributions.
+Rationale: Stochastic search algorithms like simulated annealing are computationally intensive and lack deterministic guarantees of global optimality. By combining spatial bounding techniques with deterministic global search solvers specifically adapted for outlier trimming, we can potentially bypass slow stochastic convergence and avoid heuristic trapping.
+Testable prediction: A deterministic branch-and-bound solver for trimmed k-means will find solutions with equal or lower objective function values compared to simulated annealing within fewer floating-point operations on synthetic datasets of dimension up to D=10 and sample size N=5000.
+References: P002
+
+- H004: Incorporating adaptive step-size momentum and gradient-free heuristics into the iterative update loop of trimmed k-means reduces slow oscillation phases and accelerates convergence to stable non-optimal or optimal configurations.
+Rationale: Iterative partitioning methods often suffer from slow indefinite oscillations and stable non-optimal points. Applying algorithmic optimization techniques such as momentum terms or heavy-ball methods to the center updates can damp oscillations and speed up stabilization under broad probability distributions.
+Testable prediction: Trimmed k-means with momentum-based center updates will require at least 35% fewer iterations to reach convergence compared to standard iterative trimmed k-means across synthetic non-spherical mixture distributions.
+References: P001

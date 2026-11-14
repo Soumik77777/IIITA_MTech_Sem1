@@ -1,0 +1,2182 @@
+================================================================================
+ATR ADAPTIVE MULTI-AGENT INFERENCE HISTORY
+Topic: Status and direction of outlier trimming in K-means and similar algorithms
+Generated: 2026-11-14T13:27:20.865801+00:00
+================================================================================
+
+[E0001] paper_reading | Literature Reader
+-----------------------------------------
+Paper: /media/soumik/storage/MTech/ATR/agents/dataset/papers/trimmed_k_means/1967/macqueen.pdf
+Status: success
+
+{
+ "paper_title": "Some Methods for Classification and Analysis of Multivariate Observations",
+ "authors_year": "J. MacQueen, 1967",
+ "research_question": "How can an N-dimensional population be partitioned into k sets on the basis of a sample using a computationally feasible process ('k-means'), and what is the asymptotic behavior of this process?",
+ "context": "The paper addresses multivariate classification and information structures, specifically finding partitions that minimize within-class variance, connecting optimal information structures (Marschak) with computational clustering algorithms.",
+ "methods": [
+  "Martingale theory applied to prove almost sure convergence",
+  "Computer experiments with real and artificial data samples",
+  "Coarsening and refining parameter modifications",
+  "Distance-based classification trees and scrambled dimension tests"
+ ],
+ "main_findings": [
+  "The sequence of random variables W(xn) converges almost surely to V(x) for some unbiased k-point x.",
+  "The k-means procedure is computationally economical and feasible for large samples on a digital computer.",
+  "Under specific conditions, sample k-means tend to approximate minimum variance partitions."
+ ],
+ "assumptions": [
+  "Probability measure p is absolutely continuous with respect to Lebesgue measure on EN.",
+  "p(R) = 1 for a closed and bounded convex set R subset of EN, and p(A) > 0 for every open set A subset of R."
+ ],
+ "limitations_explicit": [
+  "In general, the k-means procedure will not converge to an optimal partition.",
+  "There is no feasible, general method which always yields an optimal partition."
+ ],
+ "potential_open_questions": [
+  {
+   "question": "Can the k-means process be modified or bounded to eliminate the possibility of slow indefinite oscillation around the center?",
+   "why_unresolved": "Theorem 1 establishes almost sure convergence to the class of unbiased k-points but does not rule out slow oscillation around the center in certain symmetric configurations.",
+   "evidence": "The k-means thus converge to some such relative position, but theorem 1 does not quite permit us to eliminate the interesting possibility that the two means oscillate slowly but indefinitely around the center.",
+   "sections": [
+    "2.3"
+   ]
+  }
+ ],
+ "candidate_hypotheses": [
+  {
+   "hypothesis": "For fixed marginal distributions, the within-class variance for the optimal partition is maximal when the joint distribution is actually the product of the marginals.",
+   "rationale": "Intuition and examination of scrambled versus unscrambled variances suggest that destroying independence increases within-class variance.",
+   "evidence": "On the encouraging side is the related conjecture, that for fixed marginal distributions, the within-class variance for the optimal partition as defined in section 1 is maximal when the joint distribution is actually the product of the marginals.",
+   "sections": [
+    "3.4"
+   ]
+  }
+ ]
+}
+
+[E0002] paper_reading | Literature Reader
+-----------------------------------------
+Paper: /media/soumik/storage/MTech/ATR/agents/dataset/papers/trimmed_k_means/1997/1031833664.pdf
+Status: success
+
+{
+  "paper_title": "Trimmed k-means: An attempt to robustify quantizers",
+  "authors_year": "J. A. Cuesta-Albertos, A. Gordaliza, and C. Matran, 1997",
+  "research_question": "How can k-means clustering be robustified using impartial trimming procedures, and what are the existence, characterization, and consistency properties of these trimmed k-means?",
+  "context": "Cluster analysis and quantization methods based on k-means are sensitive to outliers and contamination. Standard robust methods can be unstable, while traditional trimming methods introduce arbitrariness in selecting zones for data removal. Building on Gordaliza's impartial trimming concept, the paper investigates robustifying k-means by minimizing variation over subsets of a given probability mass.",
+  "methods": [
+    "Formulating the trimmed k-variation using trimming functions as a generalization of trimmed sets",
+    "Applying compactness and continuity arguments to prove the existence of trimmed k-means",
+    "Utilizing Skorohod's representation theorem to prove strong consistency of empirical trimmed k-means",
+    "Conducting simulation studies with bivariate normal mixtures contaminated by outlayers and inlayers using simulated annealing algorithms"
+  ],
+  "main_findings": [
+    "The optimal trimming function essentially coincides with the indicator function of a nonpathological set formed by the union of k balls of the same radius.",
+    "Trimmed k-means exist under general continuity and growth conditions on the penalty function.",
+    "Strong consistency of empirical trimmed k-means to the population counterpart is established under continuity of the underlying probability distribution.",
+    "Simulations show that the trimmed k-means procedure successfully detects anomalous data and estimates cluster means, though bias can occur at low trimming levels due to relative proximity between clusters."
+  ],
+  "assumptions": [
+    "The penalty function Phi is continuous, nondecreasing, with Phi(0) = 0 and Phi(x) approaches infinity as x approaches infinity.",
+    "The probability distribution PX of the underlying random vector is continuous.",
+    "The number of clusters k and the trimming proportion alpha are given."
+  ],
+  "limitations_explicit": [
+    "There is a nonexistence of a deterministic optimal nonexhaustive algorithm to solve the optimization problem.",
+    "Clusters obtained through the method are forced to be spherical and have the same radius, which can lead to bad detection if clusters are nonspherical or have very different shapes.",
+    "The breakdown point of the alpha-trimmed k-means depends heavily on the data and can be low if the underlying probability is supported by tightly packed clusters with contamination."
+  ],
+  "potential_open_questions": [
+    {
+      "question": "How can the breakdown point behavior be fully characterized for alpha-trimmed k-means across different underlying cluster configurations and contamination types?",
+      "why_unresolved": "The breakdown point depends not only on the procedure parameters but also heavily on the specific configuration of the data and the number of clusters sought.",
+      "evidence": "Discussion in Section 5 and the counterexample showing breakdown points can be arbitrarily close to 0 depending on the probability distribution P.",
+      "sections": [
+        "Section 5"
+      ]
+    },
+    {
+      "question": "What are the exact theoretical differences and convergence requirements between trimmed k-means and trimmed k-nets (associated with the L-infinity criterion)?",
+      "why_unresolved": "Trimmed k-nets require varying trimming sizes with the sample size to achieve strong consistency, unlike the fixed-trimming consistency studied here.",
+      "sections": [
+        "Section 5"
+      ]
+    }
+  ],
+  "candidate_hypotheses": [
+    {
+      "hypothesis": "If Phi is a continuously differentiable, strictly convex function, then there is no probability mass at the boundary between the clusters.",
+      "rationale": "Imposing stricter smoothness and convexity conditions on the penalty function prevents mass from concentrating ambiguously on cluster boundaries.",
+      "evidence": "Cited prior work by Cuesta-Albertos, Gordaliza, and Matran (1995) referenced in Section 3.",
+      "sections": [
+        "Section 3"
+      ]
+    }
+  ]
+}
+
+[E0003] paper_reading | Literature Reader
+-----------------------------------------
+Paper: /media/soumik/storage/MTech/ATR/agents/dataset/papers/trimmed_k_means/2003/Trimming Tools in Exploratory Data Analysis.pdf
+Status: success
+
+{
+  "paper_title": "Trimming Tools in Exploratory Data Analysis",
+  "authors_year": "Luis Angel García-Escudero, Alfonso Gordaliza & Carlos Matrán (2003)",
+  "research_question": "How can trimmed k-means methodology be used to construct exploratory graphical tools for distinguishing between the bulk of data and outlying observations, and for determining the number of clusters (k)?",
+  "context": "Cluster analysis and outlier detection, specifically focusing on overcoming the lack of robustness in classical k-means clustering and addressing the multivariate setting where privileged directions for data removal are absent.",
+  "methods": [
+    "Trimmed k-variance functionals analysis",
+    "Empirical trimmed k-variance calculation",
+    "Numerical second derivatives of variance functionals",
+    "Modified FAST-MCD algorithm utilizing K-mean-steps for computational implementation"
+  ],
+  "main_findings": [
+    "Trimmed k-variance functionals plotted against trimming sizes provide visual guidance for selecting the optimal number of clusters k based on rates of decrease.",
+    "Abrupt changes or peaks in numerical second derivatives of the functionals indicate the exclusion of complete clusters or identification of contamination levels.",
+    "The method differentiates between outlying groups and radial outliers.",
+    "Generalization to non-spherical distributions can be achieved by replacing standard within-group variance with scatter estimation matrices based on determinants."
+  ],
+  "assumptions": [
+    "Data follows or can be approximated by mixtures of spherical distributions (extended later to elliptical distributions).",
+    "Continuous distributions for population-level asymptotic convergence."
+  ],
+  "limitations_explicit": [
+    "High computational complexity due to dealing with the combinatorial space of subsets.",
+    "Standard trimmed k-means is specially aimed at mixtures of spherical distributions, which fails for highly linear or non-spherical clusters without generalization."
+  ],
+  "potential_open_questions": [
+    {
+      "question": "Can alternative metrics or discrepancies be integrated into the trimmed discrepancy framework for customized problem-specific cluster shapes?",
+      "why_unresolved": "The paper suggests that replacing the determinant-based criterion with other tailored metrics is a promising direction, but full algorithmic implementations and theoretical guarantees remain ongoing work.",
+      "evidence": "We believe that this methodology could be interesting, because it allows the consideration of metrics specially designed for each problem. We are currently working in this direction.",
+      "sections": [
+        "Section 4"
+      ]
+    }
+  ],
+  "candidate_hypotheses": [
+    {
+      "hypothesis": "Replacing the standard Euclidean distance trimmed k-variance with scatter estimation matrix determinants (minimizing log(det(Wi/ni))) allows proper detection of non-spherical and highly linear cluster structures.",
+      "rationale": "Standard k-means and spherical trimmed k-means fail when clusters possess linear or highly elliptical shapes because they do not account for individual cluster covariance matrices.",
+      "evidence": "Curves W1 and W2 do not allow us to detect properly the two-clusters structure... However, in Figure 8 (bottom) we see a clear jump at alpha = 0.5 when k = 1 in the curve obtained plotting the values obtained from (4.1) against alpha.",
+      "sections": [
+        "Section 4"
+      ]
+    }
+  ]
+}
+
+[E0004] paper_reading | Literature Reader
+-----------------------------------------
+Paper: /media/soumik/storage/MTech/ATR/agents/dataset/papers/trimmed_k_means/2004/ci030295a.pdf
+Status: success
+
+{
+  "paper_title": "Implementing the Fisher's Discriminant Ratio in a k-Means Clustering Algorithm for Feature Selection and Data Set Trimming",
+  "authors_year": "Thy-Hou Lin, Huang-Te Li, and Keng-Chang Tsai, 2004",
+  "research_question": "How can the Fisher's discriminant ratio combined with a k-means clustering algorithm be implemented for simultaneous feature selection and dataset trimming to improve the statistical significance of 3D-QSAR studies?",
+  "context": "Constructing quantitative structure-activity relationship (3D-QSAR) models like CoMFA often requires selecting informative variables and eliminating background noise or outliers to enhance predictive ability and statistical significance.",
+  "methods": [
+    "Scaling 43 molecular descriptors to lie between 1 and 0",
+    "Dividing the 221 HIV-1 protease inhibitors into five classes based on pKi values",
+    "Using Fisher's discriminant ratio and cross-correlation coefficients for feature selection",
+    "Employing a k-means clustering algorithm with two or three clusters within each class to identify bad clusters and trim outliers",
+    "Evaluating feature selection using linear regression, Jurs MREG stepwise variable selection, and SYBYL CoMFA PLS or Cerius2 PLS regression analyses"
+  ],
+  "main_findings": [
+    "Simultaneous feature selection and dataset trimming reduced the dataset from 221 to 98 retained inhibitors when using the three best descriptors.",
+    "The best selected descriptors were topological indices (Hosoya Z4, Hosoya Z6, and Hosoya Z3).",
+    "Cross-validated r2 (q2) values for CoMFA PLS increased to 0.710 for the retained 98 inhibitors compared to 0.606 for the original 221 inhibitors.",
+    "Scaling descriptor values prior to feature selection is necessary because unscaled descriptors with low information content are otherwise selected."
+  ],
+  "assumptions": [
+    "Descriptors should take distant values in different classes and closely located values in the same class.",
+    "No severe correlation is present among the computed descriptors when weighting parameters R1 and R2 are set to 1."
+  ],
+  "limitations_explicit": [
+    "The proposed algorithm is not invariant under a transformation of the variables."
+  ],
+  "potential_open_questions": [
+    {
+      "question": "Can classification techniques other than k-means clustering provide equally effective dataset trimming without requiring prior distribution knowledge?",
+      "why_unresolved": "While k-means works well for simple data boundaries, more complex classification rules like the Bayesian classifier require a priori knowledge about class distributions.",
+      "evidence": "Other classification techniques may be also effective in providing the trimming in the process. However, a more complicated classification rule such as the Bayesian one requires some a priori knowledge about the distribution of classes.",
+      "sections": [
+        "CONCLUSION",
+        "page 11"
+      ]
+    }
+  ],
+  "candidate_hypotheses": [
+    {
+      "hypothesis": "Alternative classification algorithms combined with Fisher's discriminant ratio can achieve better outlier trimming on datasets with complex decision boundaries.",
+      "rationale": "K-means relies on simple distance metrics within classes and may fail if classes contain complex decision boundaries.",
+      "evidence": "Fortunately, the data set we dealt with is simple, and no complex decision boundaries are present between classes.",
+      "sections": [
+        "RESULTS AND DISCUSSION",
+        "page 11"
+      ]
+    }
+  ]
+}
+
+[E0005] paper_reading | Literature Reader
+-----------------------------------------
+Paper: /media/soumik/storage/MTech/ATR/agents/dataset/papers/trimmed_k_means/2016/NIPS-2016-robust-k-means-a-theoretical-revisit-Paper.pdf
+Status: success
+
+{
+  "paper_title": "Robust k-means: a Theoretical Revisit",
+  "authors_year": "Alexandros Georgogiannis (2016)",
+  "research_question": "What are the robustness and consistency properties of robust k-means (RKM) that uses outlier detection regularization via group penalties and Moreau envelopes?",
+  "context": "Robust variations of quadratic k-means clustering are developed to handle outliers, broadly divided into penalized regularization methods and trimming functions. This work theoretically analyzes robust k-means (RKM) from a variational analysis perspective using Moreau envelopes and proximal maps.",
+  "methods": [
+    "Theoretical analysis using variational analysis and Moreau envelopes",
+    "Finite sample universal breakdown point analysis for biased and unbiased proximal maps",
+    "Restricted noise robustness analysis on well-structured datasets",
+    "Asymptotic and non-asymptotic consistency analysis using Vapnik-Chervonenkis (VC) theory",
+    "Synthetic data experiments comparing robust k-means and trimmed k-means across mixtures of Gaussians and spherical clusters"
+  ],
+  "main_findings": [
+    "Two outliers in a dataset are enough to breakdown the clustering procedure for RKM under a biased proximal map (convex penalty), yielding a breakdown point of 1/n.",
+    "For unbiased proximal maps (non-convex penalty), the universal breakdown point is 2/n.",
+    "Despite poor universal breakdown points on arbitrary datasets, RKM ignores the influence of outliers and successfully recovers underlying cluster structures when applied to well-structured datasets.",
+    "General non-asymptotic consistency results for quadratic k-means remain valid for the robust variant (RKM) even when the penalty function is non-convex, with a convergence rate of O(sqrt(log n / n)).",
+    "RKM exhibits empirical performance and statistics remarkably similar to trimmed k-means (TKM) in practice."
+  ],
+  "assumptions": [
+    "The function phi is lower semi-continuous (lsc), symmetric, and bounded from below.",
+    "Datasets under the well-structured analysis are (rho1, rho2)-balanced containing inlier samples covered by unions of balls of bounded radius r with centers sufficiently far apart."
+  ],
+  "limitations_explicit": [
+    "RKM cannot be robust against any arbitrary type of contamination and any type of dataset, regardless of the form of the proximal map used.",
+    "The standard finite sample universal breakdown point is a very tight and general notion that labels methods as non-robust when exposed to arbitrary contamination."
+  ],
+  "potential_open_questions": [
+    {
+      "question": "Can alternative non-convex penalties or adaptive tuning parameters improve the universal breakdown point beyond 2/n without requiring strict well-structured geometric assumptions on the dataset?",
+      "why_unresolved": "Universal breakdown analysis demonstrates that arbitrary adversarial modifications can still force center breakdown under existing unbiased proximal map formulations.",
+      "evidence": "Theorem 1 establishes that the universal breakdown point for RKM with unbiased proximal maps remains 2/n.",
+      "sections": [
+        "Section 3.2"
+      ]
+    }
+  ],
+  "candidate_hypotheses": [
+    {
+      "hypothesis": "RKM with specific non-convex penalties matching hard-thresholding operators can systematically reject outliers in high-dimensional settings provided the minimum separation distance between cluster centers exceeds a quantifiable threshold relative to the noise radius.",
+      "rationale": "The interplay between Moreau envelopes and well-structured balanced datasets shows that outlier presence does not alter inlier grouping under sufficient center separation.",
+      "evidence": "Theorem 2 (Restricted robustness of RKM) and experimental results on synthetic mixtures of Gaussians and spherical clusters.",
+      "sections": [
+        "Section 3.3",
+        "Section 5"
+      ]
+    }
+  ]
+}
+
+[E0006] paper_reading | Literature Reader
+-----------------------------------------
+Paper: /media/soumik/storage/MTech/ATR/agents/dataset/papers/trimmed_k_means/2017/K-means-sharp_Modified_centroid_update_for_outlier-robust_k-means_clustering.pdf
+Status: success
+
+{
+ "paper_title": "K-means-sharp: modified centroid update for outlier-robust k-means clustering",
+ "authors_year": "Peter O. Olukanmi and Bhekisipho Twala, 2017",
+ "research_question": "How to preserve the structure, simplicity and efficiency of the classical k-means algorithm while addressing its non-robustness to outliers through a modified centroid update step?",
+ "context": "Real-world datasets commonly contain noise and outliers. Classical k-means is a least-squares method that is sensitive to outliers, which skew cluster regionalization by contributing false large values to the objective function. Unlike traditional methods that detect outliers in a separate module, this paper proposes an approach that performs clustering and outlier detection simultaneously.",
+ "methods": [
+  "Modifying the centroid update step in classical k-means to detect and exempt putative outliers from the computation.",
+  "Using a global threshold T derived from the distribution of point-to-centroid distances based on 3 standard deviations (sigma = 1.4826 * MAD_e).",
+  "Evaluating performance on 10 datasets (2 standard datasets: Iris and Ruspini, and 4 outlier-contaminated versions of each with 5%, 10%, 15%, and 20% gross errors) over 100 runs.",
+  "Comparing mean squared error between classical k-means and k-means-sharp (k-means#), and measuring k-means#'s accuracy, precision, recall, and F1-score for outlier detection."
+ ],
+ "main_findings": [
+  "Given identical initializations, k-means# yields lower error than classical k-means for all datasets tested.",
+  "For outlier detection, k-means# achieves an overall mean accuracy of 90.4%, precision of 86.8%, recall of 52.4%, and F1-score of 61.1%.",
+  "The maximum values achieved by k-means# are 99.2% for accuracy, 100% for precision, 90.0% for recall, and 92.9% for F1-score."
+ ],
+ "assumptions": [
+  "K-means, being an instance of the Gaussian Mixture Model (GMM), assumes a Gaussian data distribution.",
+  "Nearly all inliers (precisely 99.73%) will have point-to-centroid distances within 3 standard deviations (sigma) from the population mean."
+ ],
+ "limitations_explicit": [
+  "Rare cases occur among the 100 runs for some datasets in which k-means# returns zero true positives due to a bad set of randomly selected initial centroids (such as when all initial centroids are outliers), inheriting this drawback from classical k-means."
+ ],
+ "potential_open_questions": [
+  {
+   "question": "What is the sensitivity of the algorithm to the choice of the number of standard deviations for determining the inlier-outlier distinction threshold?",
+   "why_unresolved": "The choice of 3 standard deviations is fixed in the current implementation, and varying it involves trade-offs among performance metrics that require further investigation.",
+   "evidence": "We expect trade-offs among the various performance metrics as this value is varied.",
+   "sections": [
+    "Section V",
+    "Section VI"
+   ]
+  },
+  {
+   "question": "Do cluster-specific thresholds improve performance compared to a single global threshold?",
+   "why_unresolved": "The current paper uses a single global threshold and notes that cluster-specific thresholds might improve performance but would also increase computational cost.",
+   "evidence": "Furthermore, the use of cluster-specific thresholds in contrast to a single global threshold, may improve performance, and is therefore worth exploring, although this will introduce some increase in computational cost.",
+   "sections": [
+    "Section VI"
+   ]
+  }
+ ],
+ "candidate_hypotheses": [
+  {
+   "hypothesis": "Incorporating special seeding methods (such as k-means++) into k-means# will eliminate rare cases of zero true positives caused by poor initial centroid selections.",
+   "rationale": "Special seeding methods prevent outliers from being chosen as initial centroids, addressing the initialization sensitivity inherited from classical k-means.",
+   "evidence": "The problem could be caused by a bad set of randomly selected initial centroids... It can be addressed by incorporating special seeding methods into the algorithm, such as those discussed in Section III.",
+   "sections": [
+    "Section IV-C",
+    "Section V-C"
+   ]
+  },
+  {
+   "hypothesis": "Using cluster-specific thresholds instead of a single global threshold will improve clustering performance and outlier detection accuracy at the cost of increased computational complexity.",
+   "rationale": "Different clusters may have different dispersion characteristics, making cluster-level thresholds more adaptable than a single global rule.",
+   "evidence": "Furthermore, the use of cluster-specific thresholds in contrast to a single global threshold, may improve performance, and is therefore worth exploring, although this will introduce some increase in computational cost.",
+   "sections": [
+    "Section VI"
+   ]
+  }
+ ]
+}
+
+[E0007] paper_reading | Literature Reader
+-----------------------------------------
+Paper: /media/soumik/storage/MTech/ATR/agents/dataset/papers/trimmed_k_means/2017/Sensitivity_analysis_of_an_outlier-aware_k-means_clustering_algorithm.pdf
+Status: success
+
+{
+ "paper_title":"Sensitivity analysis of an outlier-aware k-means clustering algorithm",
+ "authors_year":"Peter O. Olukanmi and Bhekisipho Twala, 2017",
+ "research_question":"What is the algorithm's sensitivity to variation in the constant coefficient q (where threshold T = q * sigma), and what is the optimal value of q when emphasis is on any one of clustering quality, outlier detection accuracy, precision, and recall?",
+ "context":"Clustering algorithms like classical k-means suffer from sensitivity to outliers, which can heavily skew centroid updates. A recently introduced outlier-robust alternative, k-means# (k-means-sharp), excludes points further than a threshold T from their cluster centroids during the centroid update step. T is determined using a constant multiple q of the estimated population standard deviation of point-to-centroid distances.",
+ "methods":[
+  "Tested on 10 datasets consisting of popular datasets (Iris and Ruspini) and outlier-contaminated versions of each",
+  "Compared average performances over 100 runs on each dataset for q = 2, 3, 4, 5, and 6",
+  "Analysis of Variance (ANOVA) used to test for differences among all k-means# versions",
+  "Paired-sample t-tests used to compare classical k-means vs each k-means# version and best vs worst k-means#"
+ ],
+ "main_findings":[
+  "For all values of q studied, k-means# yielded lower mean within-cluster squared error than classical k-means, and the difference is significant in every case.",
+  "Setting q = 2 gives the best (lowest) within-cluster mean squared error.",
+  "Accuracy is highest at q = 3 (90.0%) and lowest at q = 2 (79.0%).",
+  "Precision increases as q increases, making the algorithm practically 100% precise at q > 4.",
+  "Recall and F1-score peak at q = 2 (81.0% and 61.5% respectively) and decrease as q increases.",
+  "ANOVA showed no significant difference among the whole group of k-means# implementations (p = 0.99), but paired t-tests showed each k-means# version significantly outperforms classical k-means."
+ ],
+ "assumptions":[
+  "Gaussian distribution of point-to-centroid distances is assumed for k-means",
+  "Outliers occur at the centroids update stage in classical k-means"
+ ],
+ "limitations_explicit":[
+  "The comparison is limited to 10 datasets (Iris and Ruspini and their contaminated versions)"
+ ],
+ "potential_open_questions":[
+  {
+   "question":"How does the sensitivity of q behave on higher-dimensional datasets or datasets with non-Gaussian cluster distributions?",
+   "why_unresolved":"The study only evaluates performance on Iris and Ruspini datasets and their contaminated versions, which are relatively low-dimensional and simple.",
+   "evidence":"We study the algorithms performance on 10 datasets. The set consists of 2 popular datasets (Iris and Ruspini) and 4 outlier-contaminated versions of each.",
+   "sections":[
+    "Section I",
+    "Section III"
+   ]
+  }
+ ],
+ "candidate_hypotheses":[
+  {
+   "hypothesis":"Varying the constant coefficient q affects performance and determines the trade-offs in clustering accuracy, outlier detection accuracy, precision, and recall.",
+   "rationale":"Varying q changes the threshold T which dictates which points are trimmed as outliers during centroid updates, directly impacting cluster centers and outlier classification.",
+   "evidence":"We hypothesize that this value affects performance and determines the trade-offs in clustering accuracy, outlier detection accuracy, precision and recall.",
+   "sections":[
+    "Section I"
+   ]
+  }
+ ]
+}
+
+[E0008] paper_reading | Literature Reader
+-----------------------------------------
+Paper: /media/soumik/storage/MTech/ATR/agents/dataset/papers/trimmed_k_means/2020/grunau22a.pdf
+Status: success
+
+{
+ "paper_title": "Adapting k-means Algorithms for Outliers",
+ "authors_year": "Christoph Grunau and V ́aclav Rozho ́n, 2022",
+ "research_question": "How to adapt simple and classical sampling-based k-means algorithms to the setting with outliers while obtaining strong theoretical guarantees, such as outputting (1+e)z outliers and achieving an O(1/e)-approximation (or O(1)-approximation) to the objective function?",
+ "context": "Clustering data via k-means is fundamental in machine learning, but sensitive to outliers. While various k-means with outliers formulations exist, known algorithms either require large polynomial running times or output a large constant multiple of z outliers (Az outliers). This paper bridges the gap between theory and practice for fast sampling-based algorithms.",
+ "methods": [
+  "Reduction from k-means with outliers to k-means with penalties (uniform penalties via Lagrangian relaxation)",
+  "Sequential oversampling and sampling-based search algorithms (Local-search++)",
+  "Distributed coordinator-model algorithms with bit-complexity bounds",
+  "Metropolis-Hastings Markov chain sampling for sublinear time speedups"
+ ],
+ "main_findings": [
+  "A sequential sampling-based algorithm (Local-search++) runs in O~(nk/e) time, yielding an O(1/e)-approximation while declaring at most (1+e)z points as outliers.",
+  "Distributed algorithms in the coordinator model achieve an O(1)-approximation while outputting (1+e)z outliers, where each machine sends only O~(k/e) bits and performs polynomial-time computation.",
+  "An O(1)-approximation algorithm running in O~(nk^2/z) time while discarding O(z) outliers is developed using Metropolis-Hastings sampling.",
+  "A matching lower bound of Omega(nk^2/z) queries is proven for the metric space query model."
+ ],
+ "assumptions": [
+  "The minimum distance between any two points in X is lower bounded by 1.",
+  "The maximum distance between any two points Delta is bounded by poly(n).",
+  "The distance function evaluated in general metric spaces incurs a unit cost."
+ ],
+ "limitations_explicit": [
+  "Basic oversampling requires oversampling the number of centers by a factor of O(1/e).",
+  "Algorithms that output exactly z outliers require Omega(z^2) queries.",
+  "The fast sequential local-search algorithm requires guessing parameters or checking powers of 2 for OPT."
+ ],
+ "potential_open_questions": [
+  {
+   "question": "Can the running time bound for achieving an (O(1/poly(e)), 1+e)-approximation be improved further in sublinear regimes?",
+   "why_unresolved": "The paper notes potential refinements in remarks without formalizing full bounds for all polynomial dependencies on e.",
+   "evidence": "Remark 2 in Appendix D states: 'We believe, but do not prove, that refining the above proofs... we can refine Theorem 5 to achieve an (O(1/poly(e)), 1+e)-approximation algorithm with running time O~(nk^2/(z poly(e))).'",
+   "sections": [
+    "Appendix D"
+   ]
+  }
+ ],
+ "candidate_hypotheses": [
+  {
+   "hypothesis": "Local search combined with penalization methods allows sampling-based algorithms to avoid large constant inflation of outliers (Az) seen in previous reductions.",
+   "rationale": "By removing a point after each sampling step, the cost increases due to removals are dominated by the decrease from new cluster centers capturing unsettled clusters.",
+   "evidence": "Section 3.2 and Section 4 theoretical derivations and proofs of Theorems 3 and 9.",
+   "sections": [
+    "Section 3",
+    "Section 4"
+   ]
+  }
+ ]
+}
+
+[E0009] paper_reading | Literature Reader
+-----------------------------------------
+Paper: /media/soumik/storage/MTech/ATR/agents/dataset/papers/trimmed_k_means/2021/1-s2.0-S0167865522002185-main.pdf
+Status: success
+
+{
+  "paper_title": "Robust trimmed k-means",
+  "authors_year": "Olga Dorabiala, J. Nathan Kutz, Aleksandr Y. Aravkin, 2022",
+  "research_question": "How can we develop a robust extension of the k-means algorithm that simultaneously identifies outliers and clusters points, and can be applied to either single- or multi-membership data?",
+  "context": "Unsupervised learning and clustering algorithms such as k-means are often compromised by lack of clear separation between features, noisy observations, and outlying data points. Current robustification methods are specialized for either single or multi-membership data and do not perform competitively in both cases.",
+  "methods": [
+    "Proposed Robust Trimmed k-means (RTKM) algorithm combining multi-cluster membership relaxation and outlier detection modeling",
+    "Relaxation of the k-means auxiliary weight matrix to the s-capped simplex continuum [0,1]",
+    "Outlier detection modeled using an N - [alpha N]-capped simplex vector instead of an explicit heuristic measure of outlierness",
+    "Optimization using alternating minimization via Gauss-Seidel updates for cluster centers and Proximal Alternating Minimization (PAM) for weights and outlier vectors",
+    "Empirical evaluation on single-membership datasets with outliers (Breast Cancer Wisconsin, shuttle training dataset) and multi-membership datasets without/with outliers (yeast, scene, emotions) with added Gaussian and alternative noise",
+    "Nonparametric statistical validation using Friedman and Nemenyi tests"
+  ],
+  "main_findings": [
+    "RTKM performs competitively with KMOR on single-membership data containing outliers and with NEO-k-means on multi-membership data without outliers.",
+    "RTKM leverages its relative advantages to outperform other methods on multi-membership data containing outliers, consistently achieving the highest average F1 scores.",
+    "In statistical testing, RTKM's outlier detection significantly outperforms NEO-k-means, and RTKM obtains the lowest average rank overall in terms of both F1 and Me scores."
+  ],
+  "assumptions": [
+    "The proportion of expected outliers alpha is specified or known",
+    "The minimum number of clusters s that each point can belong to is specified",
+    "Step sizes ek > 1 and dk > 1 ensure convergence of the PAM scheme"
+  ],
+  "limitations_explicit": [
+    "There is currently no principled approach to estimating the parameters alpha and s automatically."
+  ],
+  "potential_open_questions": [
+    {
+      "question": "How can the objective function of RTKM be integrated with model selection techniques (such as X-means or G-means) to automatically estimate the number of clusters k?",
+      "why_unresolved": "Methods like X-means and G-means run k-means repeatedly to find k, but adapting them for the RTKM objective function remains for future work.",
+      "evidence": "Future work could address how these methods could be altered to use our objective function to estimate k.",
+      "sections": [
+        "6. Conclusions and future work"
+      ]
+    },
+    {
+      "question": "Can a principled, data-driven approach be designed to estimate the outlier proportion alpha and minimum membership parameter s automatically?",
+      "why_unresolved": "Currently, there is no principled approach to estimating these parameters, requiring users to test over a range of values.",
+      "evidence": "Currently, there is no principled approach to estimating these parameters. However, we demonstrate that RTKM performs competitively...",
+      "sections": [
+        "3.2. Robust trimmed k-means",
+        "4. Experiments",
+        "6. Conclusions and future work"
+      ]
+    }
+  ],
+  "candidate_hypotheses": [
+    {
+      "hypothesis": "Integrating the RTKM objective function into cluster-splitting criteria (like those in X-means or G-means) will allow simultaneous determination of the optimal number of clusters k alongside outlier identification and multi-membership assignment.",
+      "rationale": "Existing cluster-splitting methods successfully estimate k for standard k-means, suggesting their core iterative evaluation criteria can be extended to relaxed, robust objectives.",
+      "evidence": "Methods such as X-means and G-means have addressed the problem of estimating the number of clusters by running k-means repeatedly until some criteria is satisfied. Future work could address how these methods could be altered to use our objective function to estimate k.",
+      "sections": [
+        "6. Conclusions and future work"
+      ]
+    }
+  ]
+}
+
+[E0010] paper_reading | Literature Reader
+-----------------------------------------
+Paper: /media/soumik/storage/MTech/ATR/agents/dataset/papers/trimmed_k_means/2021/1-s2.0-S1319157821001701-main.pdf
+Status: success
+
+{
+  "paper_title": "An adaptive outlier removal aided k-means clustering algorithm",
+  "authors_year": "Nawaf H.M.M. Shrifan, Muhammad F. Akbar, Nor Ashidi Mat Isa, 2022",
+  "research_question": "How can the clustering accuracy of the k-means algorithm be improved from the perspectives of outlier removal and distance metrics?",
+  "context": "The standard k-means clustering algorithm performs poorly due to the presence of outliers in real-world datasets, and different distance metrics introduce variations in clustering accuracy.",
+  "methods": [
+    "Proposed a modified k-means algorithm combining an adapted Tukey's rule for outlier removal and a new angle-based distance metric.",
+    "Adapted the standard Tukey's rule into an asymmetric approach using distinct r1 and r2 constants based on data skewness (GM and LM counts).",
+    "Applied the adapted Tukey's rule recursively to each attribute independently during centroid calculation without discarding entire data points.",
+    "Proposed a new distance metric (dP) using normalization to [1, 90], ratio calculations, arctangent angles, and root mean square error (RMSE).",
+    "Evaluated the proposed method on nine standard multivariate UCI datasets over 100 runs and compared results against conventional k-means, HCA, FFA, CPSO, CGA, SCMVO, DBSCAN, and K-means#."
+  ],
+  "main_findings": [
+    "The proposed modified k-means improved the overall clustering accuracy up to 80.57% on nine standard multivariate datasets.",
+    "The adapted Tukey's rule improved overall clustering accuracy by 5.72% and reduced the number of iterations for centroid convergence by 50% compared to the standard Tukey's rule.",
+    "The proposed distance metric outperformed standard Euclidean, cosine, and correlation distance metrics by 2.40%, 5.79%, and 6.15% in overall clustering accuracy, respectively."
+  ],
+  "assumptions": [
+    "Real-world data is not always ideal and may contain noise or outliers due to abnormal phenomena or measurement mechanisms.",
+    "Data distribution skewness can be detected by counting the number of data points on the left and right sides of the mean value."
+  ],
+  "limitations_explicit": [
+    "Online clustering and big data clustering are out of the scope of this work.",
+    "The recursive outlier removal step adds extra processing time compared to the conventional algorithm, making it less suitable for real-time clustering.",
+    "The proposed distance metric is limited to real values greater than zero, requiring additional processing time for data normalization.",
+    "Data clustering with a very high variety of possible clusters (such as the Blood dataset) degrades the clustering accuracy of the modified k-means."
+  ],
+  "potential_open_questions": [
+    {
+      "question": "Can the adapted Tukey's rule and new distance metric be successfully integrated into other clustering algorithms such as fuzzy c-means and k-medoids without prohibitive computational overhead?",
+      "why_unresolved": "The paper suggests this as future work, noting that time complexity and structural differences in other algorithms remain untested.",
+      "evidence": "In Section 7 (Conclusion and future work), the authors state: 'In future work, the adapted Tukey's rule and the new distance metric will be applied to various clustering algorithms such as fuzzy c-means and k-medoids.'",
+      "sections": [
+        "7. Conclusion and future work"
+      ]
+    },
+    {
+      "question": "How can the time complexity of Tukey's rule for outlier removal be reduced to make the modified k-means viable for big data clustering?",
+      "why_unresolved": "The recursive application of the adapted Tukey's rule per attribute increases processing time, making it currently unsuitable for big data or real-time applications.",
+      "evidence": "In Section 6 and Section 7, the authors note: 'improving the run-time of modified k-means for big data clustering will be investigated further in future work by reducing the time complexity of Tukey's rule for outlier removal.'",
+      "sections": [
+        "6. Challenges and limitations",
+        "7. Conclusion and future work"
+      ]
+    }
+  ],
+  "candidate_hypotheses": [
+    {
+      "hypothesis": "Applying the adapted Tukey's rule and the new distance metric to density-based or hierarchical clustering algorithms will yield similar improvements in clustering purity and noise resilience.",
+      "rationale": "Since the proposed components successfully mitigate outlier influence and improve centroid/cluster boundary definitions in partitional k-means, similar outlier-mitigation benefits should theoretically transfer to algorithms affected by noise.",
+      "evidence": "The authors hypothesize and plan future investigations into applying these mechanisms to fuzzy c-means and k-medoids.",
+      "sections": [
+        "7. Conclusion and future work"
+      ]
+    }
+  ]
+}
+
+[E0011] paper_reading | Literature Reader
+-----------------------------------------
+Paper: /media/soumik/storage/MTech/ATR/agents/dataset/papers/trimmed_k_means/2021/3501409.3501648.pdf
+Status: success
+
+{
+  "paper_title": "Outlier Detection Method based on Improved K-means Clustering Algorithm",
+  "authors_year": "Wenfen Liu, Nan Wang, Yuehua Huang, 2021",
+  "research_question": "How to avoid the misleading effect of edge points and outliers during the K-means clustering process and accurately detect outliers in datasets?",
+  "context": "Outlier detection is critical for data mining and analysis across medical, fraud detection, and industrial anomaly detection domains. Traditional K-means is sensitive to outliers during centroid updates, while performing outlier detection simultaneously with clustering can misclassify cluster edge points as outliers.",
+  "methods": [
+    "Adaptive local thresholding using standard deviation (3 sigma rule) to identify and ignore edge points during centroid updates in each K-means iteration",
+    "Iterative post-clustering outlier extraction where the point farthest from the cluster centroid is moved to an outlier cluster",
+    "Convergence tracking via the average distance of cluster data points to determine when normal clusters become stable and outliers are removed",
+    "Principal Component Analysis (PCA) for dimensionality reduction on high-dimensional ODDS datasets",
+    "Evaluation using artificial 2D datasets and public ODDS datasets, compared against LOF, COPOD, and K-means# algorithms"
+  ],
+  "main_findings": [
+    "Ignoring edge points during centroid updates accelerates clustering iteration speed and prevents centroid distortion",
+    "Iteratively removing the farthest point until cluster average distance stabilizes successfully isolates outliers",
+    "The proposed improved K-means method (KM*) achieves competitive or superior performance in terms of AUC and accuracy compared to LOF, COPOD, and K-means# on tested low-dimensional convex datasets"
+  ],
+  "assumptions": [
+    "Normal clusters are more concentrated while abnormal/outlier data points are sparser",
+    "Low-dimensional convex data structures are well-suited for K-means based formulations"
+  ],
+  "limitations_explicit": [
+    "The method performs well primarily on low-dimensional convex data sets",
+    "High-dimensional public datasets require dimensionality reduction (PCA) prior to application"
+  ],
+  "potential_open_questions": [
+    {
+      "question": "How can the algorithm be adapted for non-convex clusters without heavy reliance on dimensionality reduction or a pre-specified number of clusters k?",
+      "why_unresolved": "The core reliance on K-means prototype definitions and Euclidean variance minimization restricts performance primarily to convex data structures.",
+      "evidence": "This method inherits the characteristics of the K-means algorithm and has better performance on low-dimensional convex data sets.",
+      "sections": [
+        "1.2 Our Contribution",
+        "3.1 Data Set",
+        "4 Summary"
+      ]
+    }
+  ],
+  "candidate_hypotheses": [
+    {
+      "hypothesis": "Replacing Euclidean distance with density- or kernel-based distance metrics within the proposed edge-point removal and centroid update steps would extend the outlier detection accuracy to non-convex complex datasets.",
+      "rationale": "Kernel tricks and density transformations mitigate the geometric constraints of standard K-means Euclidean distance assumptions.",
+      "evidence": "Traditional clustering algorithm does not take into account the outliers... K-means needs to be modified for outlier detection.",
+      "sections": [
+        "1 Introduction",
+        "2.1 Related Theories"
+      ]
+    }
+  ]
+}
+
+[E0012] paper_reading | Literature Reader
+-----------------------------------------
+Paper: /media/soumik/storage/MTech/ATR/agents/dataset/papers/trimmed_k_means/2022/1-s2.0-S0020025522014633-main.pdf
+Status: success
+
+{
+  "paper_title": "K-means clustering algorithms: A comprehensive review, variants analysis, and advances in the era of big data",
+  "authors_year": "Abiodun M. Ikotun, Absalom E. Ezugwu, Laith Abualigah, Belal Abuhaija, Jia Heming (2023)",
+  "research_question": "What are the existing variants of K-means algorithms for solving clustering problems since its inception to date?",
+  "context": "The paper provides a comprehensive systematic literature review of the K-means clustering algorithm and its numerous variants, tracing developments mainly from 2010 through 2021 within the context of data mining and big data challenges.",
+  "methods": [
+    "Systematic literature review following Kitchenham et al.'s guidelines",
+    "Database search across ACM Digital Library, Elsevier Journal Access, Wiley Online Library, IEEE Xplore, Springer, and Taylor & Francis",
+    "Filtering and screening of retrieved articles using explicit inclusion and exclusion criteria",
+    "Taxonomical classification and descriptive analysis of K-means algorithm variants and implementation paradigms"
+  ],
+  "main_findings": [
+    "K-means variants span algorithm design (input, process enhancements, outputs, concept modifications) and algorithm implementation (parallel, quantum, MapReduce, and other paradigms).",
+    "A vast majority of historical research has focused on solving the initial centroid selection and initialization problems, while mixed data types have received comparatively less focus.",
+    "Big data scalability issues have driven the adoption of MapReduce frameworks, parallel machine implementations, and dimensionality reduction techniques.",
+    "Hybridization of K-means with metaheuristic algorithms has emerged as a promising approach for automatic cluster number generation and avoiding local optima."
+  ],
+  "assumptions": [
+    "Standard K-means assumes numerical datasets and spherical or ball-shaped clusters using Euclidean distance.",
+    "Real-world data collected in large quantities typically follow a Gaussian distribution.",
+    "Input parameters such as the number of clusters (k) are required by the standard K-means algorithm."
+  ],
+  "limitations_explicit": [
+    "The standard K-means algorithm is sensitive to initial centroid selection and prone to local minimum convergence.",
+    "Standard K-means is highly sensitive to outliers, which can significantly distort the cluster means.",
+    "The standard algorithm is restricted to numerical data and fails to effectively handle categorical attributes or overlapping/non-spherical clusters without modification.",
+    "Computational complexity grows with large datasets and high dimensionality."
+  ],
+  "potential_open_questions": [
+    {
+      "question": "How to design an initialization technique for K-means that is simple to implement with low time complexity and requires no additional parameters?",
+      "why_unresolved": "Existing initialization methods vary widely, and a clear universal state-of-the-art technique is still missing.",
+      "evidence": "Fränti and Sieranoja reported that a clear state-of-the-art initialization is missing.",
+      "sections": [
+        "6. Open issues and challenges",
+        "7. Conclusion"
+      ]
+    },
+    {
+      "question": "How can automatic clustering algorithms be effectively realized by hybridizing standard K-means or its variants with swarm intelligence metaheuristic algorithms?",
+      "why_unresolved": "Only a few existing metaheuristic algorithms have been combined with K-means for automatic clustering and avoiding local optima, leaving this as an ongoing challenge.",
+      "evidence": "The hybridization of the standard algorithm with a metaheuristic algorithm for automatic clustering is a new and upcoming area with little work done so far.",
+      "sections": [
+        "7. Conclusion"
+      ]
+    }
+  ],
+  "candidate_hypotheses": [
+    {
+      "hypothesis": "Integrating swarm intelligence metaheuristics with K-means variants can solve the problem of automatic cluster generation and convergence to local optima simultaneously.",
+      "rationale": "Metaheuristic algorithms possess global optimization capabilities that can bypass local minima and simultaneously search for optimal cluster counts.",
+      "evidence": "Deploying metaheuristic algorithms for clustering further solves the problem of automatic clustering where it is not required to specify cluster numbers beforehand.",
+      "sections": [
+        "6. Open issues and challenges",
+        "7. Conclusion"
+      ]
+    },
+    {
+      "hypothesis": "Utilizing parallel and distributed computing paradigms can significantly mitigate the high computational cost and scalability issues of K-means in big data environments.",
+      "rationale": "Distributed frameworks like MapReduce and parallel execution divide computational tasks across multiple nodes, reducing execution bottlenecks.",
+      "evidence": "New techniques such as parallel machine implementation, quantum machine implementation, the MapReduce framework, amongst others, have been adopted by researchers to enhance the performance of the standard K-means algorithm.",
+      "sections": [
+        "4. Discussion",
+        "6. Open issues and challenges"
+      ]
+    }
+  ]
+}
+
+[E0013] paper_reading | Literature Reader
+-----------------------------------------
+Paper: /media/soumik/storage/MTech/ATR/agents/dataset/papers/trimmed_k_means/2022/14883wPg#s.pdf
+Status: success
+
+{
+  "paper_title": "Clustering what Matters: Optimal Approximation for Clustering with Outliers",
+  "authors_year": "Agrawal, Inamdar, Saurabh, & Xue, 2023",
+  "research_question": "How to design a general approximation-preserving reduction for clustering with outliers problems (such as k-MedianOut and k-MeansOut) to their outlier-free counterparts, yielding fixed-parameter tractable (FPT) approximation algorithms?",
+  "context": "Real-world datasets are often contaminated with noise, making clustering with outliers crucial in fields like machine learning, pattern recognition, and bioinformatics. Prior FPT algorithms for outlier clustering either suffered from worse approximation ratios or relied heavily on specific metric properties, while polynomial-time approximations left gaps from optimal outlier-free limits.",
+  "methods": [
+    "Formulating a lower bound outlier-free instance by adding co-located facilities for potential outliers (e.g., (k+m)-Median or (k+m, z)-Clustering)",
+    "Computing a constant-factor approximation on the outlier-free instance to establish an average radius scale R",
+    "Partitioning point clusters into concentric rings based on geometric distance from approximate centers",
+    "Constructing a weighted coreset via uniform random sampling from each ring with concentration bounds",
+    "Enumerating all subsets of size up to m from the sampled coreset and solving the resulting outlier-free instances using black-box algorithms"
+  ],
+  "main_findings": [
+    "A general FPT reduction framework that transforms k-MedianOut instances into multiple k-Median instances in time f(k, m, epsilon) * n^(O(1))",
+    "Obtaining optimal FPT approximation ratios of (1 + 2/e + epsilon) for k-MedianOut and (1 + 8/e + epsilon) for k-MeansOut in general metrics",
+    "Achieving (1 + epsilon)-approximations for k-MedianOut and k-MeansOut in special metrics such as constant doubling dimensions, bounded treewidth graphs, and minor-excluded graphs",
+    "Extending the reduction framework to constrained variants including Matroid Median with Outliers, Colorful k-Median, and general (k, z)-Clustering with Outliers"
+  ],
+  "assumptions": [
+    "Existence of a beta-approximation algorithm for the standard outlier-free k-Median or (k, z)-clustering problem",
+    "Existence of a polynomial-time tau-approximation algorithm for the expanded outlier-free (k+m)-Median or (k+m, z)-clustering instance where tau = O(1)"
+  ],
+  "limitations_explicit": [
+    "The FPT running time depends exponentially on the number of outliers m, resulting in a factor of ((k+m)/epsilon)^(O(m))"
+  ],
+  "potential_open_questions": [
+    {
+      "question": "Is it possible to obtain approximation guarantees for k-MedianOut matching that for k-Median with a running time that is FPT in k and epsilon alone, removing the dependency on m?",
+      "why_unresolved": "The current enumeration complexity over subsets of the coreset scales exponentially with the number of outliers m.",
+      "evidence": "The paper notes in Section 5 that the most natural direction is to improve FPT running time and questions whether an FPT dependence on m is strictly necessary.",
+      "sections": [
+        "Section 5: Concluding Remarks"
+      ]
+    }
+  ],
+  "candidate_hypotheses": [
+    {
+      "hypothesis": "Clustering with outliers problems can be solved without an FPT dependency on the outlier count m while retaining optimal approximation ratios.",
+      "rationale": "If a smaller coreset or alternative structural property can bound the outlier selection space independently of m, the overall runtime could drop to FPT in k and epsilon.",
+      "evidence": "Mentioned as a fundamental open question in Section 5 regarding whether the FPT dependence on m can be eliminated.",
+      "sections": [
+        "Section 5: Concluding Remarks"
+      ]
+    }
+  ]
+}
+
+[E0014] paper_reading | Literature Reader
+-----------------------------------------
+Paper: /media/soumik/storage/MTech/ATR/agents/dataset/papers/trimmed_k_means/2023/Transforming_Complex_Problems_Into_K-Means_Solutions.pdf
+Status: success
+
+{
+  "paper_title": "Transforming Complex Problems Into K-Means Solutions",
+  "authors_year": "Hongfu Liu, Junxiang Chen, Jennifer Dy, and Yun Fu, 2023",
+  "research_question": "How can complex and non-standard cluster analysis problems be unified and solved using generalized K-means frameworks?",
+  "context": "K-means is a fundamental clustering algorithm widely used due to its simplicity and efficiency, but standard formulations focus heavily on squared Euclidean distance and standard record inputs. This survey unifies generalized K-means approaches across data representation, distance measures, label assignment, and centroid updating to solve challenging problems like subspace projection, consensus clustering, constrained clustering, domain adaptation, and outlier detection.",
+  "methods": [
+    "Literature review and conceptual unification of generalized K-means formulations across four aspects: data representation, distance measure, label assignment, and centroid updating.",
+    "Mathematical re-formulation of complex problems into modified K-means objective functions (e.g., via kernel matrices, binary indicator matrices, and concatenated matrices with auxiliary zeros).",
+    "Empirical evaluation on benchmark datasets across consensus clustering, constrained clustering, image co-segmentation, domain adaptation, and outlier detection."
+  ],
+  "main_findings": [
+    "Generalized K-means can elegantly and efficiently solve complex, non-standard problems by modifying data inputs, distance functions (such as Bregman divergences and point-to-centroid distances), label assignment strategies (non-exhaustive/overlapping), and centroid updating rules.",
+    "Iterative subspace selection and clustering (discriminative clustering) can be formulated as equivalent to kernel K-means with a specific kernel Gram matrix.",
+    "Utility-based consensus clustering and spectral ensemble clustering can be mapped to K-means or weighted K-means solutions on binary matrices, dramatically reducing time and space complexities.",
+    "Partition-level constrained clustering and unsupervised domain adaptation can be solved using a K-means framework by concatenating data matrices with side-information/labels and employing incomplete centroid updating over auxiliary zeros."
+  ],
+  "assumptions": [
+    "Cluster centroids and distance functions must be properly matched to guarantee the convergence of K-means algorithms.",
+    "Auxiliary fill-up zeros in concatenated matrices (such as in constrained clustering and domain adaptation) should not contribute to distance calculations or centroid updates."
+  ],
+  "limitations_explicit": [
+    "Standard K-means and its modifications generally converge to local rather than global optima.",
+    "Standard K-means fails to capture non-spherical cluster structures due to prototypical assumptions.",
+    "The performance and sensitivity of K-means heavily depend on initialization."
+  ],
+  "potential_open_questions": [
+    {
+      "question": "How can theoretical convergence rates and global optimality guarantees be established for non-standard K-means variants handling complex auxiliary structures like domain adaptation gaps?",
+      "why_unresolved": "Most generalized K-means variants rely on alternating minimization or block coordinate descent, guaranteeing only convergence to local minima.",
+      "evidence": "Theorem 4.9 guarantees convergence only to a local minimum for partition level constrained clustering.",
+      "sections": [
+        "Section IV-D",
+        "Section IV-E"
+      ]
+    }
+  ],
+  "candidate_hypotheses": [
+    {
+      "hypothesis": "Concatenating arbitrary side information or multi-source domain matrices with auxiliary zero-padding and incomplete centroid updates allows any structural regularization utility function to be optimized via standard K-means complexity bounds.",
+      "rationale": "By isolating unobserved or missing auxiliary indicators from distance and centroid computations, the block optimization mimics standard within-cluster sum of squares updates.",
+      "evidence": "Demonstrated across partition-level constrained clustering and single/multi-source domain adaptation formulations in Sections IV-D and IV-E.",
+      "sections": [
+        "Section III-D",
+        "Section IV-D",
+        "Section IV-E"
+      ]
+    }
+  ]
+}
+
+[E0015] paper_reading | Literature Reader
+-----------------------------------------
+Paper: /media/soumik/storage/MTech/ATR/agents/dataset/papers/trimmed_k_means/2026/2609.08494v1.pdf
+Status: success
+
+{
+ "paper_title":"Nonparametric framework for the definition, adaptive detection and probabilistic interpretation of outliers",
+ "authors_year":"Tiziano Iannaccio and Maurizio Vichi, 2026",
+ "research_question":"How can outlier detection be formalized through a domain-agnostic, nonparametric framework with false-alarm rate control, and how can it be integrated into objective-based clustering frameworks such as K-means to achieve adaptive trimming?",
+ "context":"Robust clustering, outlier detection, nonparametric inference, and anomaly classification in multivariate data processing.",
+ "methods":[
+  "Calculation of Mahalanobis pseudo-isolation using nearest-neighbor ranks",
+  "Cantelli-based outlier thresholding linked to a false-alarm rate alpha",
+  "Geometric taxonomy classification into external, internal, and cluster-specific outliers based on convex hulls",
+  "Outlier Detection K-means (ODK-means) integrating weighted K-means and adaptive trimming",
+  "Packet-boundary search algorithm for finding the minimum significance level alpha_star",
+  "Simulation studies comparing ODK-means against Trimmed K-means and Local Outlier Factor (LOF)"
+ ],
+ "main_findings":[
+  "The proposed framework provides a rigorous, distribution-agnostic definition of anomalies tied to a false-alarm rate alpha without requiring heuristic trimming quotas.",
+  "Integration into K-means (ODK-means) maintains linear scalability per iteration while successfully identifying both global and cluster-specific outliers.",
+  "The outlier topology exhibits topological properties including quiescence, class equivalence, and coalescence groups.",
+  "Simulations demonstrate that ODK-means achieves high F1 performance across varying contamination rates and data dispersions compared to Trimmed K-means and LOF."
+ ],
+ "assumptions":[
+  "Standard asymptotic k-NN theory applies, setting l such that l tends to infinity and l/N tends to 0 as N tends to infinity",
+  "The underlying pseudo-isolation score possesses finite mean and variance",
+  "Clusters in the primary simulation and validation setups are approximately J-spheres"
+ ],
+ "limitations_explicit":[
+  "ODK-means inherits the limitations of standard K-means regarding non-spherical cluster geometries unless combined with more flexible clustering models like Gaussian Mixture Models.",
+  "Full cell-wise diagnostics are beyond the scope of the primary framework, though univariate component pseudo-isolations can be applied.",
+  "The optimization of neighborhood ranks (h, l) is beyond the scope of the work."
+ ],
+ "potential_open_questions":[
+  {
+   "question":"How can a fully parametric extension of this nonparametric framework be derived to yield a closed-form distribution for the pseudo-isolation score?",
+   "why_unresolved":"The current framework relies on nonparametric bounds (Cantelli inequality and running sample estimators) rather than a closed-form parametric distribution.",
+   "evidence":"We conclude this work by pointing to the main direction for future research: developing a fully parametric extension of this framework to derive a closed-form distribution for the pseudo-isolation score.",
+   "sections":[
+    "8 Discussion"
+   ]
+  },
+  {
+   "question":"What are the optimal strategies for selecting neighborhood ranks (h, l) for pseudo-isolation in complex topological data?",
+   "why_unresolved":"The choice of neighborhood ranks is currently set using standard asymptotic k-NN heuristics rather than formal optimization.",
+   "evidence":"Remark 3 The optimization of the neighborhood ranks (h, l) is beyond the scope of this work.",
+   "sections":[
+    "3.1 Pseudo-Isolation as a Robust Outlier Score"
+   ]
+  }
+ ],
+ "candidate_hypotheses":[
+  {
+   "hypothesis":"Deriving an analytical expression for the exact probability distribution of the pseudo-isolation score will enable formal, exact hypothesis testing for individual outliers.",
+   "rationale":"Achieving an analytical expression replaces conservative bounds with exact probabilities, strengthening inferential guarantees.",
+   "evidence":"Achieving an analytical expression for this distribution will enable formal, exact hypothesis testing for individual outliers, providing an even stronger inferential foundation for anomaly detection.",
+   "sections":[
+    "8 Discussion"
+   ]
+  },
+  {
+   "hypothesis":"Integrating the nonparametric pseudo-isolation detection engine into alternative clustering algorithms like Gaussian Mixture Models or subspace clustering will successfully resolve non-spherical and high-dimensional clustering challenges.",
+   "rationale":"The modularity of the probabilistic detection framework allows it to overlay onto any objective-based partitioning scheme.",
+   "evidence":"For example, non-spherical or overlapping clusters can be handled by incorporating our detection mechanism into Gaussian Mixture Models (GMMs)... the same logic can be applied to subspace clustering techniques",
+   "sections":[
+    "8 Discussion"
+   ]
+  }
+ ]
+}
+
+[E0016] paper_reading | Literature Reader
+-----------------------------------------
+Paper: /media/soumik/storage/MTech/ATR/agents/dataset/papers/trimmed_k_means/2026/5c185872a7f1b8dd0442b9b3bcbc6455460e.pdf
+Status: success
+
+{
+ "paper_title": "An integration clustering and multi-target classification approach to explore employability and career linearity",
+ "authors_year": "Nadzla Andrita Intan Ghayatrie, Devi Fitrianah, 2026",
+ "research_question": "How can an integrated framework combining data augmentation, outlier-robust clustering (K-means LTS), and multi-target classification (MTRF) analyze and predict job waiting time and job linearity among female STEM graduates?",
+ "context": "The underrepresentation of women in STEM fields and workforce participation gaps, specifically focusing on female STEM graduates' employment outcomes including job waiting time and job linearity.",
+ "methods": [
+  "Data pre-processing (null checks, duplicate removal, IQR method for outlier detection)",
+  "Data augmentation using ADASYN-Gaussian for minority class balancing",
+  "Data selection to isolate female alumni records",
+  "K-means least trimmed square (LTS) clustering with hyperparameter tuning",
+  "Silhouette score for clustering evaluation",
+  "Multi-target random forest (MTRF) classification with Grid search and 10-fold cross-validation",
+  "Micro-averaging and macro-averaging evaluation metrics"
+ ],
+ "main_findings": [
+  "The K-means LTS model with k = 2 and a 30% trimming percentage achieved a silhouette score of 0.77, outperforming standard K-means (0.63).",
+  "Identified two distinct alumni groups: Cluster 0 (long waiting time, lower GPA, average study duration 4.13 years) and Cluster 1 (short waiting time, higher GPA, average study duration 4.11 years).",
+  "73% of the analyzed female alumni belonged to the short job waiting group.",
+  "The MTRF classification model achieved an overall F1-score micro average of 92.2% (0.9221) and macro average of 90.3% (0.9032) using 10-fold cross-validation.",
+  "Classification performance yielded 100% accuracy for the waiting time feature and 81% accuracy for the job linearity feature."
+ ],
+ "assumptions": [
+  "Only female alumni records are used for modeling after data augmentation.",
+  "Standard undergraduate study duration in Indonesian universities is 4 years.",
+  "The selected features adequately represent employment outcomes and student academic records."
+ ],
+ "limitations_explicit": [
+  "The features used to predict job linearity may not fully capture real-world factors influencing job relevance (such as job type, industry alignment, or personal career preferences).",
+  "The dataset was limited to female graduates from a small sample of private universities, potentially affecting generalizability."
+ ],
+ "potential_open_questions": [
+  {
+   "question": "How can richer academic and employment history data, including qualitative information from surveys or interviews, improve the prediction of job linearity?",
+   "why_unresolved": "Current features do not fully capture real-world factors influencing job relevance such as job type, industry alignment, or personal career preferences.",
+   "evidence": "The paper notes that the features used to predict job linearity may not fully capture real-world factors and suggests expanding the feature set.",
+   "sections": [
+    "4. CONCLUSION"
+   ]
+  },
+  {
+   "question": "Would alternative multi-target learners like deep neural networks or ensemble methods improve generalizability for complex targets such as job linearity?",
+   "why_unresolved": "Job linearity achieved a lower accuracy of 81% due to the complexity of the target and limited features available.",
+   "sections": [
+    "3.3. MTC process",
+    "4. CONCLUSION"
+   ]
+  }
+ ],
+ "candidate_hypotheses": [
+  {
+   "hypothesis": "Incorporating qualitative survey or interview data will increase the classification accuracy of job linearity beyond the current 81%.",
+   "rationale": "Job linearity involves complex real-world personal and industrial preferences that quantitative academic records alone may fail to represent completely.",
+   "evidence": "The job linearity classification achieved lower accuracy (81%) compared to waiting time due to complexity and limited features.",
+   "sections": [
+    "4. CONCLUSION"
+   ]
+  },
+  {
+   "hypothesis": "Applying deep neural networks as multi-target learners will yield higher micro- and macro-averages for complex employment outcome predictions compared to random forests.",
+   "rationale": "Advanced neural architectures can model intricate non-linear relationships across multiple interrelated target variables better than tree-based ensembles.",
+   "evidence": "Future work recommendation section suggests applying alternative multi-target learners like deep neural networks to improve generalizability for complex targets.",
+   "sections": [
+    "4. CONCLUSION"
+   ]
+  }
+ ]
+}
+
+[E0017] paper_reading | Literature Reader
+-----------------------------------------
+Paper: /media/soumik/storage/MTech/ATR/agents/dataset/papers/trimmed_k_means/2026/5dec532efefbe1690fbc71ccd5a1ed19aeb3.pdf
+Status: success
+
+{
+ "paper_title": "Adaptive Federated Baseline K-Means for Lightweight IoT Intrusion Detection: Auto-Thresholding and Robust Statistics Aggregation",
+ "authors_year": "Mohammed Al Saleh and Joseph Azar, 2026",
+ "research_question": "How to repair the merge-induced precision decay and manual thresholding weaknesses in federated Baseline K-Means for lightweight IoT intrusion detection without abandoning its statistics-only, semi-supervised design?",
+ "context": "Federated, semi-supervised novelty detection is well suited for intrusion detection on resource-constrained Internet of Things (IoT) nodes where devices share summary statistics rather than raw traffic. A previously published cross-layer federated detector (Baseline K-Means) raised collaborative recall over time but exhibited a systematic side effect: after every merge, precision decayed and the false-positive rate climbed because the coordinator recomputed its threshold from streaming distances filtered by the closest observed anomaly, thereby tightening after every merge.",
+ "methods": [
+  "Formulation and diagnosis of merge-induced precision decay and label-skew heterogeneity",
+  "E1: Adaptive auto-thresholding using a robust median-absolute-deviation (MAD) rule or target-FPR calibration",
+  "E2: Robust, benignly anchored aggregation via count and quality weighting behind a trust gate and benign-anchor threshold recalibration",
+  "Evaluation on three public datasets (NSL-KDD, UNSW-NB15, and N-BaIoT) under a non-IID federated protocol with baseline-only MinMax scaling and label-blind full-corpus preprocessing",
+  "Four-way ablation, significance testing across 10 seeds, heterogeneity/scale sweeps, adversarial stress tests (faulty-worker updates, anchor contamination, and white-box evasion), and computational resource profiling"
+ ],
+ "main_findings": [
+  "Robust aggregation (E2 and AF-BKM) successfully flattens precision across merge epochs (NSL-KDD delta P improves from -0.134 to -0.002) and reduces mean FPR by 30-64% depending on the dataset.",
+  "AF-BKM preserves recall on NSL-KDD and N-BaIoT, and exposes an explicit precision-recall trade-off on UNSW-NB15 via an operator-selectable target-FPR knob.",
+  "The deployed model serializes to 5.5-52 KB, classifies a packet in 11-27 microseconds, and uploads a d+3-value summary (160-472 bytes) per merge round, saving 94.6-98.3% compared to sharing the covariance upper triangle."
+ ],
+ "assumptions": [
+  "AF-BKM is label-free with respect to attack labels for thresholding or worker-quality weighting.",
+  "Assumes the presence of a small, trusted, benign anchor for benign-only calibration collected once during device commissioning.",
+  "Assumes the coordinator securely stores the anchor and is not compromised after initialization.",
+  "The inverse covariance is estimated only once at the coordinator from the trusted benign anchor and is never re-estimated from worker data."
+ ],
+ "limitations_explicit": [
+  "The false-positive level is anchor-relative rather than local when a worker's benign distribution drifts far from the trusted benign anchor.",
+  "Assumes secure coordinator storage of the anchor; commissioning anchor contamination beyond a few percent leads to sharp recall drops because the sample mean and covariance are non-robust estimators.",
+  "The non-IID setting modeled is primarily label skew with a small viability floor; feature-space skew, per-device behavioral drift, and changing traffic mixtures require deeper treatment.",
+  "No new physical edge deployment was conducted and no direct power/energy measurements on target hardware were reported."
+ ],
+ "potential_open_questions": [
+  {
+   "question": "How can streaming concept drift and adaptive anchor refresh policies be integrated so that benign calibration remains valid over time without compromising stability?",
+   "why_unresolved": "AF-BKM currently implements no streaming concept-drift mechanism and uses a fixed commissioning anchor.",
+   "evidence": "Section 7 notes that drift adaptation is future work and that benign calibration must remain valid over time.",
+   "sections": [
+    "Section 7",
+    "Section 7.4"
+   ]
+  },
+  {
+   "question": "Can replacing the sample mean and covariance with robust estimators like the minimum-covariance-determinant (MCD) estimator harden calibration against dirty commissioning windows?",
+   "why_unresolved": "The anchor contamination stress test showed that planted attack rows inflate the covariance along attack directions, shrinking attack distances and hurting recall.",
+   "evidence": "Section 6.7 and Section 7.4 discuss how the Gaussian model is the weak point under anchor contamination.",
+   "sections": [
+    "Section 6.7",
+    "Section 7.4"
+   ]
+  }
+ ],
+ "candidate_hypotheses": [
+  {
+   "hypothesis": "Replacing nearest-anomaly threshold tightening with benignly anchored recalibration removes merge-induced precision decay across diverse non-IID federated IoT environments.",
+   "rationale": "Because the anchor is clean and fixed, threshold recalibration tracks a stable benign FPR across merges rather than repeatedly tightening.",
+   "evidence": "Demonstrated across NSL-KDD, UNSW-NB15, and N-BaIoT where precision decay delta P approaches zero and FPR drops by 30-64% with Wilcoxon p = 0.002.",
+   "sections": [
+    "Section 4.4",
+    "Section 6.1"
+   ]
+  },
+  {
+   "hypothesis": "Integrating robust covariance estimation alongside robust thresholding will maintain high recall even when commissioning anchor data contains low-level attack contamination.",
+   "rationale": "The threshold rule is robust, but the underlying sample mean and covariance are not robust estimators, causing planted attack rows to degrade recall.",
+   "evidence": "Contamination experiments show recall drops sharply past 5% contamination due to covariance inflation along attack directions.",
+   "sections": [
+    "Section 6.7",
+    "Section 7.4"
+   ]
+  }
+ ]
+}
+
+[E0018] perspective_discovery | Topic-Adaptive Perspective Finder
+-----------------------------------------------------------------
+Status: success
+
+{
+  "perspectives": [
+    {
+      "name": "Theoretical Foundations and Consistency",
+      "description": "Focuses on the mathematical properties, asymptotic behavior, strong consistency, existence proofs, breakdown points, and approximation guarantees of trimmed and outlier-robust k-means variants.",
+      "excludes": [
+        "Computational complexity implementation details",
+        "Empirical applications on specific domain datasets"
+      ],
+      "owned_by": [
+        "P001",
+        "P002",
+        "P005",
+        "P008",
+        "P013"
+      ],
+      "boundary_rule": "Includes papers whose primary contribution is theoretical analysis, convergence proofs, breakdown points, or approximation bounds for k-means with outliers/trimming. Excludes papers focused purely on heuristic algorithmic tuning or applied domain studies.",
+      "rationale": "Captures the core mathematical and statistical formulations established to understand the theoretical behavior of trimming and outlier rejection in clustering."
+    },
+    {
+      "name": "Algorithmic Design and Optimization",
+      "description": "Examines novel algorithm modifications, centroid updates, distance metrics, soft/hard trimming relaxations, parameter tuning (such as threshold constants and trimming proportions), and generalized transformation frameworks.",
+      "excludes": [
+        "Purely theoretical convergence proofs without algorithmic innovation",
+        "Domain-specific applied analyses"
+      ],
+      "owned_by": [
+        "P003",
+        "P004",
+        "P006",
+        "P007",
+        "P009",
+        "P010",
+        "P011",
+        "P012",
+        "P014",
+        "P015"
+      ],
+      "boundary_rule": "Includes papers proposing new algorithmic variations, centroid adjustments, outlier thresholds, or distance metric extensions for k-means. Excludes papers primarily focused on distributed systems or domain applications.",
+      "rationale": "Covers the broad space of algorithmic developments designed to robustify k-means against outliers and noise."
+    },
+    {
+      "name": "Distributed, Federated, and Scalable Systems",
+      "description": "Deals with distributed execution models, federation protocols, bit-complexity bounds, and lightweight IoT or big data implementations of outlier-robust k-means.",
+      "excludes": [
+        "Single-machine batch algorithmic optimization",
+        "Purely theoretical asymptotic convergence models"
+      ],
+      "owned_by": [
+        "P017"
+      ],
+      "boundary_rule": "Includes papers where the primary focus is distributed computation, federated aggregation, or resource-constrained IoT settings. Excludes standard centralized algorithms.",
+      "rationale": "Addresses the computational and communication constraints of running robust k-means and outlier trimming across decentralized or resource-constrained nodes."
+    },
+    {
+      "name": "Applied Domain Case Studies",
+      "description": "Focuses on empirical evaluations and applications of trimmed or outlier-robust k-means algorithms to specific real-world domains such as cheminformatics, career linearity, and intrusion detection benchmark validation.",
+      "excludes": [
+        "Core algorithmic invention",
+        "Abstract mathematical proofs"
+      ],
+      "owned_by": [
+        "P016"
+      ],
+      "boundary_rule": "Includes papers where the main contribution is the application of robust k-means to solve a specific domain problem. Excludes theoretical or purely algorithmic papers.",
+      "rationale": "Ensures coverage of practical deployments and domain-specific validations of outlier-trimming k-means methods."
+    }
+  ],
+  "coverage_check": "The perspectives comprehensively cover all aspects of the literature, ranging from mathematical and theoretical foundations to algorithmic optimizations, distributed/federated systems, and domain-specific applications.",
+  "overlap_check": "Overlap is minimized by strictly separating mathematical/theoretical proof works from algorithmic design papers, distributed system architectures, and applied domain case studies."
+}
+
+[E0019] research_gap_generation | Theoretical Foundations and Consistency Gap Generator
+--------------------------------------------------------------------------------
+Status: success
+
+{
+  "perspective": "Theoretical Foundations and Consistency",
+  "research_gaps": [
+    {
+      "gap": "Characterization of Breakdown Point Behavior Across Diverse Cluster Configurations and Contamination Types",
+      "why_it_matters": "Understanding breakdown points is critical for establishing the robustness limits of trimmed k-means variants under adversarial or arbitrary data configurations.",
+      "what_is_known": "Breakdown points for trimmed k-means and robust k-means variants depend heavily on the underlying probability distribution, cluster configurations, and contamination types, with certain configurations yielding breakdown points arbitrarily close to zero.",
+      "what_remains_unknown": "A complete, universal theoretical characterization of how breakdown points vary across arbitrary cluster shapes, dimensions, and types of contamination under fixed vs. varying trimming proportions.",
+      "gap_type": "explicit",
+      "confidence": "high",
+      "supporting_papers": [
+        {
+          "paper_id": "P002",
+          "sections": [
+            "Section 5"
+          ]
+        },
+        {
+          "paper_id": "P005",
+          "sections": [
+            "Section 3.2"
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P002",
+          "section": "Section 5",
+          "evidence": "Discussion in Section 5 and the counterexample showing breakdown points can be arbitrarily close to 0 depending on the probability distribution P."
+        },
+        {
+          "paper_id": "P005",
+          "section": "Section 3.2",
+          "evidence": "Theorem 1 establishes that the universal breakdown point for RKM with unbiased proximal maps remains 2/n."
+        }
+      ]
+    },
+    {
+      "gap": "Convergence Guarantees and Global Optimality for Non-Standard and Regularized Trimmed K-Means Objectives",
+      "why_it_matters": "Most robust and trimmed k-means formulations rely on alternating minimization or block coordinate descent, which lack global optimality guarantees and can suffer from slow oscillation or convergence to local minima.",
+      "what_is_known": "Almost sure convergence to local minimizers or unbiased k-points can be proved using martingale theory, variational analysis, or Moreau envelopes for specific smooth or non-convex penalty variants.",
+      "what_remains_unknown": "Rigorous theoretical convergence rates, global optimality bounds, and conditions to eliminate slow indefinite oscillations around cluster centers for generalized or non-convex robust k-means objectives.",
+      "gap_type": "explicit",
+      "confidence": "high",
+      "supporting_papers": [
+        {
+          "paper_id": "P001",
+          "sections": [
+            "2.3"
+          ]
+        },
+        {
+          "paper_id": "P005",
+          "sections": [
+            "Section 3.2"
+          ]
+        },
+        {
+          "paper_id": "P014",
+          "sections": [
+            "Section IV-D",
+            "Section IV-E"
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P001",
+          "section": "2.3",
+          "evidence": "The k-means thus converge to some such relative position, but theorem 1 does not quite permit us to eliminate the interesting possibility that the two means oscillate slowly but indefinitely around the center."
+        },
+        {
+          "paper_id": "P014",
+          "section": "Section IV-D",
+          "evidence": "Theorem 4.9 guarantees convergence only to a local minimum for partition level constrained clustering."
+        }
+      ]
+    }
+  ]
+}
+
+[E0020] research_gap_generation | Algorithmic Design and Optimization Gap Generator
+--------------------------------------------------------------------------------
+Status: success
+
+{
+  "perspective": "Algorithmic Design and Optimization",
+  "research_gaps": [
+    {
+      "gap": "Lack of cluster-specific or adaptive anomaly thresholds in heuristic trimmed k-means variants",
+      "why_it_matters": "Using a single global distance threshold or a fixed trimming proportion across all clusters fails to account for varying cluster densities and dispersions, leading to the erroneous elimination of inliers in dense regions or the retention of outliers in sparse clusters.",
+      "what_is_known": "Existing heuristic algorithms like k-means-sharp successfully accelerate clustering and improve outlier detection via global standard deviation thresholds or median absolute deviations (P006, P007).",
+      "what_remains_unknown": "Whether introducing cluster-specific adaptive thresholds or variable trimming proportions can be achieved with minimal computational overhead and without destabilizing centroid convergence.",
+      "gap_type": "explicit",
+      "confidence": "high",
+      "supporting_papers": [
+        {
+          "paper_id": "P006",
+          "sections": ["Section VI"]
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P006",
+          "section": "Section VI",
+          "evidence": "Furthermore, the use of cluster-specific thresholds in contrast to a single global threshold, may improve performance, and is therefore worth exploring, although this will introduce some increase in computational cost."
+        }
+      ]
+    },
+    {
+      "gap": "Absence of principled, automated parameter estimation for trimming proportions and multi-membership constraints",
+      "why_it_matters": "Advanced soft-trimmed and robust k-means formulations require users to manually specify parameters such as the expected outlier proportion or minimum cluster membership, limiting their applicability in automated data pipelines.",
+      "what_is_known": "Formulations like Robust Trimmed k-means (RTKM) successfully leverage capped simplex relaxations and alternating minimization to handle both outliers and multi-membership data (P009).",
+      "what_remains_unknown": "How to design data-driven, principled estimation strategies or integrate model selection techniques to automatically determine these tuning parameters during optimization.",
+      "gap_type": "explicit",
+      "confidence": "high",
+      "supporting_papers": [
+        {
+          "paper_id": "P009",
+          "sections": ["3.2. Robust trimmed k-means", "4. Experiments", "6. Conclusions and future work"]
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P009",
+          "section": "6. Conclusions and future work",
+          "evidence": "Currently, there is no principled approach to estimating these parameters. However, we demonstrate that RTKM performs competitively..."
+        }
+      ]
+    }
+  ]
+}
+
+[E0021] research_gap_generation | Distributed, Federated, and Scalable Systems Gap Generator
+--------------------------------------------------------------------------------
+Status: success
+
+{
+  "perspective": "Distributed, Federated, and Scalable Systems",
+  "research_gaps": [
+    {
+      "gap": "Lack of streaming concept-drift adaptation and robust dynamic anchor refresh policies for federated baseline k-means architectures handling temporal distribution shifts.",
+      "why_it_matters": "In real-world decentralized IoT settings, network traffic patterns and underlying benign distributions drift over time. Relying on a fixed commissioning anchor causes false-positive drift and degraded detection efficacy when device behaviors evolve.",
+      "what_is_known": "Federated aggregation with robust statistics can successfully control merge-induced precision decay and mitigate static non-IID label skews using a small, trusted, benign anchor collected during commissioning.",
+      "what_remains_unknown": "How to design fully automated, streaming concept-drift mechanisms and adaptive anchor refresh protocols that update the calibration baseline over time without destabilizing distributed federated consensus.",
+      "gap_type": "explicit",
+      "confidence": "high",
+      "supporting_papers": [
+        {
+          "paper_id": "P017",
+          "sections": [
+            "Section 7",
+            "Section 7.4"
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P017",
+          "section": "Section 7",
+          "evidence": "Section 7 notes that drift adaptation is future work and that benign calibration must remain valid over time."
+        }
+      ]
+    },
+    {
+      "gap": "Vulnerability of federated robust aggregation to dirty commissioning windows and non-robust covariance estimators under anchor contamination.",
+      "why_it_matters": "If the commissioning window used to establish the trusted benign anchor is contaminated by even a few percent of anomalous data, sample mean and covariance estimators break down, causing severe recall drops during operational deployment.",
+      "what_is_known": "Federated outlier-robust k-means algorithms can utilize robust statistics aggregation and benign-anchor thresholds to secure worker updates against faulty or malicious participants.",
+      "what_remains_unknown": "Whether replacing the standard sample mean and covariance estimators with robust alternatives like the minimum-covariance-determinant (MCD) estimator can effectively harden initial calibration against contaminated commissioning data.",
+      "gap_type": "inferred",
+      "confidence": "high",
+      "supporting_papers": [
+        {
+          "paper_id": "P017",
+          "sections": [
+            "Section 6.7",
+            "Section 7.4"
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P017",
+          "section": "Section 6.7",
+          "evidence": "Section 6.7 and Section 7.4 discuss how the Gaussian model is the weak point under anchor contamination."
+        }
+      ]
+    }
+  ]
+}
+
+[E0022] research_gap_generation | Applied Domain Case Studies Gap Generator
+---------------------------------------------------------------------------
+Status: success
+
+{
+  "perspective": "Applied Domain Case Studies",
+  "research_gaps": [
+    {
+      "gap": "Evaluation of Trimmed K-Means and Outlier-Robust Clustering under Non-Gaussian and Complex Multi-Membership Data Structures in Real-World Domains",
+      "why_it_matters": "Real-world domain datasets frequently exhibit non-spherical clusters, overlapping categories, or complex multi-membership characteristics. Relying solely on spherical or single-membership assumptions can lead to poor outlier detection and distorted cluster boundaries in practical applications such as cheminformatics and career analysis.",
+      "what_is_known": "Standard trimmed k-means and robust variants like RTKM have been successfully applied to single-membership tasks (e.g., QSAR studies and alumni career clustering) and evaluated on basic multi-membership datasets, showing strong performance when data roughly conforms to spherical or convex distributions.",
+      "what_remains_unknown": "The empirical efficacy, generalization limits, and precise parameter sensitivity of trimmed and robust k-means variations when handling complex, overlapping, or non-convex domain structures combined with heavy real-world contamination remain largely unmapped.",
+      "gap_type": "explicit",
+      "confidence": "high",
+      "supporting_papers": [
+        {
+          "paper_id": "P009",
+          "sections": [
+            "4. Experiments",
+            "6. Conclusions and future work"
+          ]
+        },
+        {
+          "paper_id": "P016",
+          "sections": [
+            "3.3. MTC process",
+            "4. CONCLUSION"
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P009",
+          "section": "4. Experiments",
+          "evidence": "Empirical evaluation on single-membership datasets with outliers and multi-membership datasets without/with outliers demonstrates that RTKM performs competitively, but principled parameter estimation remains open."
+        },
+        {
+          "paper_id": "P016",
+          "section": "4. CONCLUSION",
+          "evidence": "The features used to predict job linearity may not fully capture real-world factors influencing job relevance, and datasets are often restricted to specific demographic subsets."
+        }
+      ]
+    },
+    {
+      "gap": "Principled, Automated Parameter Tuning for Trimming Quotas and Membership Thresholds in Applied Outlier-Robust K-Means Frameworks",
+      "why_it_matters": "In applied domains such as career progression analysis and intrusion detection, manually tuning trimming proportions (alpha), membership minimums (s), or distance coefficients (q) is inefficient, prone to user bias, and impractical for automated deployment pipelines.",
+      "what_is_known": "Current implementations of trimmed k-means and robust k-means require users to pre-specify the proportion of expected outliers or tuning parameters, testing over a range of arbitrary values to achieve acceptable clustering and detection performance.",
+      "what_remains_unknown": "There is a lack of fully automated, data-driven, and principled approaches to estimate these vital hyperparameters directly from domain datasets without extensive manual grid-search or trial-and-error.",
+      "gap_type": "explicit",
+      "confidence": "high",
+      "supporting_papers": [
+        {
+          "paper_id": "P009",
+          "sections": [
+            "3.2. Robust trimmed k-means",
+            "6. Conclusions and future work"
+          ]
+        },
+        {
+          "paper_id": "P017",
+          "sections": [
+            "Section 7",
+            "Section 7.4"
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P009",
+          "section": "3.2. Robust trimmed k-means",
+          "evidence": "Currently, there is no principled approach to estimating these parameters. However, we demonstrate that RTKM performs competitively..."
+        },
+        {
+          "paper_id": "P017",
+          "section": "Section 7.4",
+          "evidence": "Discussion highlights the need for automated calibration and drift adaptation to ensure robust thresholds remain valid over time without manual intervention."
+        }
+      ]
+    }
+  ]
+}
+
+[E0023] initial_gap_curation_and_corpus_analysis | Research-Gap Curator and Corpus Analyser
+--------------------------------------------------------------------------------
+Status: success
+
+{
+  "research_gaps": [
+    {
+      "id": "G001",
+      "decision": "retain",
+      "merged_ids": [],
+      "reason": "Clear theoretical gap concerning breakdown point behavior across diverse configurations.",
+      "gap": "Characterization of Breakdown Point Behavior Across Diverse Cluster Configurations and Contamination Types",
+      "why_it_matters": "Understanding breakdown points is critical for establishing the robustness limits of trimmed k-means variants under adversarial or arbitrary data configurations.",
+      "what_is_known": "Breakdown points for trimmed k-means and robust k-means variants depend heavily on the underlying probability distribution, cluster configurations, and contamination types, with certain configurations yielding breakdown points arbitrarily close to zero.",
+      "what_remains_unknown": "A complete, universal theoretical characterization of how breakdown points vary across arbitrary cluster shapes, dimensions, and types of contamination under fixed vs. varying trimming proportions.",
+      "gap_type": "explicit",
+      "confidence": "high",
+      "origin_perspectives": [
+        "Theoretical Foundations and Consistency"
+      ],
+      "supporting_papers": [
+        {
+          "paper_id": "P002",
+          "sections": [
+            "Section 5"
+          ]
+        },
+        {
+          "paper_id": "P005",
+          "sections": [
+            "Section 3.2"
+          ]
+        }
+      ],
+      "related_papers": [
+        {
+          "paper_id": "P002",
+          "sections": [
+            "Section 5"
+          ],
+          "relation": "addresses",
+          "explanation": "Provides formal discussion and counterexamples showing breakdown points can be arbitrarily close to 0 depending on the underlying distribution."
+        },
+        {
+          "paper_id": "P005",
+          "sections": [
+            "Section 3.2"
+          ],
+          "relation": "addresses",
+          "explanation": "Analyzes the finite sample universal breakdown point for RKM under biased and unbiased proximal maps."
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P002",
+          "section": "Section 5",
+          "evidence": "Discussion in Section 5 and the counterexample showing breakdown points can be arbitrarily close to 0 depending on the probability distribution P."
+        },
+        {
+          "paper_id": "P005",
+          "section": "Section 3.2",
+          "evidence": "Theorem 1 establishes that the universal breakdown point for RKM with unbiased proximal maps remains 2/n."
+        }
+      ]
+    },
+    {
+      "id": "G002",
+      "decision": "retain",
+      "merged_ids": [],
+      "reason": "Addresses convergence guarantees and global optimality for non-standard objectives.",
+      "gap": "Convergence Guarantees and Global Optimality for Non-Standard and Regularized Trimmed K-Means Objectives",
+      "why_it_matters": "Most robust and trimmed k-means formulations rely on alternating minimization or block coordinate descent, which lack global optimality guarantees and can suffer from slow oscillation or convergence to local minima.",
+      "what_is_known": "Almost sure convergence to local minimizers or unbiased k-points can be proved using martingale theory, variational analysis, or Moreau envelopes for specific smooth or non-convex penalty variants.",
+      "what_remains_unknown": "Rigorous theoretical convergence rates, global optimality bounds, and conditions to eliminate slow indefinite oscillations around cluster centers for generalized or non-convex robust k-means objectives.",
+      "gap_type": "explicit",
+      "confidence": "high",
+      "origin_perspectives": [
+        "Theoretical Foundations and Consistency"
+      ],
+      "supporting_papers": [
+        {
+          "paper_id": "P001",
+          "sections": [
+            "2.3"
+          ]
+        },
+        {
+          "paper_id": "P005",
+          "sections": [
+            "Section 3.2"
+          ]
+        },
+        {
+          "paper_id": "P014",
+          "sections": [
+            "Section IV-D",
+            "Section IV-E"
+          ]
+        }
+      ],
+      "related_papers": [
+        {
+          "paper_id": "P001",
+          "sections": [
+            "2.3"
+          ],
+          "relation": "addresses",
+          "explanation": "Notes that standard k-means convergence theorems cannot eliminate the possibility of slow indefinite oscillations."
+        },
+        {
+          "paper_id": "P014",
+          "sections": [
+            "Section IV-D"
+          ],
+          "relation": "addresses",
+          "explanation": "Proves that partition level constrained clustering and generalized k-means converge only to local minima."
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P001",
+          "section": "2.3",
+          "evidence": "The k-means thus converge to some such relative position, but theorem 1 does not quite permit us to eliminate the interesting possibility that the two means oscillate slowly but indefinitely around the center."
+        },
+        {
+          "paper_id": "P014",
+          "section": "Section IV-D",
+          "evidence": "Theorem 4.9 guarantees convergence only to a local minimum for partition level constrained clustering."
+        }
+      ]
+    },
+    {
+      "id": "G003",
+      "decision": "retain",
+      "merged_ids": [],
+      "reason": "Highlights the absence of cluster-specific or adaptive anomaly thresholds.",
+      "gap": "Lack of cluster-specific or adaptive anomaly thresholds in heuristic trimmed k-means variants",
+      "why_it_matters": "Using a single global distance threshold or a fixed trimming proportion across all clusters fails to account for varying cluster densities and dispersions, leading to the erroneous elimination of inliers in dense regions or the retention of outliers in sparse clusters.",
+      "what_is_known": "Existing heuristic algorithms like k-means-sharp successfully accelerate clustering and improve outlier detection via global standard deviation thresholds or median absolute deviations (P006, P007).",
+      "what_remains_unknown": "Whether introducing cluster-specific adaptive thresholds or variable trimming proportions can be achieved with minimal computational overhead and without destabilizing centroid convergence.",
+      "gap_type": "explicit",
+      "confidence": "high",
+      "origin_perspectives": [
+        "Algorithmic Design and Optimization"
+      ],
+      "supporting_papers": [
+        {
+          "paper_id": "P006",
+          "sections": [
+            "Section VI"
+          ]
+        }
+      ],
+      "related_papers": [
+        {
+          "paper_id": "P006",
+          "sections": [
+            "Section VI"
+          ],
+          "relation": "addresses",
+          "explanation": "Notes that implementing cluster-specific thresholds rather than a global one is worth exploring to improve performance despite computational costs."
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P006",
+          "section": "Section VI",
+          "evidence": "Furthermore, the use of cluster-specific thresholds in contrast to a single global threshold, may improve performance, and is therefore worth exploring, although this will introduce some increase in computational cost."
+        }
+      ]
+    },
+    {
+      "id": "G004",
+      "decision": "merge",
+      "merged_ids": [
+        "G008"
+      ],
+      "reason": "G004 and G008 address the exact same gap regarding the lack of principled, automated parameter estimation for trimming quotas and membership thresholds, and are merged into G004.",
+      "gap": "Absence of principled, automated parameter estimation for trimming proportions and multi-membership constraints",
+      "why_it_matters": "Advanced soft-trimmed and robust k-means formulations require users to manually specify parameters such as the expected outlier proportion or minimum cluster membership, limiting their applicability in automated data pipelines.",
+      "what_is_known": "Formulations like Robust Trimmed k-means (RTKM) successfully leverage capped simplex relaxations and alternating minimization to handle both outliers and multi-membership data.",
+      "what_remains_unknown": "How to design data-driven, principled estimation strategies or integrate model selection techniques to automatically determine these tuning parameters during optimization.",
+      "gap_type": "explicit",
+      "confidence": "high",
+      "origin_perspectives": [
+        "Algorithmic Design and Optimization",
+        "Applied Domain Case Studies"
+      ],
+      "supporting_papers": [
+        {
+          "paper_id": "P009",
+          "sections": [
+            "3.2. Robust trimmed k-means",
+            "4. Experiments",
+            "6. Conclusions and future work"
+          ]
+        },
+        {
+          "paper_id": "P017",
+          "sections": [
+            "Section 7",
+            "Section 7.4"
+          ]
+        }
+      ],
+      "related_papers": [
+        {
+          "paper_id": "P009",
+          "sections": [
+            "6. Conclusions and future work"
+          ],
+          "relation": "addresses",
+          "explanation": "Explicitly highlights that currently there is no principled approach to estimating these parameters."
+        },
+        {
+          "paper_id": "P017",
+          "sections": [
+            "Section 7.4"
+          ],
+          "relation": "mentions",
+          "explanation": "Discusses the need for automated calibration to ensure thresholds remain valid over time without manual tuning."
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P009",
+          "section": "6. Conclusions and future work",
+          "evidence": "Currently, there is no principled approach to estimating these parameters. However, we demonstrate that RTKM performs competitively..."
+        },
+        {
+          "paper_id": "P017",
+          "section": "Section 7.4",
+          "evidence": "Discussion highlights the need for automated calibration and drift adaptation to ensure robust thresholds remain valid over time without manual intervention."
+        }
+      ]
+    },
+    {
+      "id": "G005",
+      "decision": "retain",
+      "merged_ids": [],
+      "reason": "Addresses streaming concept drift and adaptive anchor refresh policies in federated k-means.",
+      "gap": "Lack of streaming concept-drift adaptation and robust dynamic anchor refresh policies for federated baseline k-means architectures handling temporal distribution shifts.",
+      "why_it_matters": "In real-world decentralized IoT settings, network traffic patterns and underlying benign distributions drift over time. Relying on a fixed commissioning anchor causes false-positive drift and degraded detection efficacy when device behaviors evolve.",
+      "what_is_known": "Federated aggregation with robust statistics can successfully control merge-induced precision decay and mitigate static non-IID label skews using a small, trusted, benign anchor collected during commissioning.",
+      "what_remains_unknown": "How to design fully automated, streaming concept-drift mechanisms and adaptive anchor refresh protocols that update the calibration baseline over time without destabilizing distributed federated consensus.",
+      "gap_type": "explicit",
+      "confidence": "high",
+      "origin_perspectives": [
+        "Distributed, Federated, and Scalable Systems"
+      ],
+      "supporting_papers": [
+        {
+          "paper_id": "P017",
+          "sections": [
+            "Section 7",
+            "Section 7.4"
+          ]
+        }
+      ],
+      "related_papers": [
+        {
+          "paper_id": "P017",
+          "sections": [
+            "Section 7"
+          ],
+          "relation": "addresses",
+          "explanation": "Identifies drift adaptation as an important direction for future work to ensure benign calibration remains valid."
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P017",
+          "section": "Section 7",
+          "evidence": "Section 7 notes that drift adaptation is future work and that benign calibration must remain valid over time."
+        }
+      ]
+    },
+    {
+      "id": "G006",
+      "decision": "retain",
+      "merged_ids": [],
+      "reason": "Focuses on the vulnerability of federated robust aggregation to dirty commissioning windows.",
+      "gap": "Vulnerability of federated robust aggregation to dirty commissioning windows and non-robust covariance estimators under anchor contamination.",
+      "why_it_matters": "If the commissioning window used to establish the trusted benign anchor is contaminated by even a few percent of anomalous data, sample mean and covariance estimators break down, causing severe recall drops during operational deployment.",
+      "what_is_known": "Federated outlier-robust k-means algorithms can utilize robust statistics aggregation and benign-anchor thresholds to secure worker updates against faulty or malicious participants.",
+      "what_remains_unknown": "Whether replacing the standard sample mean and covariance estimators with robust alternatives like the minimum-covariance-determinant (MCD) estimator can effectively harden initial calibration against contaminated commissioning data.",
+      "gap_type": "inferred",
+      "confidence": "high",
+      "origin_perspectives": [
+        "Distributed, Federated, and Scalable Systems"
+      ],
+      "supporting_papers": [
+        {
+          "paper_id": "P017",
+          "sections": [
+            "Section 6.7",
+            "Section 7.4"
+          ]
+        }
+      ],
+      "related_papers": [
+        {
+          "paper_id": "P017",
+          "sections": [
+            "Section 6.7",
+            "Section 7.4"
+          ],
+          "relation": "addresses",
+          "explanation": "Discusses how the Gaussian model is vulnerable under anchor contamination due to non-robust estimators."
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P017",
+          "section": "Section 6.7",
+          "evidence": "Section 6.7 and Section 7.4 discuss how the Gaussian model is the weak point under anchor contamination."
+        }
+      ]
+    },
+    {
+      "id": "G007",
+      "decision": "retain",
+      "merged_ids": [],
+      "reason": "Addresses evaluation on non-Gaussian and complex multi-membership domain structures.",
+      "gap": "Evaluation of Trimmed K-Means and Outlier-Robust Clustering under Non-Gaussian and Complex Multi-Membership Data Structures in Real-World Domains",
+      "why_it_matters": "Real-world domain datasets frequently exhibit non-spherical clusters, overlapping categories, or complex multi-membership characteristics. Relying solely on spherical or single-membership assumptions can lead to poor outlier detection and distorted cluster boundaries in practical applications such as cheminformatics and career analysis.",
+      "what_is_known": "Standard trimmed k-means and robust variants like RTKM have been successfully applied to single-membership tasks (e.g., QSAR studies and alumni career clustering) and evaluated on basic multi-membership datasets, showing strong performance when data roughly conforms to spherical or convex distributions.",
+      "what_remains_unknown": "The empirical efficacy, generalization limits, and precise parameter sensitivity of trimmed and robust k-means variations when handling complex, overlapping, or non-convex domain structures combined with heavy real-world contamination remain largely unmapped.",
+      "gap_type": "explicit",
+      "confidence": "high",
+      "origin_perspectives": [
+        "Applied Domain Case Studies"
+      ],
+      "supporting_papers": [
+        {
+          "paper_id": "P009",
+          "sections": [
+            "4. Experiments",
+            "6. Conclusions and future work"
+          ]
+        },
+        {
+          "paper_id": "P016",
+          "sections": [
+            "3.3. MTC process",
+            "4. CONCLUSION"
+          ]
+        }
+      ],
+      "related_papers": [
+        {
+          "paper_id": "P009",
+          "sections": [
+            "4. Experiments"
+          ],
+          "relation": "addresses",
+          "explanation": "Evaluates RTKM on single and multi-membership datasets with and without outliers."
+        },
+        {
+          "paper_id": "P016",
+          "sections": [
+            "4. CONCLUSION"
+          ],
+          "relation": "mentions",
+          "explanation": "Notes limitations regarding real-world factors influencing job relevance and demographic restrictions."
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P009",
+          "section": "4. Experiments",
+          "evidence": "Empirical evaluation on single-membership datasets with outliers and multi-membership datasets without/with outliers demonstrates that RTKM performs competitively, but principled parameter estimation remains open."
+        },
+        {
+          "paper_id": "P016",
+          "section": "4. CONCLUSION",
+          "evidence": "The features used to predict job linearity may not fully capture real-world factors influencing job relevance, and datasets are often restricted to specific demographic subsets."
+        }
+      ]
+    }
+  ],
+  "rejected": [
+    {
+      "id": "G008",
+      "reason": "Merged into G004 as it is an exact duplicate addressing the absence of principled, automated parameter estimation for trimming proportions."
+    }
+  ],
+  "curation_summary": "Successfully curated and validated 8 candidate research gaps across the corpus. G008 was merged into G004 due to semantic equivalence regarding automated parameter estimation. All other gaps were retained with comprehensive paper cross-referencing and evidence preservation."
+}
+
+[E0024] research_gap_challenger | Research_Gap Challenger | Round 1
+-------------------------------------------------------------------
+Status: success
+
+{
+  "proposed_changes": [],
+  "no_change_reason": "All existing research gaps are well-supported by citations from the corpus, accurately mapped to their respective perspectives, and appropriately formulated without any unsupported or vague claims."
+}
+
+[E0025] research_gap_debate_terminated | Orchestrator | Round 1
+---------------------------------------------------------------
+Status: success
+No challenger changes; defender, adjudicator and later rounds skipped.
+
+[E0026] hypothesis_generation | Theoretical Foundations and Consistency Hypothesis Generator
+--------------------------------------------------------------------------------
+Status: success
+
+{
+  "perspective": "Theoretical Foundations and Consistency",
+  "hypotheses": [
+    {
+      "hypothesis": "Under arbitrary probability distributions with tightly packed clusters and contamination, the breakdown point of alpha-trimmed k-means and robust k-means variants can converge to zero, but can be bounded below by introducing geometric separation constraints or non-convex regularized proximal penalties.",
+      "rationale": "Breakdown point behavior depends heavily on the probability distribution and data configuration, where adversarial placement can force breakdown points arbitrarily close to zero. Theoretical bounds can be established by analyzing the robust properties of unbiased proximal maps and trimmed discrepancy functionals.",
+      "testable_prediction": "For any probability measure supported by K tightly packed clusters under contamination alpha, the finite-sample universal breakdown point will remain bounded by 2/n for unbiased proximal maps unless minimum separation distances are enforced.",
+      "proposed_test": "Evaluate empirical and theoretical breakdown thresholds of trimmed k-means across synthetic mixtures of Gaussians with varying degrees of overlap and contamination levels to measure the critical fraction leading to centroid collapse.",
+      "originating_gap_ids": [
+        "G001"
+      ],
+      "supporting_papers": [
+        {
+          "paper_id": "P002",
+          "sections": [
+            "Section 5"
+          ]
+        },
+        {
+          "paper_id": "P005",
+          "sections": [
+            "Section 3.2"
+          ]
+        }
+      ],
+      "related_papers": [
+        {
+          "paper_id": "P002",
+          "sections": [
+            "Section 5"
+          ],
+          "relation": "addresses",
+          "explanation": "Provides formal discussion and counterexamples showing breakdown points can be arbitrarily close to 0 depending on the underlying distribution."
+        },
+        {
+          "paper_id": "P005",
+          "sections": [
+            "Section 3.2"
+          ],
+          "relation": "addresses",
+          "explanation": "Analyzes the finite sample universal breakdown point for RKM under biased and unbiased proximal maps."
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P002",
+          "section": "Section 5",
+          "evidence": "Discussion in Section 5 and the counterexample showing breakdown points can be arbitrarily close to 0 depending on the probability distribution P."
+        },
+        {
+          "paper_id": "P005",
+          "section": "Section 3.2",
+          "evidence": "Theorem 1 establishes that the universal breakdown point for RKM with unbiased proximal maps remains 2/n."
+        }
+      ]
+    },
+    {
+      "hypothesis": "Generalized robust and trimmed k-means objectives solved via alternating minimization or block coordinate descent exhibit slow indefinite oscillations around cluster centers in symmetric configurations, which can be eliminated using refined step-size damping or variational Moreau envelope smoothing.",
+      "rationale": "Standard convergence theorems guarantee almost sure convergence to local minimizers or relative positions but fail to rule out slow indefinite oscillations in symmetric configurations due to the lack of strict descent properties at local boundaries.",
+      "testable_prediction": "Implementing adaptive damping parameters or Moreau envelope smoothing in block coordinate descent guarantees asymptotic eradication of indefinite centroid oscillations.",
+      "proposed_test": "Simulate iterative centroid trajectories of robust k-means under symmetric two-cluster configurations with adversarial noise to track iteration counts and distance oscillations with and without smoothing penalties.",
+      "originating_gap_ids": [
+        "G002"
+      ],
+      "supporting_papers": [
+        {
+          "paper_id": "P001",
+          "sections": [
+            "2.3"
+          ]
+        },
+        {
+          "paper_id": "P014",
+          "sections": [
+            "Section IV-D",
+            "Section IV-E"
+          ]
+        }
+      ],
+      "related_papers": [
+        {
+          "paper_id": "P001",
+          "sections": [
+            "2.3"
+          ],
+          "relation": "addresses",
+          "explanation": "Notes that standard k-means convergence theorems cannot eliminate the possibility of slow indefinite oscillations."
+        },
+        {
+          "paper_id": "P014",
+          "sections": [
+            "Section IV-D"
+          ],
+          "relation": "addresses",
+          "explanation": "Proves that partition level constrained clustering and generalized k-means converge only to local minima."
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P001",
+          "section": "2.3",
+          "evidence": "The k-means thus converge to some such relative position, but theorem 1 does not quite permit us to eliminate the interesting possibility that the two means oscillate slowly but indefinitely around the center."
+        },
+        {
+          "paper_id": "P014",
+          "section": "Section IV-D",
+          "evidence": "Theorem 4.9 guarantees convergence only to a local minimum for partition level constrained clustering."
+        }
+      ]
+    }
+  ]
+}
+
+[E0027] hypothesis_generation | Algorithmic Design and Optimization Hypothesis Generator
+--------------------------------------------------------------------------------
+Status: success
+
+{
+  "perspective": "Algorithmic Design and Optimization",
+  "hypotheses": [
+    {
+      "hypothesis": "Incorporating cluster-specific adaptive trimming proportions and local anomaly thresholds into generalized robust k-means objectives improves outlier detection precision in multi-density cluster configurations without causing centroid convergence instability.",
+      "rationale": "Existing trimmed and robust k-means variants typically rely on a single global distance threshold or a fixed trimming proportion across all clusters, which leads to the erroneous omission of inliers in dense regions or retention of outliers in sparse clusters. Dynamically adapting these thresholds per cluster via localized scatter or dispersion metrics can resolve this limitation.",
+      "testable_prediction": "An adaptive trimmed k-means algorithm utilizing cluster-specific distance thresholds will achieve a statistically significant higher F1-score on multi-density synthetic and benchmark datasets compared to counterparts using a single global threshold.",
+      "proposed_test": "Implement cluster-specific median absolute deviation (MAD) scaling within the centroid update step of RTKM, benchmark it against global threshold variants across 10 contaminated multi-density datasets, and measure centroid stability and F1-score over 100 independent runs.",
+      "originating_gap_ids": [
+        "G003"
+      ],
+      "supporting_papers": [
+        {
+          "paper_id": "P006",
+          "sections": [
+            "Section VI"
+          ]
+        }
+      ],
+      "related_papers": [
+        {
+          "paper_id": "P006",
+          "sections": [
+            "Section VI"
+          ],
+          "relation": "addresses",
+          "explanation": "Notes that implementing cluster-specific thresholds rather than a global one is worth exploring to improve performance despite computational costs."
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P006",
+          "section": "Section VI",
+          "evidence": "Furthermore, the use of cluster-specific thresholds in contrast to a single global threshold, may improve performance, and is therefore worth exploring, although this will introduce some increase in computational cost."
+        }
+      ]
+    },
+    {
+      "hypothesis": "Integrating automated, data-driven parameter estimation strategies based on sample contour derivatives into robust trimmed k-means objectives eliminates manual quota tuning while retaining optimal breakdown performance.",
+      "rationale": "Advanced robust and trimmed k-means formulations require users to manually specify parameters such as the expected outlier proportion or minimum cluster membership quota. Designing automated calibration rules based on rates of decrease in trimmed variance functionals can make these algorithms fully autonomous.",
+      "testable_prediction": "An automated trimming quota estimator integrated into Robust Trimmed k-means (RTKM) will estimate the optimal outlier proportion within a 5% margin of the ground-truth contamination rate across diverse benchmark distributions.",
+      "proposed_test": "Develop a second-derivative numerical tracker of trimmed k-variance functionals to automatically select alpha during the alternating minimization phase of RTKM, and evaluate its execution time and clustering accuracy against manual grid-search tuning.",
+      "originating_gap_ids": [
+        "G004"
+      ],
+      "supporting_papers": [
+        {
+          "paper_id": "P009",
+          "sections": [
+            "3.2. Robust trimmed k-means",
+            "6. Conclusions and future work"
+          ]
+        },
+        {
+          "paper_id": "P017",
+          "sections": [
+            "Section 7.4"
+          ]
+        }
+      ],
+      "related_papers": [
+        {
+          "paper_id": "P009",
+          "sections": [
+            "6. Conclusions and future work"
+          ],
+          "relation": "addresses",
+          "explanation": "Explicitly highlights that currently there is no principled approach to estimating these parameters."
+        },
+        {
+          "paper_id": "P017",
+          "sections": [
+            "Section 7.4"
+          ],
+          "relation": "mentions",
+          "explanation": "Discusses the need for automated calibration to ensure thresholds remain valid over time without manual tuning."
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P009",
+          "section": "6. Conclusions and future work",
+          "evidence": "Currently, there is no principled approach to estimating these parameters. However, we demonstrate that RTKM performs competitively..."
+        },
+        {
+          "paper_id": "P017",
+          "section": "Section 7.4",
+          "evidence": "Discussion highlights the need for automated calibration and drift adaptation to ensure robust thresholds remain valid over time without manual intervention."
+        }
+      ]
+    }
+  ]
+}
+
+[E0028] hypothesis_generation | Distributed, Federated, and Scalable Systems Hypothesis Generator
+--------------------------------------------------------------------------------
+Status: success
+
+{
+  "perspective": "Distributed, Federated, and Scalable Systems",
+  "hypotheses": [
+    {
+      "hypothesis": "Incorporating robust covariance estimators such as the Minimum Covariance Determinant (MCD) instead of standard sample covariance for the trusted benign anchor prevents anchor contamination collapse in federated robust k-means architectures.",
+      "rationale": "Standard sample mean and covariance estimators break down under small contamination percentages in the initial commissioning window, inflating covariance along attack directions and destroying operational recall. Utilizing robust alternatives directly mitigates this vulnerability.",
+      "testable_prediction": "Deploying an MCD-based robust estimator for the benign anchor will reduce recall degradation by at least 40% under a 5% poisoned commissioning window compared to standard sample covariance.",
+      "proposed_test": "Simulate federated baseline k-means across distributed worker nodes on the UNSW-NB15 dataset with 5% malicious injection during the commissioning anchor phase, measuring attack detection recall using both standard sample covariance and MCD estimators.",
+      "originating_gap_ids": [
+        "G006"
+      ],
+      "supporting_papers": [
+        {
+          "paper_id": "P017",
+          "sections": [
+            "Section 6.7",
+            "Section 7.4"
+          ]
+        }
+      ],
+      "related_papers": [
+        {
+          "paper_id": "P017",
+          "sections": [
+            "Section 6.7",
+            "Section 7.4"
+          ],
+          "relation": "addresses",
+          "explanation": "Discusses how the Gaussian model is vulnerable under anchor contamination due to non-robust estimators."
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P017",
+          "section": "Section 6.7",
+          "evidence": "Section 6.7 and Section 7.4 discuss how the Gaussian model is the weak point under anchor contamination."
+        }
+      ]
+    },
+    {
+      "hypothesis": "Designing a streaming concept-drift adaptation protocol with dynamic anchor refresh intervals maintains operational precision and FPR stability in distributed federated k-means under temporal distribution shifts without destabilizing consensus.",
+      "rationale": "Real-world IoT devices experience continuous temporal distribution shifts. Relying on a fixed commissioning anchor causes false-positive drift and degraded detection efficacy when device behaviors evolve over time.",
+      "testable_prediction": "A dynamic anchor refresh mechanism based on rolling window median absolute deviations will maintain FPR within 2% of baseline during continuous temporal traffic shifts, outperforming static anchor configurations by over 30% in F1-score.",
+      "proposed_test": "Implement a streaming sliding-window anchor refresh module into the adaptive federated baseline k-means coordinator framework and evaluate performance across simulated temporal concept-drift scenarios on the N-BaIoT dataset.",
+      "originating_gap_ids": [
+        "G005"
+      ],
+      "supporting_papers": [
+        {
+          "paper_id": "P017",
+          "sections": [
+            "Section 7",
+            "Section 7.4"
+          ]
+        }
+      ],
+      "related_papers": [
+        {
+          "paper_id": "P017",
+          "sections": [
+            "Section 7"
+          ],
+          "relation": "addresses",
+          "explanation": "Identifies drift adaptation as an important direction for future work to ensure benign calibration remains valid."
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P017",
+          "section": "Section 7",
+          "evidence": "Section 7 notes that drift adaptation is future work and that benign calibration must remain valid over time."
+        }
+      ]
+    }
+  ]
+}
+
+[E0029] hypothesis_generation | Applied Domain Case Studies Hypothesis Generator
+--------------------------------------------------------------------------------
+Status: success
+
+{
+  "perspective": "Applied Domain Case Studies",
+  "hypotheses": [
+    {
+      "hypothesis": "Deploying robust and trimmed k-means algorithms with fixed global trimming proportions in multi-membership real-world domains (such as heterogeneous alumni career trajectories and multi-target academic progression) causes high false-positive elimination of legitimate minority career paths or retention of domain-specific anomalies.",
+      "rationale": "Real-world domain datasets frequently exhibit non-spherical clusters, overlapping categories, and complex multi-membership characteristics. Relying on global or fixed trimming quotas fails to adapt to varying densities across diverse career pathways, distorting cluster boundaries and outlier detection performance.",
+      "testable_prediction": "Integrating cluster-specific adaptive trimming or soft-membership proportions into domain case studies (e.g., career linearity prediction) will significantly improve silhouette scores and classification F1-averages compared to fixed-trimming models like K-means LTS.",
+      "proposed_test": "Evaluate Robust Trimmed k-means (RTKM) and K-means LTS on female STEM graduate career datasets by comparing fixed trimming proportions (e.g., alpha = 0.3) against cluster-specific adaptive thresholding, measuring changes in silhouette coefficients and multi-target random forest (MTRF) classification metrics.",
+      "originating_gap_ids": [
+        "G003",
+        "G004",
+        "G007"
+      ],
+      "supporting_papers": [
+        {
+          "paper_id": "P009",
+          "sections": [
+            "4. Experiments",
+            "6. Conclusions and future work"
+          ]
+        },
+        {
+          "paper_id": "P016",
+          "sections": [
+            "3.3. MTC process",
+            "4. CONCLUSION"
+          ]
+        }
+      ],
+      "related_papers": [
+        {
+          "paper_id": "P009",
+          "sections": [
+            "4. Experiments"
+          ],
+          "relation": "addresses",
+          "explanation": "Evaluates RTKM on single and multi-membership datasets with and without outliers."
+        },
+        {
+          "paper_id": "P016",
+          "sections": [
+            "4. CONCLUSION"
+          ],
+          "relation": "mentions",
+          "explanation": "Notes limitations regarding real-world factors influencing job relevance and demographic restrictions."
+        }
+      ],
+      "evidence": [
+        {
+          "paper_id": "P009",
+          "section": "4. Experiments",
+          "evidence": "Empirical evaluation on single-membership datasets with outliers and multi-membership datasets without/with outliers demonstrates that RTKM performs competitively, but principled parameter estimation remains open."
+        },
+        {
+          "paper_id": "P016",
+          "section": "4. CONCLUSION",
+          "evidence": "The features used to predict job linearity may not fully capture real-world factors influencing job relevance, and datasets are often restricted to specific demographic subsets."
+        }
+      ]
+    }
+  ]
+}
+
+[E0030] hypothesis_challenger | Hypothesis Challenger | Round 1
+---------------------------------------------------------------
+Status: success
+
+{
+  "proposed_changes": [],
+  "no_change_reason": "All hypotheses are well-supported by the cited corpus papers, correctly aligned with their originating perspectives, logically sound, and falsifiable based on the provided evidence and testable predictions."
+}
+
+[E0031] hypothesis_debate_terminated | Orchestrator | Round 1
+-------------------------------------------------------------
+Status: success
+No challenger changes; defender, adjudicator and later rounds skipped.
+
+[E0032] final_curation | Final Output Curator
+---------------------------------------------
+Status: error
+Error: GoogleInvalidRequestError: Error calling model 'gemini-3.5-flash-lite' (INVALID_ARGUMENT): 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'Request contains an invalid argument.', 'status': 'INVALID_ARGUMENT'}}
+
+[E0033] final_result | Orchestrator
+-----------------------------------
+Status: success
+7 gaps and 7 hypotheses.

@@ -1,0 +1,7 @@
+- G001: Lack of deterministic, non-exhaustive computational algorithms for optimal trimming set and cluster center selection [Papers: P001; P002 (Section 4, Section 5)]
+
+- G002: Computational limitations and theoretical rigidity of equal-radius spherical ball constraints in trimmed k-means when applied to complex or non-spherical clusters [Papers: P002 (Section 3, Section 4)]
+
+- G004: Exact theoretical breakdown point properties and data-dependent stability bounds for alpha-trimmed k-means across arbitrary probability measures [Papers: P002 (Section 5)]
+
+- G005: Elimination of potential slow indefinite oscillations in standard unconstrained k-means convergence sequences [Papers: P001 (2.3)]

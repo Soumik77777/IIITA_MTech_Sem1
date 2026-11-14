@@ -1,3 +1,0 @@
-- G001: Lack of data-driven, automated mechanisms for tuning multi-membership and trimming proportion parameters (such as expected outlier proportion $\alpha$ and minimum cluster membership $s$) in continuous relaxation formulations. [Papers: P009]
-
-- G002: Vulnerability of baseline trusted anchors to contamination in semi-supervised federated clustering architectures. [Papers: P017]

@@ -1,0 +1,29 @@
+- H001: In standard k-means partitioning under symmetric topological configurations such as a uniform distribution over a disk, the distance between cluster means and the symmetry center exhibits a Lyapunov function decay rate that permits limit cycles or slow indefinite oscillations.
+Rationale: Theorem 1 of MacQueen (1967) establishes almost sure convergence of the expected within-class variance sequence, but its proof relies on martingale convergence bounds that do not preclude measure-zero sets of initial conditions where trajectories enter bounded persistent oscillation regimes instead of point convergence.
+Testable prediction: For a uniform distribution on a bounded circular disk in R^2 with k=2, the probability measure of initial states leading to non-convergent recurrent trajectories has a strictly positive lower bound under infinitesimal perturbations of the update step size.
+References: P001
+
+- H002: The breakdown point of alpha-trimmed k-means converges to zero as the Hausdorff distance between constituent population cluster supports approaches the radius of the optimal trimming balls under specific probability mass allocations.
+Rationale: Cuesta-Albertos et al. (1997) demonstrate that optimal trimming sets correspond to unions of balls; when cluster overlap or relative mass proportions create boundary ambiguity, infinitesimal contamination can force the trimming mechanism to discard true cluster mass instead of outliers, collapsing the breakdown threshold.
+Testable prediction: There exists a family of continuous probability mixtures where the breakdown point epsilon*(alpha, P) is strictly bounded above by a function proportional to the minimum separation distance divided by the total dispersion, tending to zero.
+References: P002
+
+- H003: The breakdown point of alpha-trimmed k-means drops significantly toward zero when underlying cluster proportions are heavily imbalanced or when contamination is structured along specific lower-dimensional manifolds.
+Rationale: While trimmed k-means provides asymptotic consistency, isolated counterexamples show that arbitrary distributions can cause the breakdown point to collapse, necessitating a comprehensive characterization of lower bounds relative to cluster separation and proportion ratios.
+Testable prediction: For a mixture of Gaussian clusters with varying mixing proportions, the empirical breakdown point of alpha-trimmed k-means will approach the trimming fraction lower bound as the smallest cluster proportion drops below the trimming threshold alpha.
+References: P002
+
+- H004: Deterministic approximation algorithms utilizing convex relaxation for trimming sets can achieve near-optimal robust clustering performance comparable to simulated annealing while drastically reducing computational complexity.
+Rationale: The lack of efficient deterministic optimization algorithms for choosing optimal trimming sets forces reliance on slow heuristic or randomized search routines like simulated annealing, highlighting the need for structured relaxation techniques.
+Testable prediction: A convex relaxation-based trimming set selector will achieve within 5 percent of the objective function value attained by simulated annealing while executing at least an order of magnitude faster on datasets exceeding 100,000 samples.
+References: P002
+
+- H005: Deterministic multi-start heuristics utilizing geometric bounding boxes can approximate optimal trimming sets for trimmed k-means faster than simulated annealing without sacrificing breakdown resistance.
+Rationale: Since there is currently no deterministic optimal algorithm for selecting trimming sets in trimmed k-means, practitioners rely on stochastic methods like simulated annealing which incur high computational overhead. Bounding-box pre-filtering can restrict the search space for feasible outlier candidates.
+Testable prediction: A deterministic bounding-box heuristic will reduce CPU runtime by at least 30 percent compared to simulated annealing on synthetic uniform mixtures contaminated with 10 percent uniform noise, while achieving equal or lower empirical objective function variance.
+References: P002
+
+- H006: Introducing a localized momentum damping term into the sequential update loop of standard k-means eliminates slow indefinite oscillations in symmetric disk configurations.
+Rationale: Standard k-means sequential partitioning can experience lingering oscillations of means around the center in symmetric configurations because standard updates lack historical velocity damping. A momentum-based step size adjustment forces convergence stabilization.
+Testable prediction: A damped sequential update rule will reduce the number of iterations required to reach a stable partition by 40 percent on a uniform distribution over a 2D disk, completely preventing persistent cyclic mean updates.
+References: P001

@@ -1,0 +1,5 @@
+- G001: Characterization of the exact breakdown point behavior of trimmed k-means when true underlying cluster proportions are heterogeneous or unknown. [Papers: P002 (Section 5)]
+
+- G002: Elimination of the possibility of slow indefinite oscillation around cluster centers in the asymptotic convergence of basic k-means sequences. [Papers: P001 (2.3)]
+
+- G003: Deterministic optimization heuristics vs. simulated annealing for combinatorial trimming set selection [Papers: P002]

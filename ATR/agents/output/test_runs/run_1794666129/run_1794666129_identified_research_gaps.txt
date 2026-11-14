@@ -1,0 +1,5 @@
+- G001: Elimination of slow indefinite oscillation of cluster means in symmetric distributions [Papers: P001 (2.3)]
+
+- G002: Exact theoretical characterization and empirical impact of breakdown points under cluster misspecification and probability mass distribution [Papers: P002 (Section 5)]
+
+- G003: Lack of efficient deterministic optimization algorithms for non-convex trimmed k-means objectives [Papers: P002]

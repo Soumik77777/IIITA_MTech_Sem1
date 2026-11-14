@@ -1,0 +1,29 @@
+- H001: The incorporation of a dynamic, state-dependent step-size damping factor into the standard k-means update equations guarantees almost sure convergence without slow indefinite oscillation around limiting centers.
+Rationale: Standard martingale-based convergence proofs establish almost sure limits for k-means sequences but fail to preclude slow indefinite oscillation around stable centers due to constant step-size influences in the asymptotic limit.
+Testable prediction: Under a controlled stochastic simulation of isotropic Gaussian mixtures, a k-means algorithm with a Robbins-Monro type diminishing step-size condition exhibits zero probability of infinite oscillation compared to unadjusted updates.
+References: P001
+
+- H002: Replacing the Euclidean metric in trimmed k-means with a Mahalanobis-based scatter estimation metric preserves strong consistency guarantees when applied to mixtures of continuous elliptical distributions.
+Rationale: Strong consistency proofs for trimmed k-means rely heavily on Euclidean ball configurations and Lebesgue measure continuity; extending these proofs requires metric adaptation that accommodates elliptical covariance structures.
+Testable prediction: As sample size approaches infinity, the estimated cluster centers under the scatter-adjusted trimmed k-means converge strongly to the true theoretical elliptical quantile centers.
+References: P002, P003
+
+- H003: Implementing a dynamic neighborhood-radius damping step in iterative k-means updating rules will eliminate slow indefinite oscillations around cluster centers.
+Rationale: Standard k-means processes can exhibit slow indefinite oscillation under stable conditions because hard boundaries fail to dampen small gradient adjustments near the center. Introducing an adaptive damping parameter proportional to the local variance derivative will force asymptotic stabilization.
+Testable prediction: An accelerated convergence rate with zero limit-cycle fluctuations in synthetic bimodal mixtures when applying damped update steps compared to standard MacQueen iterations.
+References: P001
+
+- H004: Incorporating scatter-matrix determinant minimization steps into exploratory trimmed k-means algorithms will allow robust clustering of non-spherical structures without prior knowledge of the true underlying geometry.
+Rationale: Standard trimmed k-means relies heavily on Euclidean distance assumptions which bias performance on non-spherical clusters. Integrating a Mahalanobis-based elliptical dispersion update (inspired by MCD methods) into the assignment-trimming loop extends consistency to complex geometries.
+Testable prediction: Lower misclassification error and more stable cluster dispersion estimates on heavily stretched linear or elliptical synthetic distributions.
+References: P002, P003
+
+- H005: Coupling Fisher's discriminant ratio feature selection directly with generalized elliptical trimmed clustering will improve cross-validation metrics (q2) in 3D-QSAR workflows by preventing descriptor-space bias.
+Rationale: Real-world QSAR datasets contain multi-descriptor spaces with complex correlations. Combining Fisher ratio weighting with adaptive non-spherical trimming filters out outlying molecules and uninformative features simultaneously without needing strict a priori distribution assumptions.
+Testable prediction: An increase in external validation q2 and decrease in representation entropy (HR) for CoMFA PLS models built on trimmed molecular datasets.
+References: P003, P004
+
+- H006: Integrating specialized non-spherical metrics and tailored distance measures into Fisher's discriminant ratio feature selection workflows will significantly improve internal cross-validation (q2) and external predictability in QSAR models of HIV-1 protease inhibitors compared to standard Euclidean distance-based trimming.
+Rationale: Standard trimmed k-means relies heavily on Euclidean distances and spherical or ball assumptions, which fail or bias predictive models when handling complex, non-spherical distributions in molecular design and QSAR. Incorporating customized elliptical or problem-specific metrics can preserve biological variance without requiring heavy a priori distribution knowledge.
+Testable prediction: Substituting standard Euclidean-based k-means trimming with an elliptical scatter-matrix-based metric within Fisher's discriminant ratio feature selection will yield a higher cross-validated q2 (exceeding 0.710) and improved external validation metrics on the HIV-1 protease inhibitor dataset.
+References: P003, P004

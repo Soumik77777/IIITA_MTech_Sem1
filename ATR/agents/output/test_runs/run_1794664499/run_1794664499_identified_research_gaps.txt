@@ -1,0 +1,7 @@
+- G001: Eliminating slow indefinite oscillations of means in symmetric configurations for standard k-means [Papers: P001 (Section 2.3)]
+
+- G002: General behavior and lower bounds of the breakdown point for trimmed k-means across arbitrary distributions [Papers: P002 (Section 5)]
+
+- G004: Scalable and efficient deterministic optimization algorithms for choosing optimal trimming sets in trimmed k-means [Papers: P002 (Section 4, Section 5)]
+
+- G005: Empirical parameter tuning and operational mitigation for boundary slow oscillations in sequential partitioning procedures [Papers: P001 (Section 2.3)]

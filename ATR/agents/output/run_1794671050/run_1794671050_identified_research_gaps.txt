@@ -1,0 +1,19 @@
+- G001: Handling streaming concept drift and local distribution shifts in federated outlier-aware clustering frameworks [Papers: P017 (Section 6, Section 7, Section 7.4)]
+
+- G002: Resilience of commissioning anchors against poisoning and contamination via robust multivariate covariance estimators [Papers: P017 (Section 6.7, Section 7.4)]
+
+- G003: Parametric closed-form derivations for pseudo-isolation outlier scoring distributions in clustering frameworks [Papers: P015 (8 Discussion)]
+
+- G004: Formal data-driven estimation of hyper-parameter configurations in continuous robust trimmed clustering models [Papers: P009 (3.2. Robust trimmed k-means, 4. Experiments, 6. Conclusions and future work)]
+
+- G005: Integration of non-Bregman divergence metrics into universal geometric frameworks for robust K-means centroid updates [Papers: P014 (Section III-B)]
+
+- G006: Formal optimization of neighborhood ranks for pseudo-isolation outlier scoring in nonparametric clustering frameworks [Papers: P015 (3.1 Pseudo-Isolation as a Robust Outlier Score)]
+
+- G007: Handling feature-space skew and multi-device behavioral drift in decentralized federated outlier-aware clustering [Papers: P017 (Section 6, Section 7.4)]
+
+- G008: Empirical physical edge deployment and direct energy consumption profiling of lightweight federated outlier-aware K-means [Papers: P017 (Section 7.4)]
+
+- G009: Worst-case robustness guarantees and adaptive evasion defense against joint multi-vector adversary models in federated clustering [Papers: P017 (Section 7.4)]
+
+- G010: Evaluation of ADASYN-Gaussian and outlier removal integration trade-offs across highly imbalanced multi-class categorical datasets [Papers: P016 (2. RESEARCH METHOD, 4. CONCLUSION)]

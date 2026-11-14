@@ -1,0 +1,64 @@
+- H001: The discontinuity of trimming functions on optimal ball boundaries can be smoothed via mollification schemes, permitting the derivation of explicit central limit theorems and asymptotic normality bounds for empirical trimmed k-means estimators under general continuous distributions.
+Rationale: Strong consistency and existence results are well-established for trimmed k-means estimators, but the boundary discontinuities of trimming functions have precluded standard weak limit derivations. Introducing smooth approximations or penalty-based relaxations allows the application of functional delta methods and empirical process central limit theorems.
+Testable prediction: If trimming indicators are replaced by continuous sigmoidal transition boundaries with bandwidth parameter h_n going to zero as n goes to infinity, the normalized empirical cluster centers will converge weakly to a zero-mean Gaussian process with a covariance structure dependent on the density at the boundary.
+References: P002
+
+- H002: Universal breakdown points of robust and penalized k-means algorithms cannot exceed 2/n for arbitrary unstructured adversarial configurations unless the proximal penalty satisfies non-convex coercive growth conditions that penalize isolated high-leverage points.
+Rationale: Current convex or unbiased proximal maps experience breakdown with just 2 outliers on general configurations because linear penalties fail to dominate adversarial leverage. Coercive non-convex penalties alter the variational geometry to prevent catastrophic centroid dragging.
+Testable prediction: Replacing convex proximal penalties with strictly non-convex, sub-additive penalty functions will raise the universal breakdown point from 2/n to a fraction proportional to the sample size n under arbitrary adversarial contamination, provided the inlier separation exceeds the noise magnitude.
+References: P005, P002
+
+- H003: Measure-theoretic convergence proofs for the k-means process and trimming functionals can be extended from Euclidean domains to general metric spaces of non-positive curvature (CAT(0) spaces) for arbitrary k and penalty orders r by substituting Frechet means for Euclidean centroids.
+Rationale: While almost sure convergence is proven for Euclidean spaces, extensions to general metric spaces are currently limited to k=1 and r=1 as reasoned suppositions. In CAT(0) spaces, the convexity of the squared distance functional guarantees unique Frechet means and compact containment properties necessary for martingale convergence.
+Testable prediction: The empirical trimmed k-variation sequence in a separable CAT(0) metric space converges almost surely to its population counterpart for any arbitrary cluster count k and penalty order r >= 1.
+References: P001
+
+- H004: Integrating customized non-spherical metric discrepancy measures and matrix factorization update rules into trimmed k-means objectives significantly improves cluster separation on non-convex manifolds without losing computational tractability.
+Rationale: Standard trimmed k-means and optimal trimming sets rely on spherical ball unions, which fail on complex or linear non-spherical manifolds. Adapting matrix factorization mappings and specialized distance metrics allows robust clustering engines to capture non-spherical geometries.
+Testable prediction: Replacing Euclidean distance-based trimming with customized elliptic or manifold-aware discrepancy measures in iterative update steps reduces clustering error by at least 15% on non-convex synthetic manifolds.
+References: P002, P003
+
+- H005: Incorporating continuous relaxation capping constraints and joint gradient-based parameter updates into unified k-means objectives enables automatic co-estimation of cluster counts, trimming fractions, and membership thresholds.
+Rationale: State-of-the-art robust and trimmed k-means algorithms require manual specification or external grid-searching for hyperparameters like cluster count k, trimming fraction alpha, and minimum membership bounds s. Co-optimizing these within a continuous simplex relaxation objective removes manual heuristic burdens.
+Testable prediction: A joint proximal alternating minimization framework co-estimating k, alpha, and s will converge to optimal parameter values within 5% of ground-truth injection levels on synthetic multi-membership datasets.
+References: P009
+
+- H006: Evaluating trimmed k-means and robust distance-threshold variants directly on high-dimensional non-linear manifolds without linear dimensionality reduction (such as PCA) will exhibit severe degradation in F1-score and false-positive rates due to failure of spherical dispersion assumptions.
+Rationale: High-dimensional anomaly detection datasets (like ODDS) exhibit complex non-linear manifolds where linear projections discard critical variance, and standard trimmed k-means relies heavily on spherical dispersion assumptions.
+Testable prediction: Applying outlier-aware k-means variants directly to unreduced high-dimensional datasets will decrease F1-scores by more than 25% compared to PCA-preprocessed datasets.
+References: P011, P015
+
+- H007: Systematically varying the standard deviation boundary constant q across diverse multi-domain large-scale datasets reveals a strict empirical trade-off where lower values minimize within-cluster MSE and maximize recall, while higher values (q >= 4) saturate precision at near 100%.
+Rationale: Previous sensitivity analyses were limited to small canonical datasets like Iris and Ruspini, leaving the empirical stability and optimal operational zones across large-scale multi-domain environments unverified.
+Testable prediction: Scaling sensitivity sweeps for q from 2 to 6 on large-scale contaminated datasets will show that precision remains above 95% for q >= 4 while recall drops proportionally below 50%.
+References: P006, P007
+
+- H008: Contaminating the trusted baseline anchor window during device commissioning leads to severe covariance inflation along attack directions, causing false-positive rates in adaptive federated k-means to spike beyond nominal thresholds.
+Rationale: Although median-absolute-deviation auto-thresholding holds false-positive levels under clean baselines, the underlying sample mean and covariance estimators are non-robust and easily inflated by dirty commissioning data.
+Testable prediction: Introducing a 5% attack contamination rate into the trusted benign commissioning anchor will inflate empirical covariance along attack axes and increase false-positive rates by at least 40%.
+References: P017
+
+- H009: The systematic integration of robust covariance estimators, such as the Minimum Covariance Determinant (MCD), into adaptive thresholding anchors prevents the inflation of covariance matrices along attack directions during commissioning, thereby preserving false-positive stability under contaminated anchor distributions.
+Rationale: While robust statistics like the Median Absolute Deviation (MAD) stabilize thresholding levels, sample means and covariances beneath the threshold remain vulnerable to initial data corruption, leading to distorted false-positive bounds when commissioning windows contain planted anomalies.
+Testable prediction: Replacing sample covariance estimators with MCD-based robust estimators in adaptive thresholding anchors will reduce false-positive rate inflation by at least 40% when the commissioning window contains up to 5% attack contamination.
+References: P017
+
+- H010: Automated co-estimation frameworks that integrate multi-membership capping constraints and continuous simplex weights into unified objective functions eliminate the precision-recall trade-offs caused by manual hyperparameter selection for trimming proportion alpha and cluster count k.
+Rationale: Current robust and trimmed k-means algorithms rely on external grid-searching or heuristic specifications for hyperparameters like the trimming fraction alpha and cluster number k, which leads to unstable operational zones across multi-domain environments.
+Testable prediction: A unified continuous objective incorporating co-estimated simplex weights and outlier capping constraints will achieve higher average F1 scores across heterogeneous multi-membership benchmarks than externally tuned grid-search variants.
+References: P009
+
+- H011: Integrating robust covariance estimators or robust dispersion measures into molecular descriptor pipelines enhances transformation-invariant trimming and preserves biological activity structures in QSAR partial least squares regression.
+Rationale: Current feature selection and dataset trimming workflows in QSAR drug discovery are highly sensitive to variable scaling and lack invariant dispersion measures, risking the exclusion of valid molecular descriptors during bad cluster identification.
+Testable prediction: Substituting transformation-invariant robust dispersion measures into QSAR molecular descriptor trimming pipelines will maintain cross-validated regression performance (q2) under arbitrary variable scaling where standard scaling-dependent implementations fail.
+References: P004
+
+- H012: Incorporating lightweight streaming concept-drift detectors and dynamic anchor refresh policies into federated outlier-trimmed clustering frameworks prevents false-positive degradation and stabilizes recall during continuous behavioral drift in resource-constrained IoT intrusion detection.
+Rationale: Real-world IoT devices experience continuous traffic and behavioral distribution drift over time; relying on a fixed initial commissioning anchor without drift adaptation leads to progressive miscalibration and false-positive inflation.
+Testable prediction: Deploying an adaptive anchor refresh policy with lightweight drift detection in federated outlier-trimmed k-means will maintain false-positive rates below a target threshold (e.g., FPR < 0.02) during prolonged streaming distribution shifts compared to fixed-anchor static baselines.
+References: P017
+
+- H013: Integrating granular qualitative employment history features, industry alignment indicators, and alternative multi-target learners directly into outlier-robust clustering pipelines improves the classification accuracy of non-linear career outcomes such as job linearity.
+Rationale: Current applied pipelines for employability and career trajectory prediction combine K-means least trimmed squares with multi-target random forests, but struggle with lower classification accuracy on complex non-linear targets due to limited feature granularity.
+Testable prediction: Augmenting graduate employment datasets with granular industry alignment factors and deploying deep neural network multi-target learners will raise the classification accuracy of job linearity from baseline levels (81%) to above 90% without degrading cluster silhouette separation.
+References: P016

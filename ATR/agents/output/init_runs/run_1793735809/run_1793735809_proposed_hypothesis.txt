@@ -1,3 +1,0 @@
-- Integrating a Minimum Covariance Determinant (MCD) estimator for the trusted anchor in federated k-means intrusion detection will preserve recall stability even under commissioning-anchor contamination levels exceeding 5%.
-
-- Formulating adaptive, data-driven updates for the outlier proportion parameter $\alpha$ and membership threshold $s$ during alternating minimization iterations will eliminate manual tuning while preserving robust clustering performance across diverse topologies.

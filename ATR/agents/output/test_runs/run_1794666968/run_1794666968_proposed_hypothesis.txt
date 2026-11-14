@@ -1,0 +1,24 @@
+- H001: Implementing a relaxation-based greedy heuristic that iteratively updates candidate trimming sets through marginal cost evaluations can achieve deterministic convergence to near-optimal trimming sets without requiring exhaustive combinatorial search.
+Rationale: Current trimmed k-means implementations rely heavily on stochastic simulated annealing algorithms in Matlab, which lack deterministic execution guarantees and can be computationally expensive. By formulating optimal trimming set selection as a submodular maximization or continuous relaxation problem, we can construct deterministic search paths.
+Testable prediction: A deterministic relaxation algorithm will achieve lower final trimmed variance than stochastic simulated annealing in 90 percent of trials on synthetic datasets with greater than 10000 samples, while reducing execution variance to zero.
+References: P002
+
+- H002: Integrating dynamic coarsening and refinement parameter controls into trimmed k-means iterations will accelerate runtime convergence on massive datasets without increasing outlier misclassification rates.
+Rationale: While standard k-means successfully leverages coarsening and refinement parameters to dynamically control group structures during sample processing, these procedural heuristics have not been formally adapted to trimmed k-means algorithms where data points are actively discarded.
+Testable prediction: Incorporating coarsening and refinement heuristics into trimmed k-means will reduce total CPU time by at least 35 percent on large datasets while maintaining an adjusted Rand index within 1 percent of standard trimmed k-means.
+References: P001, P002
+
+- H003: Modifying the trimming region definition from a union of equal-radius spherical balls to Mahalanobis-based ellipsoidal regions with scale constraints preserves almost sure strong consistency of trimmed k-means estimators.
+Rationale: Current existence proofs and strong consistency results rely on the structural requirement that clusters are spherical and share the same radius. Generalizing the metric space penalty to account for covariance matrices allows proper asymptotic characterization under anisotropic data.
+Testable prediction: An ellipsoidal-trimmed k-means estimator achieves strong consistency for mixtures of Gaussian distributions with distinct covariance matrices as sample size approaches infinity, provided the eigenvalues of the covariance matrices are bounded away from zero and infinity.
+References: P002
+
+- H004: Incorporating an orthogonal penalty term into the martingale-based convergence equations eliminates slow indefinite oscillation behaviors of centroids under symmetric configurations.
+Rationale: MacQueen's martingale formulation proves almost sure convergence of within-class variances but leaves open the possibility of slow periodic oscillations around cluster centers in symmetric spatial layouts.
+Testable prediction: Adding a strict Lyapunov drift condition to the centroid update sequence ensures finite-time termination and prevents indefinite oscillation in symmetric configurations.
+References: P001
+
+- H005: When applied to datasets containing highly anisotropic clusters or clusters with widely disparate scales and densities, standard trimmed k-means algorithms incur severe empirical bias in anomaly detection because the underlying theoretical constraint forces all cluster geometries to be spherical and share an identical radius.
+Rationale: Prior mathematical characterizations demonstrate that optimal trimming regions in standard trimmed k-means coincide with unions of equal-radius balls, making the algorithm structurally mismatched for complex, non-spherical geometries.
+Testable prediction: On synthetic datasets comprising elongated or unequal-variance Gaussian mixtures contaminated with uniform noise, the false positive rate of outlier rejection and the cluster center estimation error will increase significantly as the ratio of cluster variance anisotropy increases beyond 3:1.
+References: P002

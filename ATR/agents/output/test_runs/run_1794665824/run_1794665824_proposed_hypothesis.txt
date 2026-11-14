@@ -1,0 +1,19 @@
+- H001: The standard K-means iterative updating process permits cyclical trajectories and slow indefinite oscillations only when the gradient of the potential function W vanishes across a continuous manifold of equivalent partition configurations.
+Rationale: MacQueen (1967) established almost sure convergence under martingale theory but noted that Theorem 1 does not eliminate slow indefinite oscillations around the center. Formally linking these cyclical paths to degenerate level sets of the potential function W clarifies the topological boundaries of convergence guarantees.
+Testable prediction: If the spatial configuration of unbiased k-points spans a strictly discrete set of local extrema with non-zero Hessian eigenvalues, the probability of indefinite oscillation approaches zero as sample size increases.
+References: P001
+
+- H002: The breakdown point of the alpha-trimmed k-mean is exactly characterized by the infimum of probability mass proportions among the closest pair of generalized balls constituting the optimal trimming function under arbitrary probability continuity.
+Rationale: Cuesta-Albertos et al. (1997) proved that optimal trimming sets coincide with unions of generalized balls. However, a precise mathematical characterization of the breakdown point under arbitrary geometry remains an open question, as contamination sensitivity depends directly on inter-cluster mass ratios.
+Testable prediction: The finite-sample breakdown point epsilon*(Pn) converges to min_{1 <= i < j <= k} [p(B(c_i, r)) + p(B(c_j, r))] / 2 as n approaches infinity under continuous probability measures.
+References: P002
+
+- H003: Implementing a step-size dampening mechanism and momentum acceleration within the iterative computer program updates can force termination and prevent slow indefinite oscillations in standard K-means.
+Rationale: Standard K-means update rules can create cyclical or near-oscillatory trajectories when distances between cluster centers and data partitions balance symmetrically. Introducing an adaptive dampening factor into the refinement computer program parameters (C and R) will force convergence.
+Testable prediction: An adaptive step-size damped K-means program will reduce the total iteration count to convergence by at least 25% on symmetric overlapping clusters without increasing final partition distortion.
+References: P001
+
+- H004: Hybridizing simulated annealing with deterministic local gradient searches in MATLAB can scale trimmed k-means optimization to high-dimensional datasets while reliably locating optimal trimming sets.
+Rationale: Pure simulated annealing is computationally burdensome and non-deterministic, whereas local gradient search traps the algorithm in local optima. Combining a cooling schedule with localized neighborhood refinement speeds up the search for optimal trimming sets.
+Testable prediction: A hybrid simulated-annealing and local-search algorithm will achieve lower objective function values with 40% fewer function evaluations compared to pure simulated annealing on datasets exceeding 10,000 dimensions.
+References: P002

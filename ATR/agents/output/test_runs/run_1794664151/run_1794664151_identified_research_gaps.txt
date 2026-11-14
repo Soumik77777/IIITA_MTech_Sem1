@@ -1,0 +1,5 @@
+- G001: Precise bounding and characterization of the breakdown point for trimmed k-means under arbitrary cluster configurations and distributions. [Papers: P002 (Section 5)]
+
+- G002: Elimination of potential slow indefinite oscillation of standard k-means cluster centers under general symmetric uniform distributions. [Papers: P001 (2.3)]
+
+- G003: Optimization heuristics and simulated annealing implementation trade-offs for trimmed k-means [Papers: P002 (Section 5)]

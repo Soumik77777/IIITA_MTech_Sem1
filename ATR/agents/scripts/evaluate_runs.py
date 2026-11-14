@@ -172,10 +172,12 @@ def extract_model(params: dict[str, Any], usage: dict[str, Any], history: dict[s
     return str(model or "")
 
 
-def extract_params(params: dict[str, Any], usage: dict[str, Any]) -> str:
-    """Return only temperature and maximum debate rounds; mark absent values NA."""
+def extract_llm_params(params: dict[str, Any], usage: dict[str, Any]) -> str:
+    """Return the LLM parameters actually applied, as a JSON dict; absent values are NA.
+
+    Only temperature for now. To track another model's parameters, add keys to the dict.
+    """
     temperature = "NA"
-    debate_rounds_max = "NA"
 
     for source in (params, usage):
         if not isinstance(source, dict):
@@ -184,23 +186,38 @@ def extract_params(params: dict[str, Any], usage: dict[str, Any]) -> str:
             value = source.get("temperature_requested")
             if value is not None:
                 temperature = value
-        if debate_rounds_max == "NA":
-            value = source.get("debate_rounds_max")
-            if value is not None:
-                debate_rounds_max = value
         for parent_key in ("generation_config", "model_params", "llm_params"):
             nested = source.get(parent_key)
-            if isinstance(nested, dict):
-                if temperature == "NA" and nested.get("temperature") is not None:
-                    temperature = nested["temperature"]
-                if debate_rounds_max == "NA" and nested.get("debate_rounds_max") is not None:
-                    debate_rounds_max = nested["debate_rounds_max"]
+            if isinstance(nested, dict) and temperature == "NA" and nested.get("temperature") is not None:
+                temperature = nested["temperature"]
 
-    return json.dumps(
-        {"temperature": temperature, "debate_rounds_max": debate_rounds_max},
-        ensure_ascii=False,
-        sort_keys=True,
-    )
+    return json.dumps({"temperature": temperature}, ensure_ascii=False, sort_keys=True)
+
+
+def extract_max_rounds(params: dict[str, Any], mode: str) -> Any:
+    """Maximum critique rounds (single) or debate rounds (multi); NA if not recorded.
+
+    Single stores its limit in self_critique_rounds (its debate_rounds_max is always 0);
+    multi stores it in debate_rounds_max. A value of 0 is treated as "not applicable".
+    """
+    keys = ("self_critique_rounds", "debate_rounds_max") if mode == "single" \
+        else ("debate_rounds_max", "self_critique_rounds")
+    for key in keys:
+        value = params.get(key)
+        if value not in (None, 0):
+            return value
+    return "NA"
+
+
+def count_txt_items(path: Path | None, prefix: str) -> int | None:
+    """Count '- G001: ...' / '- H001: ...' entries written by main.py."""
+    if path is None or not path.is_file():
+        return None
+    try:
+        text = path.read_text(encoding="utf-8")
+    except OSError:
+        return None
+    return len(re.findall(rf"^- {prefix}\d+:", text, flags=re.MULTILINE))
 
 
 def extract_metrics(history: dict[str, Any], usage_data: dict[str, Any]) -> dict[str, Any]:
@@ -285,9 +302,10 @@ def main() -> None:
     dataset_mapping: list[list[Any]] = [["Dataset ID", "Paper Count", "Paper Paths"]]
     architecture_mapping: list[list[Any]] = [["Architecture ID", "Mode", "Prompt Snapshot"]]
     metadata_rows: list[list[Any]] = [[
-        "Run ID", "Dataset ID", "Mode", "LLM Model", "Parameters",
-        "Architecture ID", "Total API Calls", "Failed Calls", "Input Tokens", "Output Tokens", "Total Tokens",
-        "Runtime (seconds)", "Pause Between Calls (seconds)",
+        "Run ID", "Dataset ID", "Mode", "LLM Model", "LLM Parameters",
+        "Architecture ID", "Max Rounds", "Total API Calls", "Failed Calls", "Input Tokens", "Output Tokens",
+        "Total Tokens", "Runtime (seconds)", "Pause Between Calls (seconds)",
+        "Total Gaps", "Total Hypotheses",
     ]]
 
     dataset_ids: dict[str, str] = {}
@@ -351,16 +369,30 @@ def main() -> None:
         mode = extract_mode(params, run_dir)
         model = extract_model(params, usage_data, history)
         run_metrics = extract_metrics(history, usage_data)
+
+        # Totals come from the inference history (the same items that get scored);
+        # the gaps/hypothesis txt files written by main.py are used as a cross-check.
+        gaps, hypotheses = extract_items(history)
+        txt_counts = {
+            "gaps": count_txt_items(find_artifact(run_dir, "identified_research_gaps.txt"), "G"),
+            "hypotheses": count_txt_items(find_artifact(run_dir, "proposed_hypothesis.txt"), "H"),
+        }
+        for label, from_history in (("gaps", len(gaps)), ("hypotheses", len(hypotheses))):
+            if txt_counts[label] is not None and txt_counts[label] != from_history:
+                print(f"[WARNING] {human_run_id}: {from_history} {label} in inference history "
+                      f"but {txt_counts[label]} in the txt file.")
+
         metadata_rows.append([
             human_run_id, dataset_id, mode, model,
-            extract_params(params, usage_data), architecture_id,
+            extract_llm_params(params, usage_data), architecture_id,
+            extract_max_rounds(params, mode),
             run_metrics["api_calls"], run_metrics["failed_calls"],
             run_metrics["input_tokens"], run_metrics["output_tokens"],
             run_metrics["total_tokens"],
             run_metrics["runtime_seconds"], run_metrics["pause_between_calls_seconds"],
+            len(gaps), len(hypotheses),
         ])
 
-        gaps, hypotheses = extract_items(history)
         run_records.append({
             "human_run_id": human_run_id,
             "items": gaps + hypotheses,

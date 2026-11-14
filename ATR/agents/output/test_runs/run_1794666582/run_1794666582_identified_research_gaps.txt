@@ -1,0 +1,5 @@
+- G001: Rigorous general theoretical and computational characterization of the breakdown point of trimmed k-means across diverse underlying data configurations, cluster counts, and trimming proportions [Papers: P002 (Section 5)]
+
+- G002: Extension and rigorous proof of asymptotic convergence for k-means processes in general metric spaces beyond specific trivial cases [Papers: P001 (Section 4)]
+
+- G003: Absence of deterministic, non-exhaustive algorithmic implementations for optimal trimming set selection in trimmed k-means [Papers: P002 (Introduction, Simulations)]

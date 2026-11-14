@@ -1,0 +1,5 @@
+- G001: Formal characterization of breakdown point behavior for arbitrary underlying probability measures and cluster configurations in trimmed k-means [Papers: P002 (Section 5)]
+
+- G002: Eliminating slow indefinite oscillation around cluster centers in symmetric dispersion configurations for standard k-means [Papers: P001 (2.3)]
+
+- G003: Lack of deterministic, exhaustive optimization algorithms for solving trimmed k-means and optimal trimming set selection [Papers: P002]

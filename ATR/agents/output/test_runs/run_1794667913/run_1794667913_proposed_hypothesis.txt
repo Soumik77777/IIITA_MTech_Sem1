@@ -1,0 +1,24 @@
+- H001: Deterministic multi-start gradient descent combined with convex relaxation heuristics can approximate optimal partitioning and trimming sets faster and more reliably than simulated annealing.
+Rationale: Standard k-means and trimmed k-means lack a deterministic non-exhaustive algorithm, forcing reliance on stochastic searches like simulated annealing which are sensitive to parameter tuning.
+Testable prediction: A deterministic multi-start framework utilizing convex relaxation will achieve lower within-class variance and optimal trimming selections with 50% less computational time than simulated annealing on synthetic datasets of 100,000 samples.
+References: P001, P002
+
+- H002: Replacing the equal-radius spherical ball constraint in trimmed k-means with a Mahalanobis distance penalty matrix enables efficient detection of anisotropic and multi-scale clusters without losing computational tractability.
+Rationale: Equal-radius spherical ball constraints cause algorithmic inefficiency and poor detection performance when clusters exhibit diverse shapes or varying dispersion.
+Testable prediction: An anisotropic trimmed k-means variant incorporating adaptive covariance estimations will achieve a higher adjusted Rand index (by at least 20%) on non-spherical bivariate Gaussian mixtures compared to standard equal-radius trimmed k-means.
+References: P002
+
+- H003: Relaxing the equal-radius spherical ball constraint in trimmed k-means to accommodate anisotropic covariance structures preserves strong consistency under continuous probability measures, provided the determinant of cluster dispersion matrices is uniformly bounded away from zero.
+Rationale: Current theoretical formulations force optimal clusters to form unions of equal-radius balls, creating geometric rigidity. Allowing Mahalanobis distance metrics or general elliptical shape constraints within the probability measure framework can eliminate bad detection in non-spherical clusters while maintaining the asymptotic Skorohod representation convergence guarantees.
+Testable prediction: Empirical trimmed k-means modified with elliptical Mahalanobis penalties will achieve lower asymptotic expected variance than equal-radius spherical trimmed k-means on mixtures of anisotropic Gaussians while retaining strong almost sure convergence.
+References: P002
+
+- H004: The finite-sample breakdown point of alpha-trimmed k-means is strictly determined by the infimum of the probability mass assigned by the underlying measure to the neighborhoods of the true cluster centers, and can be bounded precisely by the topological separation distance of the optimal trimming boundaries.
+Rationale: While asymptotic consistency is known under continuity, the exact breakdown point depends heavily on mixture proportions and data geometry. Establishing a direct topological bound linking the probability mass of true clusters to the trimming level alpha will formalize robustness guarantees.
+Testable prediction: As the contamination mass concentrated near the decision boundary exceeds the minimum probability mass assigned to any individual true cluster, the breakdown point of the empirical trimmed k-mean drops discontinuously to zero.
+References: P002
+
+- H005: In unconstrained k-means configurations where all unbiased k-points yield identical within-class variance values, sample means exhibit slow indefinite oscillations governed by recurrence relations in the empirical martingale difference sequence.
+Rationale: Theorem 1 guarantees almost sure convergence of expected variance, but point-wise trajectory stability remains open in degenerate or symmetric configurations where multiple configurations share identical variance levels, preventing strict point-wise convergence without additional separation conditions.
+Testable prediction: In circularly symmetric uniform point configurations, the trajectory of sample means will fail to satisfy Cauchy convergence criteria, demonstrating non-vanishing periodic oscillations of order O(n^{-1/2}) indefinitely.
+References: P001

@@ -1,0 +1,5 @@
+- G001: Characterization of the precise breakdown point behavior of trimmed k-means under non-spherical configurations and arbitrary underlying data distributions [Papers: P002 (Section 5)]
+
+- G002: Elimination of slow indefinite oscillations and non-optimal stable points in standard and trimmed k-means iterative partitioning processes [Papers: P001 (Section 2.3)]
+
+- G003: Lack of deterministic global optimization solvers for trimmed k-means algorithms [Papers: P002 (Section 1, Section 4, Section 5)]

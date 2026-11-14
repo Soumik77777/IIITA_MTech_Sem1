@@ -1,0 +1,13 @@
+- G001: Asymptotic consistency and loss convergence rates for robust clustering formulations under non-convex, unbiased proximal maps and general non-spherical metric spaces [Papers: P002 (Section 3); P005 (Section 4)]
+
+- G002: Characterization of universal breakdown points for trimmed and robust clustering models on arbitrary, unstructured datasets without geometric separation constraints [Papers: P002 (Section 5); P005 (3.1, 3.2, 3.3)]
+
+- G003: Lack of Robust Estimators for Commissioning Anchors in Federated Outlier-Aware K-Means Calibration [Papers: P017 (Section 6.7, Section 7.4)]
+
+- G004: Theoretical Characterization of False-Alarm Calibration under Non-Gaussian and Heavy-Tailed Distance Distributions [Papers: P006 (IV-A); P007 (I, II-B); P015 (8 Discussion)]
+
+- G005: Dynamic, Streaming Adaptation of Outlier Thresholds and Trimming Proportions Under Concept Drift [Papers: P009 (Section 3.2, Section 6); P017 (Section 3, Section 7.4)]
+
+- G006: Empirical validation of trimmed k-means and outlier-aware clustering algorithms under severe feature-space skew and concept drift in decentralized or real-world IoT environments. [Papers: P017 (Section 6.1, Section 7.3, Section 7.4)]
+
+- G007: Systematic empirical benchmarking of automated tuning frameworks for trimming proportion parameters across diverse domain-specific exploratory workflows. [Papers: P009 (Section 3.2. Robust trimmed k-means, Section 6. Conclusions and future work)]

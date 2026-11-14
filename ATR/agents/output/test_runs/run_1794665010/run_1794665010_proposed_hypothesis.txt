@@ -1,0 +1,19 @@
+- H001: The breakdown point of trimmed k-means is bounded from below by a function of the minimum relative cluster probability and the trimming level alpha, provided the underlying measure satisfies specific concentration inequalities.
+Rationale: Breakdown points in trimmed k-means vary unpredictably because contamination can artificially distort local probability measures around cluster boundaries. Establishing a rigorous lower bound requires mapping the measure-theoretic capacity of arbitrary probability distributions under bounded perturbations.
+Testable prediction: For any continuous probability measure with disjoint compact supports, the empirical breakdown point converges to a deterministic limit determined solely by the smallest component probability mass and alpha.
+References: P002
+
+- H002: Under symmetric dispersion configurations, standard k-means sample means do not exhibit indefinite oscillation, as the gradient of the expected within-class variance possesses isolated critical points that act as local attractors.
+Rationale: While almost sure convergence of variance measures is proven, the existence of slow indefinite oscillation remains an open analytical possibility due to potential degeneracy in symmetric geometries. Analyzing the Hessian of the potential function can eliminate this loop.
+Testable prediction: The trajectory of sample means under symmetric initialization converges in finite steps or exhibits strict monotonic decrease in potential without cyclical limit sets.
+References: P001
+
+- H003: Implementing a hybrid deterministic-stochastic local search strategy that combines convex relaxations for candidate initialization with simulated annealing can eliminate slow indefinite oscillations and reliably locate global optimal trimming sets in trimmed k-means.
+Rationale: Current optimization relies heavily on stochastic heuristics like simulated annealing which lack global guarantees and are sensitive to initialization. By utilizing deterministic bounding procedures for initial partitioning, we can constrain the search space and prevent repetitive loop behaviors in symmetric dispersion configurations.
+Testable prediction: The hybrid algorithm will reduce objective function variance across independent runs by at least 30 percent compared to pure simulated annealing while avoiding infinite oscillation loops.
+References: P002
+
+- H004: Adaptive perturbation annealing schedules that dynamically scale the cooling rate based on local cluster density gradients prevent premature convergence to suboptimal trimming configurations in high-contamination regimes.
+Rationale: Breakdown points approach zero when contamination proportions interact poorly with fixed-radius spherical cluster assumptions under static optimization heuristics. Modulating the search step-size according to local density estimates enables the algorithm to escape spurious local minima caused by outlier clusters.
+Testable prediction: An adaptive perturbation schedule will maintain a breakdown point close to the theoretical maximum alpha across complex, highly overlapping cluster distributions where standard simulated annealing fails.
+References: P002

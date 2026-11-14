@@ -1,0 +1,5 @@
+- G001: Characterization of the slow asymptotic oscillations of means in standard k-means under symmetric distributions [Papers: P001 (2.3)]
+
+- G002: Full theoretical characterization of breakdown point behavior for trimmed k-means across arbitrary underlying distributions and cluster structures [Papers: P002 (5. Conclusions)]
+
+- G003: The operational trade-offs and global convergence guarantees of heuristic optimizers (such as simulated annealing) versus deterministic structures for non-convex trimmed k-means optimization [Papers: P002 (5. Conclusions)]

@@ -1,0 +1,34 @@
+- H001: Under arbitrary probability distributions with tightly packed clusters and contamination, the breakdown point of alpha-trimmed k-means and robust k-means variants can converge to zero, but can be bounded below by introducing geometric separation constraints or non-convex regularized proximal penalties.
+Rationale: Breakdown point behavior depends heavily on the probability distribution and data configuration, where adversarial placement can force breakdown points arbitrarily close to zero. Theoretical bounds can be established by analyzing the robust properties of unbiased proximal maps and trimmed discrepancy functionals.
+Testable prediction: For any probability measure supported by K tightly packed clusters under contamination alpha, the finite-sample universal breakdown point will remain bounded by 2/n for unbiased proximal maps unless minimum separation distances are enforced.
+References: P002, P005
+
+- H002: Generalized robust and trimmed k-means objectives solved via alternating minimization or block coordinate descent exhibit slow indefinite oscillations around cluster centers in symmetric configurations, which can be eliminated using refined step-size damping or variational Moreau envelope smoothing.
+Rationale: Standard convergence theorems guarantee almost sure convergence to local minimizers or relative positions but fail to rule out slow indefinite oscillations in symmetric configurations due to the lack of strict descent properties at local boundaries.
+Testable prediction: Implementing adaptive damping parameters or Moreau envelope smoothing in block coordinate descent guarantees asymptotic eradication of indefinite centroid oscillations.
+References: P001, P014
+
+- H003: Incorporating cluster-specific adaptive trimming proportions and local anomaly thresholds into generalized robust k-means objectives improves outlier detection precision in multi-density cluster configurations without causing centroid convergence instability.
+Rationale: Existing trimmed and robust k-means variants typically rely on a single global distance threshold or a fixed trimming proportion across all clusters, which leads to the erroneous omission of inliers in dense regions or retention of outliers in sparse clusters. Dynamically adapting these thresholds per cluster via localized scatter or dispersion metrics can resolve this limitation.
+Testable prediction: An adaptive trimmed k-means algorithm utilizing cluster-specific distance thresholds will achieve a statistically significant higher F1-score on multi-density synthetic and benchmark datasets compared to counterparts using a single global threshold.
+References: P006
+
+- H004: Integrating automated, data-driven parameter estimation strategies based on sample contour derivatives into robust trimmed k-means objectives eliminates manual quota tuning while retaining optimal breakdown performance.
+Rationale: Advanced robust and trimmed k-means formulations require users to manually specify parameters such as the expected outlier proportion or minimum cluster membership quota. Designing automated calibration rules based on rates of decrease in trimmed variance functionals can make these algorithms fully autonomous.
+Testable prediction: An automated trimming quota estimator integrated into Robust Trimmed k-means (RTKM) will estimate the optimal outlier proportion within a 5% margin of the ground-truth contamination rate across diverse benchmark distributions.
+References: P009, P017
+
+- H005: Incorporating robust covariance estimators such as the Minimum Covariance Determinant (MCD) instead of standard sample covariance for the trusted benign anchor prevents anchor contamination collapse in federated robust k-means architectures.
+Rationale: Standard sample mean and covariance estimators break down under small contamination percentages in the initial commissioning window, inflating covariance along attack directions and destroying operational recall. Utilizing robust alternatives directly mitigates this vulnerability.
+Testable prediction: Deploying an MCD-based robust estimator for the benign anchor will reduce recall degradation by at least 40% under a 5% poisoned commissioning window compared to standard sample covariance.
+References: P017
+
+- H006: Designing a streaming concept-drift adaptation protocol with dynamic anchor refresh intervals maintains operational precision and FPR stability in distributed federated k-means under temporal distribution shifts without destabilizing consensus.
+Rationale: Real-world IoT devices experience continuous temporal distribution shifts. Relying on a fixed commissioning anchor causes false-positive drift and degraded detection efficacy when device behaviors evolve over time.
+Testable prediction: A dynamic anchor refresh mechanism based on rolling window median absolute deviations will maintain FPR within 2% of baseline during continuous temporal traffic shifts, outperforming static anchor configurations by over 30% in F1-score.
+References: P017
+
+- H007: Deploying robust and trimmed k-means algorithms with fixed global trimming proportions in multi-membership real-world domains (such as heterogeneous alumni career trajectories and multi-target academic progression) causes high false-positive elimination of legitimate minority career paths or retention of domain-specific anomalies.
+Rationale: Real-world domain datasets frequently exhibit non-spherical clusters, overlapping categories, and complex multi-membership characteristics. Relying on global or fixed trimming quotas fails to adapt to varying densities across diverse career pathways, distorting cluster boundaries and outlier detection performance.
+Testable prediction: Integrating cluster-specific adaptive trimming or soft-membership proportions into domain case studies (e.g., career linearity prediction) will significantly improve silhouette scores and classification F1-averages compared to fixed-trimming models like K-means LTS.
+References: P009, P016

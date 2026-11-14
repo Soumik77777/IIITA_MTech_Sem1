@@ -1,0 +1,24 @@
+- H001: The breakdown point of alpha-trimmed k-means is bounded from below by a function of the minimum separation distance and minimum probability mass assigned to each Voronoi region of the underlying probability measure.
+Rationale: Because existing theory demonstrates that the breakdown point can drop arbitrarily close to zero under adversarial or pathological distributions, establishing a geometric lower bound requires relating the trimming proportion directly to the infimum of the measure of balls forming the optimal trimming function.
+Testable prediction: For any probability measure satisfying a uniform mass condition on metric balls of radius r, the breakdown point of the alpha-trimmed k-mean remains strictly greater than alpha provided the contamination mass is constrained within specific geometric boundaries.
+References: P002
+
+- H002: Under any continuous, spherically symmetric uniform probability measure, the standard k-means iterative sequence of cluster centers possesses a Lyapunov function whose strict decrease prevents indefinite non-convergent cyclic oscillations.
+Rationale: Although almost sure convergence of within-class variance is established, the exact trajectory of cluster centers can exhibit slow oscillation due to the lack of strict directional contraction in symmetric flat-topped densities.
+Testable prediction: Constructing a discrete-time potential function based on local density gradients will demonstrate that the measure of the set of initial configurations leading to infinite oscillation has measure zero under absolutely continuous symmetric uniform distributions.
+References: P001
+
+- H003: Incorporating an adaptive cooling schedule and perturbation magnitude controller into simulated annealing for trimmed k-means will prevent premature convergence to suboptimal spherical cluster boundaries while minimizing computational overhead in high dimensions.
+Rationale: Trimmed k-means relies heavily on non-exhaustive search heuristics like simulated annealing due to the lack of deterministic optimal algorithms. In complex non-convex partitioning problems, static cooling schedules often lead to trapping in local minima or excessive runtime.
+Testable prediction: An adaptive simulated annealing schedule will achieve lower within-class trimmed variation compared to standard exponential cooling schedules within a fixed iteration budget across high-dimensional contaminated datasets.
+References: P002
+
+- H004: Implementing a dynamic momentum term or step-size damping heuristic within standard k-means centroid updates will eliminate slow indefinite oscillations under symmetric uniform distributions.
+Rationale: Standard k-means update rules can exhibit slow cyclic or oscillating behaviors around center points in symmetric uniform setups. Modifying the iterative update heuristic to dampen updates when trajectory vector angles reverse will enforce topological trajectory stability and clear stopping criteria.
+Testable prediction: Introducing a momentum-damped update rule will reduce the average number of iterations required to reach absolute stationary convergence by at least 30% under symmetric uniform distributions without degrading final variance minimization.
+References: P001
+
+- H005: Algorithmic enforcement of local density-adaptive radius constraints during trimmed k-means iterations will prevent the breakdown point from dropping near zero in adversarial cluster geometries.
+Rationale: Standard trimmed k-means forces all clusters to have equal radii, making the breakdown point highly vulnerable to specific geometries where contamination can hijack the equal-radius spherical constraints.
+Testable prediction: Allowing bounded local variations in the trimming radius per cluster during simulated annealing optimization will maintain a breakdown point strictly greater than the user-defined trimming proportion alpha, even under adversarial configurations.
+References: P002

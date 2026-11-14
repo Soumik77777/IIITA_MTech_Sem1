@@ -1,0 +1,14 @@
+- H001: Under symmetric continuous probability distributions, standard k-means centroid trajectories exhibit non-vanishing measure wandering sets in phase space that preclude finite-time stopping, resulting in slow asymptotic oscillations.
+Rationale: Theorem 1 establishes almost sure convergence of the sum of squared distances, but the local geometry of symmetric configurations permits gradient vectors to vanish asymptotically while higher-order derivatives maintain periodic or quasi-periodic non-zero drift.
+Testable prediction: For a uniform distribution on a symmetric disk with k=2, the empirical mean sequence x_n fails to satisfy the Cauchy criterion at a polynomial rate O(n^-beta) for some beta > 0.
+References: P001
+
+- H002: The breakdown point epsilon* of empirical alpha-trimmed k-means is strictly bounded from above by the minimum mass assigned to any individual component in the true mixture plus the misspecification gap of the chosen cluster count k.
+Rationale: Since trimmed k-means enforce uniform spherical radius constraints across all k clusters, any structural mismatch between the assumed and true cluster geometry causes mass displacement that lowers the finite-sample breakdown threshold toward zero.
+Testable prediction: When the underlying distribution consists of m disjoint clusters with probabilities q_1, ..., q_m where m != k, the breakdown point approaches min(alpha, q_1, ..., q_m) as the contamination magnitude diverges to infinity.
+References: P002
+
+- H003: Heuristic optimization via simulated annealing in trimmed k-means exhibits severe sensitivity to initial configurations and local traps as the contamination level approaches the theoretical breakdown bound min(alpha, q_1, ..., q_k).
+Rationale: Since exact deterministic optimization is intractable for trimmed k-means, practitioners rely on simulated annealing. However, high contamination levels combined with structural misspecifications can distort the objective landscape, trapping heuristic search algorithms in suboptimal states where cluster radii and trimming proportions fail to converge.
+Testable prediction: The frequency of convergence to suboptimal local traps in simulated annealing-based trimmed k-means increases non-linearly when the contamination proportion exceeds 50% of the minimum cluster probability q_i.
+References: P002

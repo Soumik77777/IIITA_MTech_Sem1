@@ -1,0 +1,5 @@
+- G001: Characterization and elimination of slow indefinite oscillation in asymptotic convergence of standard k-means [Papers: P001 (2.3)]
+
+- G002: Generalization of asymptotic consistency and trimming discrepancy metrics for non-spherical and complex geometries [Papers: P002 (Section 5); P003 (4. MIXTURES OF ELLIPTICAL DISTRIBUTIONS)]
+
+- G005: Lack of standardized integration between Fisher's discriminant ratio feature selection and generalized non-spherical metric trimmed clustering in QSAR and molecular design workflows [Papers: P003 (4. MIXTURES OF ELLIPTICAL DISTRIBUTIONS); P004 (CONCLUSION)]

@@ -1,0 +1,44 @@
+- H001: Smoothing the indicator boundary functions of trimmed k-means via mollification or kernel penalties enables the derivation of a functional central limit theorem for empirical trimmed estimators.
+Rationale: Trimming functions introduce discontinuities on ball boundaries that preclude standard Delta method or central limit theorem derivations without smoothing or advanced empirical process machinery.
+Testable prediction: Applying a smoothed boundary penalty to empirical trimmed k-means minimizers yields weak convergence and asymptotic normality without biasing the limiting distribution beyond a controlled smoothing bandwidth.
+References: P002
+
+- H002: Generalized breakdown bounds for robust and trimmed k-means under non-spherical or anisotropic cluster structures can be established by substituting strict ball separation requirements with minimum cluster volume overlap thresholds.
+Rationale: Existing breakdown proofs rely heavily on spherical symmetry and strict geometric separation, which fail when clusters overlap or exhibit anisotropy.
+Testable prediction: Formulating a minimax contamination framework based on overlap coefficients rather than minimum ball distance will yield tight, non-zero breakdown bounds for asymmetric clusters.
+References: P002, P005
+
+- H003: Isolating outlier selection from center location search through sensitivity-based coreset constructions eliminates the polynomial FPT dependence on the number of outliers in exact approximation reduction frameworks.
+Rationale: Current kernelization and sampling techniques couple the number of outliers directly into the exponential exponent of parameterized algorithms, creating high computational complexity.
+Testable prediction: A refined coreset construction that bounds outlier impact via sensitivity sampling rather than combinatorial enumeration will reduce running time dependencies from $((k + m)/\epsilon)^{O(m)}$ to FPT in $k$ and $\epsilon$ alone.
+References: P013
+
+- H004: Coupling continuous relaxation objective functions from robust trimmed k-means with Bayesian Information Criterion scoring inside a cluster splitting loop enables simultaneous, data-driven determination of both optimal cluster count and outlier quotas.
+Rationale: Continuous relaxation objectives modify the cost landscape of robust clustering, rendering standard splitting heuristics like X-means inapplicable without reformulation of local scoring functions around soft assignments.
+Testable prediction: Integrating a penalized robust cost into local splitting criteria will simultaneously converge to the correct cluster count and trimming proportion without manual hyperparameter tuning.
+References: P009
+
+- H005: Replacing standard Euclidean distance thresholds in outlier-aware centroid update rules with local neighborhood manifold distances allows robust k-means variants to cluster high-dimensional non-convex structures without preliminary linear dimensionality reduction.
+Rationale: Euclidean distance and linear projections like PCA fail to preserve intrinsic topology when clusters wrap around non-linear manifolds, distorting local standard deviation thresholds.
+Testable prediction: Substituting Euclidean distance with geodesic distance matrices in the iterative point-removal phase preserves non-convex manifold structures during centroid updating.
+References: P011
+
+- H006: Substituting robust covariance estimators such as minimum-covariance-determinant (MCD) for standard sample covariance in federated calibration windows protects auto-thresholding distance metrics against initial worker contamination.
+Rationale: While Median Absolute Deviation threshold rules are robust, the underlying sample mean and covariance estimators used for distance calibration remain vulnerable to dirty commissioning windows.
+Testable prediction: Incorporating MCD covariance estimates into the initial benign calibration phase eliminates false-positive spikes caused by initial client-side corruption.
+References: P017
+
+- H007: Incorporating mixed-type dissimilarity metrics (such as Gower's distance) into K-means least trimmed squares (LTS) clustering workflows will enable the seamless integration of qualitative career factors—like industry alignment and personal preferences—without causing data sparsity, thereby improving multi-target classification accuracy for graduate employability.
+Rationale: Current educational analytics clustering uses purely numerical academic metrics and job linearity indicators, which limits the inclusion of qualitative attributes such as job type and personal career preferences that heavily influence real-world job relevance.
+Testable prediction: Extending LTS k-means to accommodate mixed categorical-numerical dissimilarity matrices will result in higher silhouette scores and improved macro-averaged F1 scores on graduate employment datasets compared to standard numerical-only LTS clustering.
+References: P016
+
+- H008: Replacing the non-robust Gaussian sample mean and covariance estimators with robust alternatives like minimum-covariance-determinant (MCD) in federated auto-thresholding k-means (AF-BKM) architectures will eliminate false-positive spikes and preserve recall during initial client commissioning contamination.
+Rationale: While Median Absolute Deviation (MAD) thresholding rules survive post-merge contamination, the underlying Gaussian covariance model remains vulnerable to edge corruption in the initial benign calibration window.
+Testable prediction: Integrating MCD covariance estimators into AF-BKM will maintain flat false-positive rates and prevent precision degradation under high initial worker contamination scenarios.
+References: P017
+
+- H009: Implementing a dynamic sliding-window anchor calibration protocol in federated anomaly-trimmed k-means architectures will successfully accommodate streaming feature-space skew and per-device behavioral drift across heterogeneous IoT client nodes.
+Rationale: Static trusted benign anchors assume stationary feature distributions across devices, exposing intrusion detection systems to false-positive inflation when IoT telemetry drifts over operational lifecycles.
+Testable prediction: A sliding-window adaptive anchor refresh policy will sustain high F1-scores and prevent false-positive drift on streaming IoT intrusion detection benchmarks subject to non-IID feature skew.
+References: P017

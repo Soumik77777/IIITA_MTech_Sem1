@@ -1,0 +1,5 @@
+- G001: Analytical characterization of breakdown points for trimmed k-means across arbitrary mixture geometries and contamination proportions [Papers: P002 (Section 5)]
+
+- G002: Elimination of slow indefinite oscillations of cluster centers in specific symmetric distribution cases for standard k-means [Papers: P001 (2.3)]
+
+- G003: Lack of deterministic optimal algorithms for computing the trimmed set and escaping non-convex local traps in trimmed k-means [Papers: P002 (Section 5)]

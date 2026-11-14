@@ -1,0 +1,49 @@
+- H001: For trimmed and robust clustering models operating on non-convex or general metric spaces, strong consistency and non-asymptotic loss convergence rates of $O(\sqrt{\log n / n})$ are preserved if and only if the underlying metric space satisfies a finite doubling dimension and the trimming proximal maps fulfill a directional Lipschitz continuity condition.
+Rationale: Existing asymptotic consistency proofs for trimmed $k$-means depend strictly on spherical probability distributions and ball-based continuity assumptions (P002), whereas robust $k$-means loss convergence bounds rely on balanced inlier metrics (P005). Extending these guarantees to arbitrary non-spherical metric spaces requires bounding covering numbers via doubling dimensions.
+Testable prediction: Empirical validation on synthetic non-convex manifolds (e.g., concentric rings or intersecting ellipses) will show that loss convergence matches the $O(\sqrt{\log n / n})$ bound if the metric's local doubling dimension remains bounded, but degrades arbitrarily when the metric space exhibits unbounded curvature changes.
+References: P002, P005
+
+- H002: The universal breakdown point of robust and trimmed $k$-means estimators on unconstrained, unstructured metric spaces can be raised from the pathological $1/n$ or $2/n$ bounds to a constant fraction independent of $n$ if the objective function incorporates a non-local repulsive penalty regularization term.
+Rationale: Unbiased and biased proximal maps in robust $k$-means suffer from catastrophic breakdown with as few as two adversaries on arbitrary datasets because outliers can drag centers to infinity without penalty (P005). Adding a repulsive regularization term bounds the collapse of cluster centers.
+Testable prediction: Under worst-case adversarial contamination where $m = \lfloor \epsilon n \rfloor$ outliers are introduced into an unstructured point set, a regularized robust $k$-means estimator will maintain a bounded estimation error for cluster centers, whereas standard robust $k$-means will exhibit unbounded breakdown as $n \to \infty$.
+References: P002, P005
+
+- H003: Integrating robust Minimum-Covariance-Determinant (MCD) estimators into federated client initialization workflows will prevent commissioning anchor contamination without violating the O(d^2) lightweight update constraints required for resource-constrained IoT nodes.
+Rationale: Paper P017 establishes that non-robust sample mean and covariance estimators used during device commissioning degrade downstream precision and recall when anchor contamination exceeds a few percent. Replacing standard sample covariance with robust estimators like MCD can harden initialization, but requires computational approximations to remain feasible under IoT memory limits.
+Testable prediction: An MCD-hardened federated clustering protocol will maintain false-positive calibration within 1% of pristine anchor baselines even under 15% random feature contamination during commissioning, with communication overhead remaining under 500 bytes per round.
+References: P017
+
+- H004: Replacing static global distance thresholds with lightweight, streaming median-absolute-deviation (MAD) drift detectors in iterative K-means clustering will preserve outlier detection F1-score above 0.85 under abrupt non-stationary concept drift without requiring full network retraining.
+Rationale: Papers P009 and P017 highlight that static hyperparameters and fixed trimming proportions quickly become obsolete under streaming feature shifts. Introducing incremental MAD-based threshold refresh mechanisms permits dynamic adaptation of inlier-outlier boundaries.
+Testable prediction: A streaming MAD-threshold-refresh K-means variant will exhibit a drop in F1-score of less than 5% when subjected to simulated sudden feature-space concept drift, outperforming static-threshold baselines by at least 25% in recall.
+References: P009, P017
+
+- H005: Integrating minimum-covariance-determinant (MCD) estimators into the lightweight commissioning anchor workflow of federated outlier-aware clustering prevents false-positive rate inflation under contaminated initialization conditions.
+Rationale: Non-robust sample mean and covariance estimators used during device commissioning are vulnerable to initial data contamination, inflating along attack directions and degrading precision and recall. Replacing them with robust covariance estimators maintains calibration security.
+Testable prediction: An MCD-hardened AF-BKM commissioning anchor will exhibit less than a 2% drop in cluster precision when initial anchor contamination reaches 10%, compared to a greater than 15% drop under standard sample covariance estimators.
+References: P017
+
+- H006: Replacing parametric Gaussian distance thresholds (such as standard MAD or Tukey's rules) with non-parametric Cantelli-bound pseudo-isolation score calibrations maintains guaranteed false-alarm rates under heavy-tailed and multi-modal distance distributions.
+Rationale: Adaptive outlier rules assuming normality fail to maintain guaranteed false-alarm rates under complex, heavy-tailed distance distributions, leading to uncalibrated trimming. Non-parametric pseudo-isolation bounds bypass normality assumptions.
+Testable prediction: A non-parametric pseudo-isolation calibration rule will maintain empirical false-alarm rates within 1% of the target alpha across Pareto and Cauchy-distributed distance metrics, whereas MAD-based thresholds will exhibit false-alarm deviations exceeding 8%.
+References: P015
+
+- H007: Coupling lightweight streaming drift detectors with adaptive anchor-refresh policies in iterative K-means prevents false-positive rate degradation under non-stationary concept drift.
+Rationale: Static hyperparameters and fixed commissioning anchors become obsolete in streaming environments, causing excessive false positives or unflagged emerging anomalies as data distributions evolve.
+Testable prediction: An adaptive anchor-refresh policy combined with sequential drift detection will maintain false-positive rates within 2% of baseline during gradual concept drift, whereas static anchor baselines will experience an FPR inflation greater than 20%.
+References: P017
+
+- H008: Integrating minimum-covariance-determinant (MCD) estimators into the commissioning anchor initialization phase of decentralized outlier-aware K-means prevents catastrophic precision/recall degradation under contaminated benign calibration windows.
+Rationale: Non-robust sample mean and covariance estimators inflate along attack directions when commissioning anchors contain planted noise or attack rows, directly impairing downstream Mahalanobis-based false-positive rate calibration.
+Testable prediction: Replacing standard sample covariance with an MCD estimator in federated anchor calibration maintains an F1-score drop of less than 0.02 under up to 10% malicious contamination during commissioning, whereas standard estimation exhibits >0.15 performance degradation.
+References: P017
+
+- H009: Deploying lightweight streaming concept drift detectors and sliding-window anchor refresh policies in federated outlier-aware K-means preserves guaranteed false-alarm rates over extended operational periods under non-stationary feature shifts.
+Rationale: Static benign calibration anchors and global trimming thresholds become obsolete under streaming feature-space skew and behavioral drift, leading to uncalibrated outlier rates.
+Testable prediction: A sliding-window adaptive anchor refresh policy combined with Page-Hinkley drift detection will maintain false-alarm rates within 1% of the target alpha over time under gradual feature drift, whereas static anchors suffer >5% false-alarm drift.
+References: P017
+
+- H010: Data-driven automated selection heuristics for trimming proportion (alpha) and minimum membership parameters in Robust Trimmed K-Means (RTKM) achieve comparable downstream classification and outlier detection performance to exhaustive manual tuning across heterogeneous applied datasets.
+Rationale: Applied workflows and exploratory data analyses currently rely on subjective manual tuning of alpha and s, limiting reproducibility and robustness across diverse domains.
+Testable prediction: An automated elbow-point heuristic operating on the second derivative of empirical trimmed k-variance functionals will achieve F1-scores within 95% of the globally optimal manually-tuned parameter configuration across benchmark UCI datasets.
+References: P009
