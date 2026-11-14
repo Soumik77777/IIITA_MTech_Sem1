@@ -21,8 +21,11 @@ SCORE_DIMENSIONS = ["Novelty", "Significance", "Feasibility", "Testability"]
 
 # Add the run output folders to analyse, in order you want for R01, R02, ...
 RUN_FOLDERS = [
-    Path("ATR/agents/output/run_1793735809"),
-    Path("ATR/agents/output/run_1793785339"),
+    Path("ATR/agents/output/run_1794660685"),
+    Path("ATR/agents/output/run_1794662507"),
+    Path("ATR/agents/output/run_1794668371"),
+    Path("ATR/agents/output/run_1794670582"),
+    Path("ATR/agents/output/run_1794671050"),
 ]
 
 # All five CSV files will be written here.
