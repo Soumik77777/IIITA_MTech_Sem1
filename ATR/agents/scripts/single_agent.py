@@ -34,6 +34,8 @@ _RETRYABLE_TERMS = (
 _LABELS = {
     "paper_analysis": "PAPER ANALYSIS",
     "research_gap_generation": "GAP GENERATION",
+    "gap_self_critique": "GAP SELF-CRITIQUE",
+    "gap_self_critique_revision": "GAP REVISION",
     "hypothesis_generation": "HYPOTHESIS GENERATION",
     "self_critique": "SELF-CRITIQUE",
     "self_critique_revision": "REVISION",
@@ -203,7 +205,13 @@ def _structured_schema(stage):
         "self_critique": obj({
             "proposed_changes": arr(critique_change), "no_change_reason": string,
         }),
+        "gap_self_critique": obj({
+            "proposed_changes": arr(critique_change), "no_change_reason": string,
+        }),
         "self_critique_revision": obj({
+            "decisions": arr(decision), "round_summary": string,
+        }),
+        "gap_self_critique_revision": obj({
             "decisions": arr(decision), "round_summary": string,
         }),
     }
@@ -535,6 +543,33 @@ PAPER SUMMARIES:
 """
 
 
+def _gap_critique_prompt(topic, additional, rnd, max_rounds, gaps, cards):
+    return f"""
+You are the SAME single researcher who generated the research gaps below.
+Before any hypotheses are generated, critically evaluate EVERY research gap.
+This is a gap-only validation stage: do not generate hypotheses.
+Check whether each gap is genuinely unresolved in the supplied corpus, is
+distinct from other gaps, is sufficiently specific, and is supported by cited
+paper evidence rather than merely by a paper's silence.
+Do not manufacture criticisms. Recommend changes only when justified.
+Allowed actions: revise, reject, merge, retain.
+Categories: unsupported_by_cited_papers, already_addressed, infeasible,
+vague, non_falsifiable, duplicate_or_overlapping.
+Cite the relevant corpus paper IDs and sections. Use only the supplied corpus;
+do not use web search or outside knowledge.
+For every proposed revision, preserve the gap's meaning where possible and
+rewrite its complete record, including supporting_papers, related_papers,
+and evidence. Never change IDs. Do not silently drop a gap.
+Return only JSON:
+{{"proposed_changes":[{{"target_id":"","action":"revise|reject|merge|retain",
+"category":"unsupported_by_cited_papers|already_addressed|infeasible|vague|non_falsifiable|duplicate_or_overlapping",
+"argument":"","evidence":[],"paper_references":[],
+"proposed_revision":"","merge_with":[]}}],"no_change_reason":""}}
+RESEARCH GAPS: {_dump(gaps)}
+PAPER SUMMARIES: {_dump(cards)}
+"""
+
+
 def _critique_prompt(topic, additional, rnd, max_rounds, records, cards):
     return f"""
 You are the SAME single researcher who produced the records below.
@@ -860,30 +895,110 @@ def run_single_agent(llm, topic, additional_prompt, pdf_paths, model_name,
                     iteration=iteration, gaps_found=len(raw_gaps))
                 break
 
-        # Stage 3: generate hypotheses only after the complete gap list exists.
+        # Stage 3: critique and revise research gaps BEFORE generating hypotheses.
         gap_draft = {"research_gaps": raw_gaps, "hypotheses": []}
         gaps, _ = _draft_records(gap_draft, valid_ids)
+        gap_critique_rounds = []
+        gap_round_summaries = []
+        gap_critique_executed = 0
+
+        for gap_rnd in range(1, max_rounds + 1):
+            active_gaps = _active(gaps)
+            if not active_gaps:
+                break
+            gap_critique = runner.call(
+                _gap_critique_prompt(
+                    topic, additional_prompt, gap_rnd, max_rounds,
+                    active_gaps, cards),
+                stage="gap_self_critique", round_no=gap_rnd)
+            if gap_critique is None:
+                critique_warning = (
+                    f"Pre-hypothesis gap critique round {gap_rnd} failed; "
+                    "retained the previous gap records.")
+                break
+
+            gap_critique_executed += 1
+            gap_changes_raw = gap_critique.get("proposed_changes", [])
+            gap_changes = (
+                [c for c in gap_changes_raw if isinstance(c, dict)]
+                if isinstance(gap_changes_raw, list) else []
+            )
+            if not gap_changes:
+                reason = gap_critique.get("no_change_reason", "")
+                gap_critique_rounds.append({
+                    "round": gap_rnd, "critiques": [], "decisions": [],
+                    "terminated": True, "reason": reason,
+                    "records_after": copy.deepcopy({"research_gaps": active_gaps}),
+                })
+                runner.note(
+                    "gap_critique_terminated", "success",
+                    "No gap changes proposed; pre-hypothesis gap validation stopped.",
+                    round=gap_rnd)
+                break
+
+            gap_revision = runner.call(
+                _revision_prompt(
+                    topic, additional_prompt, gap_rnd, max_rounds,
+                    active_gaps, gap_changes, cards),
+                stage="gap_self_critique_revision", round_no=gap_rnd)
+            if gap_revision is None:
+                critique_warning = (
+                    f"Pre-hypothesis gap revision round {gap_rnd} failed; "
+                    "retained the previous gap records.")
+                gap_critique_rounds.append({
+                    "round": gap_rnd, "critiques": gap_changes,
+                    "decisions": [], "terminated": False, "failed": True,
+                })
+                break
+
+            gap_decisions = gap_revision.get("decisions", [])
+            _apply_decisions(gaps, gap_decisions, gap_changes, gap_rnd, valid_ids)
+            gap_summary = gap_revision.get("round_summary", "")
+            if gap_summary:
+                gap_round_summaries.append(gap_summary)
+            gap_critique_rounds.append({
+                "round": gap_rnd, "critiques": gap_changes,
+                "decisions": gap_decisions if isinstance(gap_decisions, list) else [],
+                "round_summary": gap_summary, "terminated": False,
+                "records_after": copy.deepcopy({"research_gaps": _active(gaps)}),
+            })
+
+        # Only validated, non-rejected gaps are passed to hypothesis generation.
+        validated_gaps = _active(gaps)
         raw_hypotheses = []
-        if gaps:
+        if validated_gaps:
             hypothesis_draft = runner.call(
                 _hypothesis_generation_prompt(
-                    topic, additional_prompt, gaps, cards),
+                    topic, additional_prompt, validated_gaps, cards),
                 stage="hypothesis_generation")
             if hypothesis_draft is None:
                 synthesis_warning = synthesis_warning or (
-                    "Hypothesis-generation request failed or returned invalid JSON.")
+                    "Hypothesis-generation request failed or returned invalid structured output.")
             else:
                 raw_hypotheses = hypothesis_draft.get("hypotheses", [])
                 if not isinstance(raw_hypotheses, list):
                     raw_hypotheses = []
-        gaps, hypotheses = _draft_records(
+
+        # Preserve the validated gap records (including critique history/status)
+        # while validating hypothesis links against their stable IDs.
+        validated_gap_records = copy.deepcopy(gaps)
+        _, hypotheses = _draft_records(
             {"research_gaps": raw_gaps, "hypotheses": raw_hypotheses}, valid_ids)
+        gaps = validated_gap_records
+        known_gap_ids = {g["id"] for g in gaps}
+        for hypothesis in hypotheses:
+            hypothesis["originating_gap_ids"] = [
+                gid for gid in hypothesis.get("originating_gap_ids", [])
+                if gid in known_gap_ids
+            ]
+
         if not gaps and not hypotheses:
             synthesis_warning = synthesis_warning or (
                 "Iterative search returned no usable gap or hypothesis records.")
         draft_records = copy.deepcopy({"research_gaps": gaps, "hypotheses": hypotheses})
 
-        # Stage 3: self-critique -> revision rounds by the same researcher.
+        # Stage 4: self-critique -> revision rounds by the same researcher.
+        # Stage 5: combined post-hypothesis self-critique -> revision rounds.
         for rnd in range(1, max_rounds + 1):
             records = _active(gaps) + _active(hypotheses)
             if not records:
@@ -982,6 +1097,8 @@ def run_single_agent(llm, topic, additional_prompt, pdf_paths, model_name,
             "execution": "Sequential API calls; no concurrent requests.",
             "pause_after_response_seconds": pause_sec, "max_retries": max_retries,
             "web_search": False,
+            "pre_hypothesis_gap_critique_rounds_max": max_rounds,
+            "pre_hypothesis_gap_critique_rounds_executed": gap_critique_executed,
             "self_critique_rounds": max_rounds, "refinement_rounds": max_rounds,
             "self_critique_rounds_executed": executed,
             "target_gap_count": target_gap_count,
@@ -996,6 +1113,8 @@ def run_single_agent(llm, topic, additional_prompt, pdf_paths, model_name,
         "rejected_hypotheses": rejected_hypotheses,
         "debate_summaries": {"research_gaps": [], "hypotheses": []},
         "draft_records": draft_records,
+        "gap_critique_rounds": gap_critique_rounds if papers else [],
+        "gap_critique_summaries": gap_round_summaries if papers else [],
         "critique_rounds": rounds,
         "curation": {"initial": None, "final_summary": "\n".join(s for s in round_summaries if s),
                      "merged_or_rejected": merged_or_rejected},

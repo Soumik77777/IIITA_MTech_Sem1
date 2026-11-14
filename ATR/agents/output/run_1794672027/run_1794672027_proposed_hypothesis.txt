@@ -1,0 +1,49 @@
+- H001: Integrating Minimum Covariance Determinant (MCD) estimators into the initial benign anchor calibration phase of federated outlier-aware K-Means prevents covariance inflation along attack directions and improves anomaly recall under contaminated commissioning conditions.
+Rationale: Standard sample mean and covariance estimators are non-robust and easily biased by unflagged attack traffic during the commissioning window, leading to degraded anomaly detection. Replacing them with robust covariance estimators like MCD or shrinkage protects the anchor distribution.
+Testable prediction: Under a 5% to 15% commissioning traffic contamination rate, an AF-BKM model utilizing MCD for anchor calibration will achieve at least a 20% higher anomaly recall than the standard sample-covariance baseline.
+References: P017
+
+- H002: Formulating non-parametric pseudo-isolation scores with Cantelli inequality false-alarm rate control for multi-membership K-means variants (such as RTKM) enables parameter-free outlier rejection while preserving proximal alternating minimization convergence guarantees.
+Rationale: Existing multi-membership robust clustering techniques rely on arbitrary, user-specified trimming thresholds (alpha and s). Incorporating non-parametric pseudo-isolation scoring directly into the multi-membership assignment objective eliminates arbitrary quotas.
+Testable prediction: A pseudo-isolation-integrated multi-membership K-means algorithm will achieve lower false-positive rates and higher F1 scores across diverse contaminated multi-membership datasets compared to fixed-parameter RTKM.
+References: P015, P009
+
+- H003: Equipping federated outlier-aware K-Means with lightweight concept drift detectors and periodic sliding-window anchor refreshes maintains stable false-positive rates and high anomaly recall under longitudinal feature-space drift.
+Rationale: Static commissioning anchors degrade in efficacy when distributed edge environments experience temporal feature-space skew. Introducing adaptive refresh policies based on lightweight sliding windows keeps the anomaly detection baseline aligned with current benign distributions.
+Testable prediction: Under simulated streaming concept drift, an AF-BKM architecture with adaptive anchor refreshing will maintain a false-positive rate variance under 2% and prevent anomaly recall degradation over extended operational rounds.
+References: P017
+
+- H004: Employing deterministic sublinear sampling primitives combined with penalty-based Lagrangian relaxations achieves constant-factor approximation guarantees for trimmed K-means in strictly O~(nk) time without polynomial inflation factors in cluster or outlier counts.
+Rationale: Current sublinear time approximations for k-means with outliers scale quadratically or depend heavily on parameters like k and z. Simplifying the sublinear primitive and removing coreset weighting bottlenecks enables strict linear scaling.
+Testable prediction: A strictly linear-time deterministic sampling variant of trimmed K-means will execute within 5% of standard Lloyd iteration times while preserving an O(1)-approximation ratio on large-scale metric datasets.
+References: P008
+
+- H005: Transmitting compressed decentralized nearest-neighbor summary statistics across federated workers enables global non-parametric pseudo-isolation scoring without violating bandwidth constraints or exposing raw client data.
+Rationale: Federated anomaly detection relies on compact summary communication. By aggregating lightweight local nearest-neighbor distance distributions instead of raw data points, workers can compute robust global pseudo-isolation scores.
+Testable prediction: A distributed pseudo-isolation federated K-means framework will achieve an F1 score within 2% of centralized ODK-means while transmitting less than 500 bytes per node per round.
+References: P015, P017
+
+- H006: Incorporating kernel density estimations and manifold-distance metrics into trimmed K-means objective functions allows robust clustering and outlier rejection in arbitrary, non-convex cluster geometries.
+Rationale: Standard trimmed k-means relies heavily on Euclidean distance centroids and spherical ball union assumptions, leading to high false-positive rates on non-convex distributions. Replacing Euclidean distances with kernelized or geodesic metrics preserves tractability while adapting to complex boundaries.
+Testable prediction: Kernel-adapted trimmed K-means will achieve at least a 15% higher silhouette score and 20% higher F1-score on non-convex benchmark datasets (such as concentric rings or spiral clusters) compared to standard Euclidean trimmed K-means.
+References: P003, P011, P015
+
+- H007: Formulating a joint bi-level optimization objective that penalizes both cluster dispersion and excessive trimming proportions enables simultaneous, data-driven estimation of optimal cluster counts (k) and contamination levels (alpha).
+Rationale: Robust clustering algorithms require manual pre-specification of alpha and k, which distorts breakdown points when contamination fluctuates. A joint optimization objective removes this dependency by dynamically solving for both parameters during iteration.
+Testable prediction: A bi-level optimized trimmed K-means algorithm will estimate k and alpha within 5% of true simulated ground truth values across varying contamination levels without requiring grid searches.
+References: P002, P009
+
+- H008: Coupling K-means Least Trimmed Squares (LTS) objective functions directly with multi-target regression loss surfaces optimizes feature selection and outlier removal simultaneously for multi-objective prediction tasks like career linearity.
+Rationale: Heuristic selection of trimming proportions (e.g., fixed 30%) without alignment with downstream multi-target regression loss functions leads to suboptimal predictive fidelity on complex targets like job linearity.
+Testable prediction: An integrated LTS-MTRF framework with joint loss optimization will achieve at least a 10% higher F1-macro score on job linearity prediction compared to sequential pipeline architectures.
+References: P016
+
+- H009: Executing distributed trimmed K-means and nearest-neighbor pseudo-isolation scoring under cryptographic secure multi-party computation (SMC) preserves exact outlier detection performance while preventing raw intermediate distance leakage.
+Rationale: Distributed anomaly detection risks exposing delicate distributional properties or cluster boundaries if raw distances are shared. Integrating cryptographic SMC protocols secures intermediate updates without sacrificing clustering quality.
+Testable prediction: An SMC-secured distributed trimmed K-means protocol will achieve identical clustering accuracy and outlier F1-scores to unencrypted distributed runs while incurring less than a 3x computational overhead.
+References: P017, P015
+
+- H010: Integrating Gower's dissimilarity metric and mixed-type dissimilarity updating rules into trimmed K-means objective functions enables robust clustering and outlier detection on datasets containing continuous, ordinal, and categorical attributes.
+Rationale: Standard trimmed k-means algorithms rely strictly on Euclidean geometry, making them incompatible with mixed-type data spaces. Incorporating Gower's distance allows proper distance calculations and centroid updates across heterogeneous data types.
+Testable prediction: A mixed-type adapted trimmed K-means algorithm will achieve at least a 15% higher clustering purity and superior outlier precision on mixed industrial datasets compared to standard Euclidean trimmed K-means with one-hot encoding.
+References: P012
