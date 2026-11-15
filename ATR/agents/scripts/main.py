@@ -34,7 +34,7 @@ PRICE_PER_MILLION_TOKENS = {
 
 # Run controls shared by both agents. They live here (not in the agent modules) so that changing them does not change the architecture snapshot of an agent.
 MAX_ROUNDS = 3    # single: max self-critique + revision rounds; multi: max debate rounds per subject
-PAUSE_SEC = 3     # minimum pause between consecutive API calls
+PAUSE_SEC = 10     # minimum pause between consecutive API calls
 MAX_RETRIES = 3   # attempts per API call (only retryable errors are retried)
 # -------------------------------------------------------
 

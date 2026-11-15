@@ -1,0 +1,39 @@
+- H001: Alternative penalty functions, non-convex proximal maps, or modified objective formulations cannot fundamentally elevate universal breakdown bounds beyond O(1/n) on arbitrary, unconstrained datasets without requiring prior geometric restrictions.
+Rationale: Supported by variational analysis establishing O(1/n) universal breakdown limits on arbitrary metric spaces.
+Testable prediction: Constructing adversarial contaminations exceeding 2/n will break unconstrained trimmed k-means center estimates.
+References: P002, P005
+
+- H002: The exponential FPT dependence on the number of outliers m is a fundamental computational barrier that cannot be eliminated or relaxed to depend solely on k and epsilon.
+Rationale: Based on parameterized complexity reductions and coreset enumeration limits in outlier-aware clustering.
+Testable prediction: Any exact reduction removing FPT dependence on m will violate conditional lower bounds unless P=NP.
+References: P013
+
+- H003: A fully parametric extension and closed-form analytical distribution for pseudo-isolation scores can be derived to enable exact hypothesis testing.
+Rationale: Required for advancing nonparametric anomaly detection into exact parametric inference.
+Testable prediction: Deriving score density under Gaussian assumptions will match empirical pseudo-isolation histograms asymptotically.
+References: P015
+
+- H004: Replacing non-robust sample covariance estimators with Minimum Covariance Determinant (MCD) estimators and robust dispersion updates in robust trimmed k-means optimization loops and federated architectures will maintain high anomaly recall and prevent cluster center degradation under directional adversarial contamination.
+Rationale: Classical robust and trimmed k-means variants suffer from covariance inflation under attack vectors. Integrating robust dispersion matrices into alternating minimization updates addresses this vulnerability.
+Testable prediction: Substituting standard sample covariance calculations with robust MCD updates in iterative trimmed clustering will maintain outlier detection recall and prevent cluster center breakdown under unconstrained adversarial contamination.
+References: P005, P017
+
+- H005: Embedding automated information-theoretic criteria (such as Minimum Description Length or Bayesian Information Criterion penalties) into the objective functions of robust trimmed k-means will enable simultaneous joint optimization of cluster count k, minimum cluster size s, and trimming proportion alpha without grid searching.
+Rationale: Most robust k-means frameworks achieve strong performance given fixed hyperparameters but lack closed-form update rules or automated mechanisms for tuning alpha, s, and k, creating a major operational bottleneck.
+Testable prediction: BIC-penalized robust trimmed k-means formulations will automatically recover the true underlying number of clusters and contamination fraction within 5% error on synthetic benchmark suites.
+References: P009, P002
+
+- H006: Replacing spherical distance metrics in trimmed k-means with cluster-specific Mahalanobis distances derived from iterative scatter estimation matrices will improve clustering accuracy and outlier separation on elliptical and non-spherical mixtures.
+Rationale: Standard trimmed k-means and robust k-means rely heavily on spherical distance assumptions and ball intersections, causing them to fail when data exhibits complex elliptical or overlapping geometries.
+Testable prediction: Covariance-adjusted trimmed k-means utilizing scatter estimation matrices will achieve higher Adjusted Rand Index (ARI) scores than spherical trimmed k-means on synthetic mixtures of elongated elliptical distributions.
+References: P003
+
+- H007: Systematic parameter sweeps of threshold coefficients (q) and trimming proportions (alpha) across diverse non-Gaussian and high-dimensional ODDS benchmark datasets will demonstrate distinct Pareto frontiers where low threshold coefficients maximize cluster purity while higher coefficients optimize precision at the expense of recall.
+Rationale: Prior studies on low-dimensional datasets have shown that varying q or alpha trades off clustering MSE against false-positive rates and recall; validating this behavior across high-dimensional and non-Gaussian manifolds establishes the operational limits of robust thresholding.
+Testable prediction: Varying q from 2 to 6 across high-dimensional ODDS benchmarks will reveal a statistically significant decrease in outlier recall paired with a corresponding asymptotic increase in precision exceeding 95%.
+References: P006, P007, P011
+
+- H010: Mechanisms for streaming concept-drift adaptation and automated anchor refreshing will keep benign calibration valid over extended operational lifespans without manual intervention in federated IoT intrusion detection systems.
+Rationale: IoT and distributed monitoring infrastructures experience constantly evolving network traffic profiles, making fixed commissioning anchors and static thresholds vulnerable to performance degradation over extended operational lifespans.
+Testable prediction: Dynamic anchor sliding windows will prevent false-positive inflation under gradual concept drift compared to fixed commissioning anchors.
+References: P017

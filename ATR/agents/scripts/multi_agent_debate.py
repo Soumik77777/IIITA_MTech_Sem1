@@ -108,13 +108,11 @@ def _print_call_result(stage, agent, parsed, paper_loc=None, runtime=None, error
         "paper_reading": "READER", "perspective_discovery": "PERSPECTIVE FINDER",
         "research_gap_generation": "GAPS GENERATOR",
         "initial_gap_curation_and_corpus_analysis": "CURATOR",
-        "research_gap_challenger": "CHALLENGER",
-        "research_gap_defender": "DEFENDER",
-        "research_gap_adjudication": "ADJUDICATOR",
+        "research_gap_critique": "PERSPECTIVE CRITIC",
+        "research_gap_adjustment": "ADJUSTER",
         "hypothesis_generation": "HYPOTHESES GENERATOR",
-        "hypothesis_challenger": "CHALLENGER",
-        "hypothesis_defender": "DEFENDER",
-        "hypothesis_adjudication": "ADJUDICATOR",
+        "hypothesis_critique": "PERSPECTIVE CRITIC",
+        "hypothesis_adjustment": "ADJUSTER",
         "final_curation": "FINAL CURATOR",
     }.get(stage, agent.upper())
     if error:
@@ -132,15 +130,12 @@ def _print_call_result(stage, agent, parsed, paper_loc=None, runtime=None, error
         elif stage == "perspective_discovery":
             count = len(parsed.get("perspectives", [])) if isinstance(parsed, dict) and isinstance(parsed.get("perspectives", []), list) else 0
             detail = f"Generated {count} perspectives"
-        elif stage.endswith("_challenger"):
-            count = len(parsed.get("proposed_changes", [])) if isinstance(parsed, dict) and isinstance(parsed.get("proposed_changes", []), list) else 0
-            detail = f"Challenged {count} proposals"
-        elif stage.endswith("_defender"):
-            count = len(parsed.get("responses", [])) if isinstance(parsed, dict) and isinstance(parsed.get("responses", []), list) else 0
-            detail = f"Defended {count} proposals"
-        elif stage.endswith("_adjudication"):
+        elif stage.endswith("_critique"):
+            count = len(parsed.get("critiques", [])) if isinstance(parsed, dict) and isinstance(parsed.get("critiques", []), list) else 0
+            detail = f"Critiqued {count} records"
+        elif stage.endswith("_adjustment"):
             count = len(parsed.get("decisions", [])) if isinstance(parsed, dict) and isinstance(parsed.get("decisions", []), list) else 0
-            detail = f"Adjudicated {count} proposals"
+            detail = f"Adjusted {count} records"
         elif stage == "paper_reading":
             detail = "Analysed paper"
         elif stage == "final_curation":
@@ -192,26 +187,10 @@ def _structured_schema(stage):
                 "supporting_papers","related_papers","evidence")})),
             "rejected":arr(obj({"id":{"type":"string"},"reason":{"type":"string"}})),
             "curation_summary":{"type":"string"}}),
-        "research_gap_challenger": obj({
-            "proposed_changes":arr(obj({k:record["properties"][k] for k in (
-                "target_id","action","category","perspective","argument","evidence",
-                "paper_references","proposed_revision","merge_with")})),
-            "no_change_reason":{"type":"string"}}),
-        "hypothesis_challenger": obj({
-            "proposed_changes":arr(obj({k:record["properties"][k] for k in (
-                "target_id","action","category","perspective","argument","evidence",
-                "paper_references","proposed_revision","merge_with")})),
-            "no_change_reason":{"type":"string"}}),
-        "research_gap_defender": obj({
-            "responses":arr(obj({k:record["properties"][k] for k in (
-                "target_id","position","response","evidence","paper_references","proposed_revision")})),
-            "overall_response":{"type":"string"}}),
-        "hypothesis_defender": obj({
-            "responses":arr(obj({k:record["properties"][k] for k in (
-                "target_id","position","response","evidence","paper_references","proposed_revision")})),
-            "overall_response":{"type":"string"}}),
-        "research_gap_adjudication": _adjudication_schema(record, obj),
-        "hypothesis_adjudication": _adjudication_schema(record, obj),
+        "research_gap_critique": _critique_schema(record, obj, arr),
+        "hypothesis_critique": _critique_schema(record, obj, arr),
+        "research_gap_adjustment": _adjudication_schema(record, obj),
+        "hypothesis_adjustment": _adjudication_schema(record, obj),
         "hypothesis_generation": obj({
             "perspective":{"type":"string"},
             "hypotheses":arr(obj({k:record["properties"][k] for k in (
@@ -277,6 +256,28 @@ def _structured_schema(stage):
         return stages[stage]
     except KeyError:
         raise ValueError(f"No structured-output schema registered for stage: {stage}")
+
+
+def _critique_schema(record, obj, arr):
+    critique = obj({
+        "target_id": {"type": "string"},
+        "assessment": {"type": "string"},
+        "novelty": {"type": "string"},
+        "scientific_or_theoretical_soundness": {"type": "string"},
+        "feasibility": {"type": "string"},
+        "significance": {"type": "string"},
+        "testability": {"type": "string"},
+        "argument": {"type": "string"},
+        "evidence": arr({"type": "string"}),
+        "paper_references": record["properties"]["paper_references"],
+        "recommendation": {"type": "string"},
+        "proposed_revision": {"type": "string"},
+    })
+    return obj({
+        "perspective": {"type": "string"},
+        "critiques": arr(critique),
+        "overall_assessment": {"type": "string"},
+    })
 
 
 def _adjudication_schema(record, obj):
@@ -575,7 +576,11 @@ Do not rank. Keep one existing ID for a merge and list absorbed IDs.
 Then independently check EVERY candidate against EVERY paper summary,
 including papers not cited by that candidate. Add related_papers with relation
 addresses, contradicts, extends or mentions, plus sections and explanation.
-Corpus-only: never claim novelty; say "not found as addressed in this corpus".
+Assess candidates using the supplied paper summaries together with sound scientific
+judgement. Consider whether a gap is already known, implausible, poorly framed
+or genuinely meaningful. Do not treat absence from these summaries as proof
+of novelty; distinguish corpus-supported observations from broader scientific
+assessments when relevant.
 Every input ID must be retained, merged or rejected; never silently drop.
 Preserve/union supporting_papers, evidence and origin perspectives.
 Return only JSON:
@@ -591,63 +596,118 @@ ALL PAPER SUMMARIES:
 """
 
 
-def _challenger_prompt(topic, kind, rnd, max_rounds, records, perspectives, cards):
+def _critique_prompt(topic, kind, rnd, max_rounds, perspective, records, cards):
     return f"""
-ROLE: Scientific Challenger
+ROLE: Independent Scientific Critic
 TOPIC: {topic}; SUBJECT: {kind}; ROUND: {rnd}/{max_rounds}
-In ONE call, apply all perspective lenses below to every record. It is not
-mandatory to propose changes. Only suggest changes when necessary; do not
-manufacture disagreement. Categories: unsupported_by_cited_papers,
-already_addressed, infeasible, vague, non_falsifiable. Cite corpus paper IDs
-and sections. Corpus-only, no web search or outside knowledge.
+PERSPECTIVE NAME: {perspective.get("name", "")}
+PERSPECTIVE DESCRIPTION: {perspective.get("description", "")}
+SCOPE EXCLUSIONS: {_dump(perspective.get("excludes", []))}
+SCOPE OWNERSHIP: {_dump(perspective.get("owned_by", []))}
+BOUNDARY RULE: {perspective.get("boundary_rule", "")}
+
+Critically evaluate EVERY supplied record from this perspective's domain.
+The description and boundary rule define the scope of your expertise; do not
+give generic criticism detached from this scope. Judge each record's novelty,
+scientific/theoretical soundness, feasibility, significance and testability
+where those dimensions apply. For example, a theoretical perspective should
+assess whether the reasoning, assumptions, mechanisms and expected implications
+are theoretically coherent and defensible, and whether the idea is meaningfully
+new within that domain. Other perspectives should apply equivalent standards
+appropriate to their own scope.
+
+Identify substantive weaknesses, hidden assumptions, missing controls or
+comparisons, implausible claims, overlooked prior ideas, and ways to strengthen
+the record. A record may be strong; do not manufacture criticism. Use the
+supplied paper summaries and relevant scientific reasoning. You may draw on
+your existing scientific knowledge where useful, but do not invent citations
+or present unsupported claims as established facts. Clearly distinguish
+paper-supported evidence from your own reasoning. Cite paper IDs/sections
+when referring to supplied papers. Do not limit your assessment to what is
+explicitly stated in the supplied corpus.
+
+For every record, return a concise but substantive assessment. Set
+recommendation to retain, revise, merge or reject. Use revise only when you
+can explain a concrete improvement; use merge only when another supplied
+record is substantially equivalent. If no change is warranted, recommend
+retain and explain why. Keep IDs unchanged.
+
 Return only JSON:
-{{"proposed_changes":[{{"target_id":"","action":"revise|reject|merge|retain",
-"category":"unsupported_by_cited_papers|already_addressed|infeasible|vague|non_falsifiable",
-"perspective":"","argument":"","evidence":[],"paper_references":[],
-"proposed_revision":"","merge_with":[]}}],"no_change_reason":""}}
-PERSPECTIVES: {_dump(perspectives)}
-RECORDS: {_dump(records)}
-PAPER SUMMARIES: {_dump(cards)}
+{{"perspective":"{perspective.get("name", "")}","critiques":[{{
+"target_id":"","assessment":"","novelty":"","scientific_or_theoretical_soundness":"",
+"feasibility":"","significance":"","testability":"","argument":"",
+"evidence":[],"paper_references":[],"recommendation":"retain|revise|merge|reject",
+"proposed_revision":""}}],"overall_assessment":""}}
+RECORDS:
+{_dump(records)}
+PAPER SUMMARIES:
+{_dump(cards)}
 """
 
 
-def _defender_prompt(topic, kind, rnd, max_rounds, records, challenges, cards):
+def _adjuster_prompt(topic, kind, rnd, max_rounds, records, critiques, cards):
     return f"""
-ROLE: Scientific Defender
+ROLE: Scientific Adjuster
 TOPIC: {topic}; SUBJECT: {kind}; ROUND: {rnd}/{max_rounds}
-For every challenge, defend if evidence supports the record, concede if correct,
-or partially concede. Do not defend merely for debate. Suggest revisions only
-when needed. Cite corpus paper IDs and sections. Preserve IDs and provenance.
-Return only JSON:
-{{"responses":[{{"target_id":"","position":"defend|concede|partially_concede",
-"response":"","evidence":[],"paper_references":[],"proposed_revision":""}}],
-"overall_response":""}}
-RECORDS: {_dump(records)}
-CHALLENGES: {_dump(challenges)}
-PAPER SUMMARIES: {_dump(cards)}
-"""
 
+You are the final decision-maker for this debate round. You receive every
+active record, every perspective's critique as a separate assessment, and
+the COMPLETE paper cards for the entire corpus.
 
-def _adjudicator_prompt(topic, kind, rnd, max_rounds, records, challenges, defences):
-    return f"""
-ROLE: Scientific Adjudicator
-TOPIC: {topic}; SUBJECT: {kind}; ROUND: {rnd}/{max_rounds}
-Decide each affected record: retain, revise, merge or reject. For a revision,
-rewrite the COMPLETE record including supporting_papers, related_papers and
-evidence. Never change or renumber IDs. A merge keeps one existing ID and
-lists absorbed IDs. Do not silently drop records. Preserve uncertainties.
+Independently inspect the paper cards when evaluating the critiques. Check
+supporting AND contradictory findings, methods, assumptions, limitations and
+open questions across the full corpus. Do not rely only on evidence excerpts
+or on the critics' summaries.
+
+Evaluate EVERY individual critique separately, including critiques that
+disagree with one another. Do not use majority voting, consensus, or the number
+of perspectives supporting a position as a reason to accept or reject it.
+Assess each critique on its own merits, considering the perspective's stated
+expertise and scope, the record being assessed, and the paper-card evidence.
+A single well-supported critique may justify a change; several weak critiques
+do not become strong through agreement.
+
+For EACH critique, explicitly record:
+- whether it is accepted, partially accepted, or rejected;
+- why that specific criticism is accepted or rejected;
+- which parts are incorporated into the final decision;
+- which points are overlooked or not acted upon, and the reason.
+No critique may be silently ignored. If a critique is irrelevant, out of scope,
+unsupported, mistaken, or redundant, state that explicitly and explain why.
+If it is valid but does not warrant changing the record, explain why it is
+not acted upon. Distinguish paper-card evidence from scientific reasoning.
+
+After evaluating all critiques individually, make ONE final decision per
+record: retain, revise, merge or reject. The final decision must be consistent
+with the individual critique assessments, or explain any apparent difference.
+For a revision, rewrite the COMPLETE record, preserving its scientific meaning
+where possible and incorporating only justified improvements. Include
+supporting_papers, related_papers and evidence. Never change or renumber IDs.
+A merge keeps one existing ID and lists absorbed IDs. Do not silently drop
+records. Preserve uncertainties. If no improvement is justified, retain.
+
 Return only JSON:
-{{"decisions":[{{"target_id":"","decision":"retain|revise|merge|reject",
+{{"critique_assessments":[{{
+"perspective":"","target_id":"","critique_summary":"",
+"disposition":"accepted|partially_accepted|rejected",
+"reason":"","incorporated_points":[],"overlooked_points":[],
+"evidence_checked":[],"paper_references":[]
+}}],
+"decisions":[{{"target_id":"","decision":"retain|revise|merge|reject",
 "reason":"","merged_ids":[],"revised_record":{{"id":"",
 "gap_or_hypothesis_text":"","why_it_matters":"","what_is_known":"",
 "what_remains_unknown":"","rationale":"","testable_prediction":"",
 "proposed_test":"","supporting_papers":[],"related_papers":[],"evidence":[]}},
-"remaining_uncertainties":[]}}],"round_summary":""}}
-RECORDS: {_dump(records)}
-CHALLENGES: {_dump(challenges)}
-DEFENCES: {_dump(defences)}
-"""
+"remaining_uncertainties":[]}}],
+"round_summary":""}}
 
+RECORDS:
+{_dump(records)}
+INDIVIDUAL PERSPECTIVE CRITIQUES:
+{_dump(critiques)}
+COMPLETE PAPER CARDS:
+{_dump(cards)}
+"""
 
 def _hypothesis_prompt(topic, additional, perspective, gaps, cards):
     return f"""
@@ -783,7 +843,7 @@ def _apply_revision(rec, revised, key, valid_ids):
     return True
 
 
-def _apply_decisions(records, decisions, changes, responses, rnd, kind, valid_ids, rejected):
+def _apply_decisions(records, decisions, critiques, assessments, rnd, kind, valid_ids, rejected):
     """Apply the adjudicator's decisions to the active records (mutates them in place)."""
     key = "gap" if kind == "research_gap" else "hypothesis"
     by_id = {x["id"]: x for x in records}
@@ -795,10 +855,20 @@ def _apply_decisions(records, decisions, changes, responses, rnd, kind, valid_id
         if not rec or rec.get("status") in ("rejected", "merged"):
             continue
         decision["round"] = rnd
+        critique_items = [
+            {"perspective": c.get("perspective"), "critique": item}
+            for c in critiques if isinstance(c, dict)
+            for item in c.get("critiques", [])
+            if isinstance(item, dict) and item.get("target_id") == rid
+        ]
+        critique_assessments = [
+            item for item in assessments
+            if isinstance(item, dict) and item.get("target_id") == rid
+        ]
         rec.setdefault("debate_history", []).append({
             "round": rnd,
-            "challenge": [x for x in changes if isinstance(x, dict) and x.get("target_id") == rid],
-            "defence": [x for x in responses if isinstance(x, dict) and x.get("target_id") == rid],
+            "critiques": critique_items,
+            "critique_assessments": critique_assessments,
             "decision": decision,
         })
         action = decision.get("decision", "retain")
@@ -824,7 +894,7 @@ def _apply_decisions(records, decisions, changes, responses, rnd, kind, valid_id
                     absorbed.update(status="merged", merged_into=rid,
                                     merge_reason=decision.get("reason", ""))
                     absorbed.setdefault("debate_history", []).append({
-                        "round": rnd, "challenge": [], "defence": [],
+                        "round": rnd, "critiques": [],
                         "decision": {"decision": "absorbed", "merged_into": rid,
                                      "reason": decision.get("reason", ""), "round": rnd},
                     })
@@ -840,37 +910,69 @@ def _run_debate(runner, topic, kind, records, perspectives, cards, valid_ids):
         current = _active(records)
         if not current:
             break
-        challenges = runner.call(
-            _challenger_prompt(topic, kind, rnd, runner.max_rounds, current, perspectives, cards),
-            stage=f"{kind}_challenger", agent=f"{kind.title()} Challenger", round_no=rnd,
-        ) or {}
-        changes = challenges.get("proposed_changes", [])
-        changes = [x for x in changes if isinstance(x, dict)] if isinstance(changes, list) else []
-        if not changes:
-            runner.note(f"{kind}_debate_terminated", "success",
-                        "No challenger changes; defender, adjudicator and later rounds skipped.",
-                        round=rnd)
-            rounds.append({"round": rnd, "challenges": [], "terminated": True,
-                           "reason": challenges.get("no_change_reason", "")})
-            break
 
-        defences = runner.call(
-            _defender_prompt(topic, kind, rnd, runner.max_rounds, current, changes, cards),
-            stage=f"{kind}_defender", agent=f"{kind.title()} Defender", round_no=rnd,
+        # One independent critique call per generated perspective.
+        perspective_critiques = []
+        for perspective in perspectives:
+            result = runner.call(
+                _critique_prompt(
+                    topic, kind, rnd, runner.max_rounds,
+                    perspective, current, cards,
+                ),
+                stage=f"{kind}_critique",
+                agent=f"{perspective.get('name', 'Perspective')} Critic",
+                round_no=rnd,
+            ) or {}
+            result["perspective"] = result.get("perspective") or perspective.get("name", "")
+            items = result.get("critiques", [])
+            result["critiques"] = [
+                item for item in items
+                if isinstance(item, dict) and item.get("target_id")
+            ] if isinstance(items, list) else []
+            perspective_critiques.append(result)
+
+        # One adjuster integrates all perspectives and updates the records.
+        adjustment = runner.call(
+            _adjuster_prompt(
+                topic, kind, rnd, runner.max_rounds, current,
+                perspective_critiques, cards,
+            ),
+            stage=f"{kind}_adjustment",
+            agent=f"{kind.title()} Adjuster",
+            round_no=rnd,
         ) or {}
-        responses = defences.get("responses", [])
-        adjudication = runner.call(
-            _adjudicator_prompt(topic, kind, rnd, runner.max_rounds, current, changes, responses),
-            stage=f"{kind}_adjudication", agent=f"{kind.title()} Adjudicator", round_no=rnd,
-        ) or {}
-        decisions = adjudication.get("decisions", [])
-        _apply_decisions(current, decisions, changes, responses if isinstance(responses, list) else [],
-                         rnd, kind, valid_ids, rejected)
+        decisions = adjustment.get("decisions", [])
+        decisions = decisions if isinstance(decisions, list) else []
+        assessments = adjustment.get("critique_assessments", [])
+        assessments = assessments if isinstance(assessments, list) else []
+        _apply_decisions(
+            current, decisions, perspective_critiques, assessments,
+            rnd, kind, valid_ids, rejected,
+        )
+
         rounds.append({
-            "round": rnd, "challenges": changes, "defences": responses,
-            "decisions": decisions, "round_summary": adjudication.get("round_summary", ""),
+            "round": rnd,
+            "perspective_critiques": perspective_critiques,
+            "critique_assessments": assessments,
+            "decisions": decisions,
+            "round_summary": adjustment.get("round_summary", ""),
             "terminated": False,
         })
+
+        # Stop early only when the adjuster makes no substantive change.
+        substantive = any(
+            isinstance(d, dict) and d.get("decision") in ("revise", "merge", "reject")
+            for d in decisions
+        )
+        if not substantive:
+            runner.note(
+                f"{kind}_debate_terminated", "success",
+                "Adjuster made no substantive changes; later rounds skipped.",
+                round=rnd,
+            )
+            rounds[-1]["terminated"] = True
+            break
+
     return _active(records), rejected, rounds
 
 

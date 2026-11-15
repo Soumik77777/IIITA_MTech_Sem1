@@ -1,0 +1,29 @@
+- H001: Incorporating restricted balanced inlier separation conditions into theoretical bounds will reconcile the pessimistic 2/n universal breakdown bounds with the strong empirical stability observed in robust and trimmed k-means.
+Rationale: Bridging the gap between universal worst-case bounds and empirical resilience is crucial for theoretical justification of robust clustering heuristics in structured real-world data.
+Testable prediction: Evaluating robust k-means and trimmed k-means under (rho_1, rho_2)-balanced inlier conditions yields higher theoretical breakdown bounds that correlate directly with empirical breakdown points observed in practice.
+References: P002, P005
+
+- H002: Incorporating group-specific dispersion and scatter estimation matrices into trimmed and robust k-means objective functions will enable accurate cluster detection in non-spherical and anisotropic mixtures.
+Rationale: Overcoming the spherical geometry constraint is essential for applying robust trimming tools to complex real-world data manifolds.
+Testable prediction: Optimizing generalized elliptical trimmed clustering objectives will correctly identify linear and elliptical cluster structures where standard spherical models fail.
+References: P002, P003
+
+- H003: It is possible to eliminate the exponential FPT dependence on the outlier count m in clustering coreset and reduction frameworks, yielding running times dependent solely on k and epsilon.
+Rationale: Resolving this complexity bottleneck determines whether optimal outlier-aware clustering can achieve running times comparable to outlier-free algorithms.
+Testable prediction: Designing advanced coreset sampling strategies or relaxed sketching techniques will bound approximation error without requiring explicit subset enumeration up to size m.
+References: P013
+
+- H006: Employing cluster-specific dispersion thresholds instead of a single global threshold will improve outlier detection accuracy and reduce false positives across heterogeneous multi-cluster datasets.
+Rationale: Using a single global threshold assumes uniform variance across all clusters, which fails when clusters exhibit heterogeneous densities or sizes, leading to disproportionate errors in denser versus sparser clusters.
+Testable prediction: A cluster-specific threshold heuristic will achieve higher F1-score and balanced recall across multi-density datasets compared to global thresholding rules.
+References: P006
+
+- H007: Integrating nonparametric pseudo-isolation scoring modules with flexible covariance clustering models (such as Gaussian-mixture models or spectral clustering) will enable robust outlier detection on complex non-spherical data topologies.
+Rationale: Real-world data frequently exhibits complex, anisotropic, or elongated geometries where spherical distance metrics fail, rendering standard spherical trimming or partitioning methods prone to misclassifying boundary inliers as outliers.
+Testable prediction: Combining pseudo-isolation scoring with flexible covariance GMMs will achieve superior outlier detection F1-scores on complex topological manifolds compared to spherical-restricted trimming.
+References: P015
+
+- H009: Deploying robust covariance estimators such as minimum-covariance-determinant (MCD) underneath robust threshold rules in federated baseline k-means (AF-BKM) will preserve attack detection recall when initial commissioning windows are contaminated with anomaly traces.
+Rationale: In decentralized IoT environments, non-robust sample mean and covariance estimators inflate along attack directions during initial anchor commissioning, causing recall degradation even when MAD thresholds hold false-positive rates.
+Testable prediction: An AF-BKM intrusion detection model incorporating MCD estimators will maintain high recall across NSL-KDD and UNSW-NB15 evaluation runs when up to 20% of the initial baseline calibration window is poisoned with attack traffic.
+References: P017
