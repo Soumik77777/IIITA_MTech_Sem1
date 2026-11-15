@@ -1,0 +1,17 @@
+- G001: Lack of deterministic, non-heuristic optimal algorithms for solving the trimmed k-means problem across general parameter spaces. [Papers: P002 (Methods, 3. Trimmed $k$-means); P003 (2. Trimming Tools in Exploratory Data Analysis)]
+
+- G002: Instability and data-dependency of breakdown points in trimmed k-means when cluster proportions and contamination configurations interact. [Papers: P002 (5. Conclusions)]
+
+- G003: Geometric restriction of optimal trimming regions to spherical balls, limiting performance on non-spherical or highly linear cluster geometries. [Papers: P002 (3. Trimmed $k$-means); P003 (Section 4. Mixtures of Elliptical Distributions)]
+
+- G004: Divergence in asymptotic consistency requirements between constant-sample trimming in k-means and sample-varying trimming in k-nets (L_inf criterion). [Papers: P002 (5. Conclusions)]
+
+- G005: Absence of parameter-free, automated methods for selecting the optimal trimming proportion alpha and cluster count k simultaneously. [Papers: P003 (Introduction, Trimming Tools in Exploratory Data Analysis)]
+
+- G006: Lack of invariance under variable transformations in combined feature selection and dataset trimming procedures. [Papers: P004 (RESULTS AND DISCUSSION, CONCLUSION)]
+
+- G007: Unresolved convergence stability and oscillation risks in standard k-means configurations under symmetric probability distributions. [Papers: P001 (2.3. Remarks, Page 288)]
+
+- G008: Lack of empirical validation and statistical power assessment for scrambled dimension tests of independence. [Papers: P001 (3.4. A scrambled dimension test for independence among several variables, Page 293)]
+
+- G009: Dependence on a priori class distribution knowledge when replacing k-means with advanced classifiers in integrated feature selection and trimming frameworks. [Papers: P004 (CONCLUSION)]

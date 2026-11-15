@@ -1,0 +1,24 @@
+- H001: When the number of clusters $k$ is misspecified relative to the true generative mixture, the breakdown point of alpha-trimmed K-means decreases monotonically with the degree of cluster overlap and approaches zero as the contamination rate matches or exceeds the smallest true cluster proportion.
+Rationale: Existing literature establishes that breakdown points depend heavily on dataset geometry and trimming size, but lacks formal bounds under model misspecification.
+Testable prediction: Empirically measured breakdown thresholds on synthetic mixtures with incorrect $k$ will strictly bound below theoretical predictions derived from worst-case overlapping cluster masses.
+References: P002
+
+- H002: Incorporating Minimum Covariance Determinant (MCD) scatter estimators into optimal trimming formulations enables consistent clustering of non-spherical elliptical mixtures without sacrificing breakdown robustness.
+Rationale: Standard optimal trimming forces spherical equal-radius clusters, failing on anisotropic distributions. Substituting robust scatter matrices relaxes this constraint while preserving resistance to outliers.
+Testable prediction: An MCD-backed elliptical trimmed K-means algorithm will achieve higher adjusted Rand index (ARI) on highly skewed bivariate elliptical mixtures compared to standard spherical trimmed K-means.
+References: P002, P003
+
+- H003: Jointly optimizing the expected outlier proportion $\alpha$ and minimum cluster membership $s$ via an outer-loop validation objective in Robust Trimmed K-means (RTKM) matches ground-truth parameter values more accurately than heuristic grid search.
+Rationale: Robust robustified variants currently rely on unprincipled manual parameter tuning for $\alpha$ and $s$, creating instability across automated pipelines.
+Testable prediction: An automated objective-penalization wrapper will estimate $\alpha$ within a 5% margin of true contamination rates across diverse benchmark datasets.
+References: P009
+
+- H004: Integrating a sliding-window exponential moving average into federated baseline K-means anchor updates maintains false-positive rate stability under gradual streaming concept drift.
+Rationale: Static calibration anchors in federated intrusion detection degrade over time when underlying benign distributions drift in IoT edge environments.
+Testable prediction: Adaptive anchor refresh mechanisms will reduce false-positive rate inflation by at least 50% under simulated progressive feature drift compared to static baselines.
+References: P017
+
+- H005: Replacing sample mean and covariance estimators with Minimum Covariance Determinant (MCD) estimators during initial calibration preserves intrusion detection recall under contaminated commissioning windows.
+Rationale: Initial commissioning data containing undetected outliers distorts standard covariance matrices along attack directions, severely harming subsequent operational recall.
+Testable prediction: MCD-backed calibration routines will maintain detection recall above 90% even when commissioning anchors contain up to 10% injected outlier noise.
+References: P017

@@ -2,7 +2,7 @@
 
 Stages:
 1. Read each PDF separately (same reader prompt and schema as the multi-agent pipeline).
-2. Iteratively generate ID-numbered research gaps, then generate hypotheses.
+2. Synthesize the paper summaries into ID-numbered research gaps and hypotheses (one call).
 3. Up to `max_rounds` rounds of self-critique -> revision by the SAME researcher.
    One round = two calls (critique, then revision). The loop stops early when the
    critique proposes no changes. There are no personas, no defender/adjudicator roles
@@ -20,6 +20,7 @@ This module returns data and logs; main.py owns file output and the run constant
 import base64
 import copy
 import json
+import os
 import re
 import time
 from datetime import datetime, timezone
@@ -33,13 +34,13 @@ _RETRYABLE_TERMS = (
 )
 _LABELS = {
     "paper_analysis": "PAPER ANALYSIS",
-    "research_gap_generation": "GAP GENERATION",
-    "gap_self_critique": "GAP SELF-CRITIQUE",
-    "gap_self_critique_revision": "GAP REVISION",
+    "hypothesis_synthesis": "GAP SYNTHESIS",
     "hypothesis_generation": "HYPOTHESIS GENERATION",
     "self_critique": "SELF-CRITIQUE",
     "self_critique_revision": "REVISION",
 }
+target_min_gaps = 10
+
 _REVISION_FIELDS = (
     "why_it_matters", "what_is_known", "what_remains_unknown", "rationale",
     "testable_prediction", "proposed_test", "evidence",
@@ -131,96 +132,6 @@ def _count(parsed, key):
 
 
 # ----------------------------------------------------------------------------
-# LangChain structured-output schemas
-# ----------------------------------------------------------------------------
-
-def _structured_schema(stage):
-    """JSON Schema contracts for Gemini's native structured-output mode."""
-    def obj(properties):
-        return {"type": "object", "properties": properties,
-                "required": list(properties), "additionalProperties": False}
-
-    def arr(item):
-        return {"type": "array", "items": item}
-
-    string = {"type": "string"}
-    strings = arr(string)
-    paper_ref = obj({"paper_id": string, "sections": strings})
-    related_paper = obj({"paper_id": string, "sections": strings,
-                         "relation": string, "explanation": string})
-    evidence = obj({"paper_id": string, "section": string, "evidence": string})
-    open_question = obj({"question": string, "why_unresolved": string,
-                         "evidence": string, "sections": strings})
-    candidate_hypothesis = obj({"hypothesis": string, "rationale": string,
-                                "evidence": string, "sections": strings})
-
-    reader = obj({
-        "paper_title": string, "authors_year": string,
-        "research_question": string, "context": string,
-        "methods": strings, "main_findings": strings, "assumptions": strings,
-        "limitations_explicit": strings,
-        "potential_open_questions": arr(open_question),
-        "candidate_hypotheses": arr(candidate_hypothesis),
-    })
-    gap = obj({
-        "id": string, "gap": string, "why_it_matters": string,
-        "what_is_known": string, "what_remains_unknown": string,
-        "gap_type": string, "confidence": string,
-        "supporting_papers": arr(paper_ref),
-        "related_papers": arr(related_paper), "evidence": arr(evidence),
-    })
-    hypothesis = obj({
-        "id": string, "hypothesis": string, "rationale": string,
-        "testable_prediction": string, "proposed_test": string,
-        "originating_gap_ids": strings,
-        "supporting_papers": arr(paper_ref),
-        "related_papers": arr(related_paper), "evidence": arr(evidence),
-    })
-    critique_change = obj({
-        "target_id": string, "action": string, "category": string,
-        "argument": string, "evidence": arr(evidence),
-        "paper_references": arr(paper_ref), "proposed_revision": string,
-        "merge_with": strings,
-    })
-    revised_record = obj({
-        "id": string, "gap_or_hypothesis_text": string,
-        "why_it_matters": string, "what_is_known": string,
-        "what_remains_unknown": string, "rationale": string,
-        "testable_prediction": string, "proposed_test": string,
-        "supporting_papers": arr(paper_ref),
-        "related_papers": arr(related_paper), "evidence": arr(evidence),
-    })
-    decision = obj({
-        "target_id": string, "decision": string, "reason": string,
-        "merged_ids": strings, "revised_record": revised_record,
-        "remaining_uncertainties": strings,
-    })
-
-    schemas = {
-        "paper_analysis": reader,
-        "research_gap_generation": obj({
-            "historical_analysis": string, "research_gaps": arr(gap),
-        }),
-        "hypothesis_generation": obj({"hypotheses": arr(hypothesis)}),
-        "self_critique": obj({
-            "proposed_changes": arr(critique_change), "no_change_reason": string,
-        }),
-        "gap_self_critique": obj({
-            "proposed_changes": arr(critique_change), "no_change_reason": string,
-        }),
-        "self_critique_revision": obj({
-            "decisions": arr(decision), "round_summary": string,
-        }),
-        "gap_self_critique_revision": obj({
-            "decisions": arr(decision), "round_summary": string,
-        }),
-    }
-    if stage not in schemas:
-        raise ValueError(f"No structured-output schema defined for stage: {stage}")
-    return schemas[stage]
-
-
-# ----------------------------------------------------------------------------
 # API runner: throttling, retries, usage and inference-history logging
 # ----------------------------------------------------------------------------
 
@@ -235,6 +146,8 @@ class _Runner:
         self.usage = []
         self.last_failure = None  # ("request" | "parse", message) after a failed call
         self._last_done = None
+        self._last_sent_at = None
+        self._last_sent_tokens = None
 
     def note(self, stage, status, message, **extra):
         """Log an orchestrator event (no API call)."""
@@ -246,12 +159,23 @@ class _Runner:
         self.history.append(event)
 
     def _wait(self):
-        if self._last_done is None:
-            return
-        delay = self.pause_sec - (time.monotonic() - self._last_done)
-        if delay > 0:
-            print(f"[WAIT] {delay:.1f}s before next API call")
-            time.sleep(delay)
+        now = time.monotonic()
+        if self._last_sent_at is not None and self._last_sent_tokens is not None:
+            elapsed = now - self._last_sent_at
+            if self._last_sent_tokens > _LARGE_REQUEST_COOLDOWN_THRESHOLD and elapsed < _LARGE_REQUEST_COOLDOWN_SECONDS:
+                delay = _LARGE_REQUEST_COOLDOWN_SECONDS - elapsed
+                print(
+                    f"[WAIT] {delay:.1f}s cooldown: previous request was estimated "
+                    f"at {self._last_sent_tokens:,} input tokens (> "
+                    f"{_LARGE_REQUEST_COOLDOWN_THRESHOLD:,})."
+                )
+                time.sleep(delay)
+
+        if self._last_done is not None:
+            delay = self.pause_sec - (time.monotonic() - self._last_done)
+            if delay > 0:
+                print(f"[WAIT] {delay:.1f}s before next API call")
+                time.sleep(delay)
 
     def _report(self, stage, paper_loc, round_no, parsed=None, runtime=None, error=None):
         label = _LABELS.get(stage, stage.upper())
@@ -262,8 +186,8 @@ class _Runner:
             detail = f"FAILED — {error}"
         elif parsed is None:
             detail = "FAILED — invalid JSON response"
-        elif stage == "research_gap_generation":
-            detail = f"Generated {_count(parsed, 'research_gaps')} research gaps"
+        elif stage == "hypothesis_synthesis":
+            detail = f"Drafted {_count(parsed, 'research_gaps')} research gaps"
         elif stage == "hypothesis_generation":
             detail = f"Generated {_count(parsed, 'hypotheses')} hypotheses"
         elif stage == "self_critique":
@@ -275,23 +199,43 @@ class _Runner:
         timing = f" ({runtime:.1f}s)" if runtime is not None else ""
         print(f"[SINGLE] {label} — {subject}: {detail}{timing}")
 
-    def call(self, prompt, *, stage, agent="Single Researcher", paper_path=None, round_no=None):
+    def call(self, prompt, *, stage, agent="Single Researcher", paper_path=None, paper_paths=None, round_no=None, input_token_estimate=None, pdf_token_estimate=None):
         """One LLM request. Returns the parsed JSON dict, or None on failure."""
         self.last_failure = None
         paper_loc = str(Path(paper_path).resolve()) if paper_path else None
+        attachments_for_estimate = list(paper_paths or [])
+        if paper_path:
+            attachments_for_estimate.append(paper_path)
+        if input_token_estimate is None:
+            try:
+                input_token_estimate = _count_input_tokens(
+                    self.model_name, prompt, attachments_for_estimate
+                )
+            except Exception as exc:
+                print(f"[TOKENS] Preflight estimate unavailable for {stage}: "
+                      f"{type(exc).__name__}: {exc}")
         event = {
             "event_id": f"E{len(self.history)+1:04d}", "timestamp_utc": _now(),
             "stage": stage, "agent": agent, "round": round_no, "paper_loc": paper_loc,
+            "paper_paths": [str(Path(x).resolve()) for x in (paper_paths or [])],
+            "estimated_input_tokens": input_token_estimate,
+            "estimated_pdf_tokens": pdf_token_estimate,
             "prompt": prompt, "status": "started",
         }
         self.history.append(event)
         try:
+            attachments = list(paper_paths or [])
             if paper_path:
-                encoded_pdf = base64.b64encode(Path(paper_path).resolve().read_bytes()).decode("ascii")
-                message = HumanMessage(content=[
-                    {"type": "text", "text": prompt},
-                    {"type": "media", "mime_type": "application/pdf", "data": encoded_pdf},
-                ])
+                attachments.append(paper_path)
+            if attachments:
+                content = [{"type": "text", "text": prompt}]
+                for attached_path in attachments:
+                    encoded_pdf = base64.b64encode(
+                        Path(attached_path).resolve().read_bytes()
+                    ).decode("ascii")
+                    content.append({"type": "media", "mime_type": "application/pdf",
+                                    "data": encoded_pdf})
+                message = HumanMessage(content=content)
             else:
                 message = HumanMessage(content=prompt)
         except Exception as exc:
@@ -303,14 +247,11 @@ class _Runner:
 
         for attempt in range(1, self.max_retries + 1):
             self._wait()
+            self._last_sent_at = time.monotonic()
+            self._last_sent_tokens = input_token_estimate
             started = time.perf_counter()
             try:
-                structured_llm = self.llm.with_structured_output(
-                    _structured_schema(stage),
-                    method="json_schema",
-                    include_raw=True,
-                )
-                structured_result = structured_llm.invoke([message])
+                response = self.llm.invoke([message])
             except Exception as exc:
                 runtime = round(time.perf_counter() - started, 3)
                 self._last_done = time.monotonic()
@@ -320,8 +261,12 @@ class _Runner:
                     "round": round_no, "paper_loc": paper_loc, "model": self.model_name,
                     "attempt": attempt, "status": "error", "runtime_seconds": runtime,
                     "input_tokens": None, "output_tokens": None, "total_tokens": None,
+                    "preflight_input_tokens": input_token_estimate,
+                    "preflight_pdf_tokens": pdf_token_estimate,
                     "estimated_cost_usd": None, "error": error,
                 })
+                print(f"[TOKENS] {stage} attempt {attempt}: input=unavailable, "
+                      f"output=unavailable, total=unavailable (request failed)")
                 if any(term in str(exc).lower() for term in _RETRYABLE_TERMS) and attempt < self.max_retries:
                     backoff = self.pause_sec * (2 ** (attempt - 1))
                     print(f"[WAIT] {backoff:.1f}s before retrying {stage}")
@@ -335,14 +280,6 @@ class _Runner:
 
             runtime = round(time.perf_counter() - started, 3)
             self._last_done = time.monotonic()
-            response = structured_result.get("raw")
-            parsed = structured_result.get("parsed")
-            parsing_error = structured_result.get("parsing_error")
-            if hasattr(parsed, "model_dump"):
-                parsed = parsed.model_dump()
-            if not isinstance(parsed, dict):
-                parsed = None
-
             meta = getattr(response, "usage_metadata", None) or {}
             inp, out, total = meta.get("input_tokens"), meta.get("output_tokens"), meta.get("total_tokens")
             if total is None and inp is not None and out is not None:
@@ -354,23 +291,25 @@ class _Runner:
             self.usage.append({
                 "timestamp_utc": _now(), "stage": stage, "agent": agent,
                 "round": round_no, "paper_loc": paper_loc, "model": self.model_name,
-                "attempt": attempt, "status": "success" if parsed is not None else "parse_error",
-                "runtime_seconds": runtime, "input_tokens": inp, "output_tokens": out,
-                "total_tokens": total, "estimated_cost_usd": cost,
-                "error": str(parsing_error) if parsing_error else None,
+                "attempt": attempt, "status": "success", "runtime_seconds": runtime,
+                "input_tokens": inp, "output_tokens": out, "total_tokens": total,
+                "preflight_input_tokens": input_token_estimate,
+                "preflight_pdf_tokens": pdf_token_estimate,
+                "estimated_cost_usd": cost, "error": None,
             })
-            raw = _text(response.content) if response is not None else ""
-            event.update(
-                status="success" if parsed is not None else "parse_error",
-                response=raw, parsed_output=parsed,
-                structured_output_error=str(parsing_error) if parsing_error else None,
-                runtime_seconds=runtime, attempts=attempt,
-            )
+            print(f"[TOKENS] {stage} attempt {attempt}: "
+                  f"input={inp if inp is not None else 'unavailable'}, "
+                  f"output={out if out is not None else 'unavailable'}, "
+                  f"total={total if total is not None else 'unavailable'}")
+            raw = _text(response.content)
+            parsed = _parse(raw)
+            if not isinstance(parsed, dict):
+                parsed = None
+            event.update(status="success", response=raw, parsed_output=parsed,
+                         runtime_seconds=runtime, attempts=attempt)
             if parsed is None:
-                message = ("LangChain structured output did not produce a parsed object: "
-                           + (str(parsing_error) if parsing_error else "unknown parsing error"))
-                event["parse_warning"] = message
-                self.last_failure = ("parse", message)
+                event["parse_warning"] = "Invalid JSON; raw response retained."
+                self.last_failure = ("parse", "Could not parse model response as a JSON object.")
             self._report(stage, paper_loc, round_no, parsed, runtime)
             return parsed
         return None
@@ -392,6 +331,7 @@ def _paper_cards(papers):
             "assumptions": a.get("assumptions", []),
             "limitations_explicit": a.get("limitations_explicit", []),
             "potential_open_questions": a.get("potential_open_questions", []),
+            "candidate_hypotheses": a.get("candidate_hypotheses", []),
             "paper_loc": p["paper_loc"],
         })
     return cards
@@ -465,75 +405,117 @@ automatically a research gap. Return only valid JSON:
 {{
  "paper_title":"","authors_year":"","research_question":"","context":"",
  "methods":[],"main_findings":[],"assumptions":[],"limitations_explicit":[],
- "potential_open_questions":[{{"question":"","why_unresolved":"","evidence":"","sections":[]}}],
- "candidate_hypotheses":[{{"hypothesis":"","rationale":"","evidence":"","sections":[]}}]
+ "potential_open_questions":[{{"question":"","why_unresolved":"","evidence":"","evidence_excerpt":"","sections":[]}}],
+ "candidate_hypotheses":[{{"hypothesis":"","rationale":"","evidence":"","evidence_excerpt":"","sections":[]}}]
 }}
-Do not claim novelty beyond this paper.
-"""
+For each potential_open_question and candidate_hypothesis, provide evidence_excerpt
+as a CONTEXTUAL VERBATIM EXCERPT, not merely the single sentence that states the
+limitation or future direction. Copy the continuous passage from the PDF, preserving
+the original wording. Include a few complete sentences immediately BEFORE the key
+evidence and a few complete sentences immediately AFTER it, so the excerpt captures
+the preceding discussion, reasoning, qualifications, results, or follow-up discussion.
+Aim for roughly 5-10 sentences or about 100-180 words per excerpt when the source
+contains that much relevant context. Include the full relevant paragraph(s) when
+shorter; do not add unrelated text just to meet a length target. Do not stitch
+non-contiguous sentences together. Never invent, paraphrase, or silently correct
+quoted text. Include the printed page number and section heading in sections when
+identifiable. If no directly relevant passage exists, use an empty string for
+evidence_excerpt. Keep evidence as a concise explanation separate from the verbatim
+excerpt. Do not claim novelty beyond this paper."""
 
 
-def _gap_generation_prompt(topic, additional, cards, existing_gaps, target_count, batch_size, iteration):
+def _synthesis_prompt(topic, additional, cards):
     return f"""
-You are a single scientific researcher conducting an ITERATIVE literature-gap search.
+You are a single scientific researcher synthesizing a supplied literature corpus.
 TOPIC: {topic}
 USER INSTRUCTIONS: {additional or "None"}
-SEARCH ITERATION: {iteration}
-TARGET TOTAL: approximately {target_count} distinct research gaps.
-GENERATE THIS ITERATION: at most {batch_size} NEW gaps.
 
-Use ONLY the supplied paper summaries as evidence. Do not imply that this corpus
+Use ONLY the paper summaries below as evidence. Do not imply that this corpus
 represents all published literature. Distinguish explicit findings, reasonable
 inferences, and speculation.
 
-Search the corpus systematically for additional, distinct unresolved research
-questions. Examine methods, assumptions, datasets, evaluation choices, theoretical
-claims, limitations, conflicting findings, and underexplored connections. In each
-iteration, prioritize areas not already represented by the existing gaps. Do not
-paraphrase, split, or lightly reword an existing gap to inflate the count.
-The target is approximate, not a quota: return fewer gaps if the corpus does not
-support more substantive gaps. If no meaningful new gap remains, return an empty list.
+Produce a concise historical account and specific research gaps numbered G001,
+G002, ... in order. There is no maximum number of gaps: identify every distinct,
+well-supported gap that the corpus justifies. Ten is a target, not a cap or a
+requirement to invent gaps. Each gap must explain what is known, what remains
+unknown and why it matters. Cite direct evidence and supporting papers using only
+supplied paper IDs. Do not generate hypotheses at this stage.
 
-Each gap must explain what is known, what remains unknown and why it matters.
-Cite direct evidence and supporting papers using only supplied paper IDs. Use
-section references where possible; sections may be empty but paper IDs must be valid.
-A limitation or a paper's silence is not automatically a research gap.
+Do not call something a research gap merely because one paper does not discuss it.
+A limitation is not automatically a research gap. Avoid duplicate or overlapping gaps.
+Do not claim novelty beyond the supplied papers; a broader literature review would
+be required to establish novelty.
 
 Return ONLY valid JSON, no Markdown:
 {{"historical_analysis":"",
-"research_gaps":[{{"id":"","gap":"","why_it_matters":"","what_is_known":"",
+"research_gaps":[{{"id":"G001","gap":"","why_it_matters":"","what_is_known":"",
 "what_remains_unknown":"","gap_type":"explicit|inferred","confidence":"low|medium|high",
 "supporting_papers":[{{"paper_id":"P001","sections":[]}}],
-"related_papers":[{{"paper_id":"P001","sections":[],"relation":"addresses|contradicts|extends|mentions","explanation":""}}],
 "evidence":[{{"paper_id":"P001","section":"","evidence":""}}]}}]}}
 
-EXISTING GAPS — DO NOT DUPLICATE:
-{_dump(existing_gaps)}
 PAPER SUMMARIES:
 {_dump(cards)}
 """
 
 
-def _hypothesis_generation_prompt(topic, additional, gaps, cards):
+def _gap_generation_prompt(topic, additional, cards, target_count):
     return f"""
-You are a single scientific researcher generating hypotheses from the completed
-research-gap list.
+You are a single scientific researcher conducting a comprehensive literature-gap
+analysis of the supplied corpus in ONE attempt.
+TOPIC: {topic}
+USER INSTRUCTIONS: {additional or "None"}
+TARGET: identify at least {target_count} distinct, substantive research gaps if the
+evidence supports them.
+
+Examine the entire corpus systematically: methods, assumptions, datasets,
+evaluation choices, theoretical claims, explicit limitations, conflicting findings,
+and underexplored connections. Aim for at least {target_count} gaps in this one
+response. Do not stop after finding only a few obvious gaps. However, stop when no
+further NEW, solid, scientifically meaningful gap can be supported by the corpus.
+The target is not permission to invent weak, speculative, duplicate, or unsupported
+gaps. It is acceptable to return fewer than {target_count} only when the corpus
+genuinely supports no more distinct gaps.
+
+Use ONLY the supplied paper summaries. Do not imply that this corpus represents all
+published literature. Distinguish explicit statements from reasonable inferences.
+A limitation or a paper's silence is not automatically a research gap. Do not split,
+rephrase, or lightly modify one issue to inflate the count.
+
+For every gap, explain what is known, what remains unknown, and why it matters.
+Cite direct evidence and supporting papers using only supplied paper IDs. Use
+specific section references wherever available. Keep gaps distinct and grounded.
+Assign IDs sequentially as G001, G002, ... in the order returned.
+
+Return ONLY valid JSON, no Markdown, with exactly this structure:
+{{"historical_analysis":"",
+"research_gaps":[{{"id":"G001","gap":"","why_it_matters":"","what_is_known":"",
+"what_remains_unknown":"","gap_type":"explicit|inferred","confidence":"low|medium|high",
+"supporting_papers":[{{"paper_id":"P001","sections":[]}}],
+"related_papers":[{{"paper_id":"P001","sections":[],"relation":"addresses|contradicts|extends|mentions","explanation":""}}],
+"evidence":[{{"paper_id":"P001","section":"","evidence":""}}]}}]}}
+
+PAPER SUMMARIES:
+{_dump(cards)}
+"""
+
+def _hypothesis_prompt(topic, additional, gaps, cards):
+    return f"""
+You are the same single scientific researcher. Generate testable hypotheses only
+AFTER the research gaps have been critiqued and finalised.
 TOPIC: {topic}
 USER INSTRUCTIONS: {additional or "None"}
 
-Generate specific, falsifiable hypotheses grounded in the supplied final gaps.
-Aim for approximately one substantive hypothesis per gap where justified, so the
-number of hypotheses is broadly comparable to the number of gaps. Do not force a
-hypothesis for a gap if the evidence does not support a testable proposition.
-Each hypothesis must cite one or more valid originating gap IDs and supporting
-paper IDs/sections, and include a rationale, testable prediction and proposed test.
-Avoid duplicate or overlapping hypotheses. Do not claim proof or novelty beyond
-the supplied corpus.
+Use the final gaps and the supplied paper summaries. Generate as many or as few
+hypotheses as the gaps and scientific reasoning justify. There is no numerical
+minimum, maximum, or target average. Do not force one hypothesis per gap. Every
+hypothesis must be specific and falsifiable, cite one or more valid originating gap
+IDs, and include supporting papers/sections, evidence, rationale, prediction and test.
+Do not claim novelty beyond this corpus.
 
-Return ONLY valid JSON, no Markdown:
-{{"hypotheses":[{{"id":"","hypothesis":"","rationale":"","testable_prediction":"",
-"proposed_test":"","originating_gap_ids":["G001"],
+Return ONLY valid JSON:
+{{"hypotheses":[{{"id":"H001","hypothesis":"","rationale":"",
+"testable_prediction":"","proposed_test":"","originating_gap_ids":["G001"],
 "supporting_papers":[{{"paper_id":"P001","sections":[]}}],
-"related_papers":[{{"paper_id":"P001","sections":[],"relation":"addresses|contradicts|extends|mentions","explanation":""}}],
 "evidence":[{{"paper_id":"P001","section":"","evidence":""}}]}}]}}
 
 FINAL RESEARCH GAPS:
@@ -543,38 +525,11 @@ PAPER SUMMARIES:
 """
 
 
-def _gap_critique_prompt(topic, additional, rnd, max_rounds, gaps, cards):
-    return f"""
-You are the SAME single researcher who generated the research gaps below.
-Before any hypotheses are generated, critically evaluate EVERY research gap.
-This is a gap-only validation stage: do not generate hypotheses.
-Check whether each gap is genuinely unresolved in the supplied corpus, is
-distinct from other gaps, is sufficiently specific, and is supported by cited
-paper evidence rather than merely by a paper's silence.
-Do not manufacture criticisms. Recommend changes only when justified.
-Allowed actions: revise, reject, merge, retain.
-Categories: unsupported_by_cited_papers, already_addressed, infeasible,
-vague, non_falsifiable, duplicate_or_overlapping.
-Cite the relevant corpus paper IDs and sections. Use only the supplied corpus;
-do not use web search or outside knowledge.
-For every proposed revision, preserve the gap's meaning where possible and
-rewrite its complete record, including supporting_papers, related_papers,
-and evidence. Never change IDs. Do not silently drop a gap.
-Return only JSON:
-{{"proposed_changes":[{{"target_id":"","action":"revise|reject|merge|retain",
-"category":"unsupported_by_cited_papers|already_addressed|infeasible|vague|non_falsifiable|duplicate_or_overlapping",
-"argument":"","evidence":[],"paper_references":[],
-"proposed_revision":"","merge_with":[]}}],"no_change_reason":""}}
-RESEARCH GAPS: {_dump(gaps)}
-PAPER SUMMARIES: {_dump(cards)}
-"""
-
-
-def _critique_prompt(topic, additional, rnd, max_rounds, records, cards):
+def _critique_prompt(topic, additional, rnd, max_rounds, records, cards, subject):
     return f"""
 You are the SAME single researcher who produced the records below.
-Perform ONE self-critique (round {rnd}/{max_rounds}) of EVERY record, gaps and
-hypotheses alike. Do not simulate other agents, personas, reviewers, or a debate.
+Perform ONE self-critique (round {rnd}/{max_rounds}) of EVERY {subject} record
+in this batch. Evaluate only the records supplied in this batch. Do not simulate other agents, personas, reviewers, or a debate.
 TOPIC: {topic}
 USER INSTRUCTIONS: {additional or "None"}
 It is not mandatory to propose changes. Only suggest changes when necessary; do not
@@ -588,6 +543,11 @@ Return only JSON:
 "argument":"","evidence":[],"paper_references":[],
 "proposed_revision":"","merge_with":[]}}],"no_change_reason":""}}
 RECORDS: {_dump(records)}
+Use the paper summaries' evidence_excerpt fields as the primary source passages.
+Check whether each excerpt directly supports the associated claim. Quote or cite
+these exact passages in proposed changes where useful; do not fabricate quotations.
+Do not expect or refer to attached PDFs in this critique request.
+
 PAPER SUMMARIES: {_dump(cards)}
 """
 
@@ -619,6 +579,64 @@ PAPER SUMMARIES: {_dump(cards)}
 
 
 # ----------------------------------------------------------------------------
+# Excerpt-based critique and token preflight
+# ----------------------------------------------------------------------------
+
+_LARGE_REQUEST_COOLDOWN_THRESHOLD = 150_000
+_LARGE_REQUEST_COOLDOWN_SECONDS = 60
+_TOKEN_CLIENT = None
+
+
+def _token_client():
+    global _TOKEN_CLIENT
+    from google import genai
+    if _TOKEN_CLIENT is None:
+        _TOKEN_CLIENT = genai.Client(api_key=os.environ.get("GOOGLE_API_KEY"))
+    return _TOKEN_CLIENT
+
+
+def _count_input_tokens(model_name, prompt, pdf_paths=None):
+    """Count the complete text + any explicitly attached PDFs in a request."""
+    from google.genai import types
+
+    parts = [types.Part.from_text(text=prompt)]
+    for path in pdf_paths or []:
+        parts.append(types.Part.from_bytes(
+            data=Path(path).resolve().read_bytes(), mime_type="application/pdf"))
+    response = _token_client().models.count_tokens(
+        model=model_name, contents=[types.Content(role="user", parts=parts)])
+    return int(response.total_tokens)
+
+
+def _critique_batches(records, cards, paper_by_id, topic, additional, rnd,
+                      max_rounds, subject, model_name):
+    """
+    Critique using exact evidence excerpts embedded in reader-generated paper summaries.
+    Original PDFs are not attached to critique requests. All records, paper summaries,
+    section references and excerpts are retained in one complete prompt.
+    """
+    prompt = _critique_prompt(topic, additional, rnd, max_rounds,
+                              records, cards, subject)
+    total_tokens = _count_input_tokens(model_name, prompt, [])
+    print(
+        f"[TOKENS] {subject.upper()} critique: {len(records)} {subject} records + "
+        f"{len(cards)} paper summaries, section references and evidence excerpts; "
+        f"no PDF attachments; estimated complete request = {total_tokens:,} tokens."
+    )
+    return [{
+        "records": list(records),
+        "paper_ids": [],
+        "paper_paths": [],
+        "pdf_tokens": 0,
+        "input_tokens": total_tokens,
+        "prompt": prompt,
+        "batch_no": 1,
+        "batch_count": 1,
+    }]
+
+
+# ----------------------------------------------------------------------------
+
 # Records: creation, revision, merging, and gap/hypothesis link bookkeeping
 # ----------------------------------------------------------------------------
 
@@ -791,7 +809,7 @@ def _history_text(topic, events):
 
 def run_single_agent(llm, topic, additional_prompt, pdf_paths, model_name,
                      price_per_million_tokens=None, *, max_rounds, pause_sec, max_retries,
-                     target_gap_count=10):
+                     target_gap_count=target_min_gaps):
     """Run the single-agent pipeline and return results/logs to main.py."""
     if not isinstance(target_gap_count, int) or target_gap_count < 1:
         raise ValueError("target_gap_count must be an integer >= 1.")
@@ -829,223 +847,198 @@ def run_single_agent(llm, topic, additional_prompt, pdf_paths, model_name,
     else:
         cards = _paper_cards(papers)
         valid_ids = {c["paper_id"] for c in cards}
+        paper_by_id = {p["paper_id"]: p for p in papers}
 
-        # Stage 2: iterative gap search. Each call explores areas not covered by
-        # earlier gaps; stop at the target or when the model finds no further gaps.
+        # Stage 2: one comprehensive attempt to identify the target number of gaps.
+        prompt = _gap_generation_prompt(
+            topic, additional_prompt, cards, target_gap_count
+        )
+        draft = runner.call(
+            prompt, stage="hypothesis_synthesis", round_no=1
+        )
         raw_gaps = []
-        iteration = 0
-        batch_size = min(3, target_gap_count)
-        while len(raw_gaps) < target_gap_count:
-            iteration += 1
-            existing = [
-                {"id": f"G{i:03d}", **{k: v for k, v in item.items() if k != "id"}}
-                for i, item in enumerate(raw_gaps, start=1)
-            ]
-            parsed = runner.call(
-                _gap_generation_prompt(
-                    topic, additional_prompt, cards, existing, target_gap_count,
-                    min(batch_size, target_gap_count - len(raw_gaps)), iteration),
-                stage="research_gap_generation", round_no=iteration)
-            if parsed is None:
-                kind, message = runner.last_failure or ("request", "unknown failure")
-                if kind == "parse":
-                    parse_warning = message
-                synthesis_warning = (
-                    f"Gap-generation iteration {iteration} failed; retained gaps "
-                    "from earlier iterations.")
-                break
-
-            if not historical_analysis:
-                historical_analysis = parsed.get("historical_analysis", "")
-            new_items = parsed.get("research_gaps", [])
-            new_items = [
-                item for item in new_items
-                if isinstance(item, dict) and item.get("gap")
-            ] if isinstance(new_items, list) else []
-            if not new_items:
-                runner.note(
-                    "gap_generation_terminated", "success",
-                    "No additional substantive gaps returned; iterative search stopped.",
-                    iteration=iteration, gaps_found=len(raw_gaps))
-                break
-
-            # Assign stable sequential IDs locally; ignore model-provided IDs.
-            # Also guard against repeated gaps across iterations.
-            existing_texts = {
-                " ".join(str(item.get("gap", "")).lower().split())
-                for item in raw_gaps
-            }
-            added_this_iteration = 0
-            for item in new_items:
-                if len(raw_gaps) >= target_gap_count:
-                    break
-                item = dict(item)
+        if draft is None:
+            kind, message = runner.last_failure or ("request", "unknown failure")
+            if kind == "parse":
+                parse_warning = message
+            synthesis_warning = (
+                "Single gap-generation attempt failed; no iterative retry was made."
+            )
+        else:
+            historical_analysis = draft.get("historical_analysis", "")
+            returned_gaps = draft.get("research_gaps", [])
+            returned_gaps = (
+                [item for item in returned_gaps
+                 if isinstance(item, dict) and item.get("gap")]
+                if isinstance(returned_gaps, list) else []
+            )
+            seen_gap_texts = set()
+            for item in returned_gaps:
                 normalized = " ".join(str(item.get("gap", "")).lower().split())
-                if not normalized or normalized in existing_texts:
+                if not normalized or normalized in seen_gap_texts:
                     continue
+                item = dict(item)
                 item["id"] = f"G{len(raw_gaps) + 1:03d}"
                 raw_gaps.append(item)
-                existing_texts.add(normalized)
-                added_this_iteration += 1
+                seen_gap_texts.add(normalized)
 
-            if added_this_iteration == 0:
-                runner.note(
-                    "gap_generation_terminated", "warning",
-                    "Iteration produced no new distinct gaps; iterative search stopped.",
-                    iteration=iteration, gaps_found=len(raw_gaps))
-                break
-
-        # Stage 3: critique and revise research gaps BEFORE generating hypotheses.
-        gap_draft = {"research_gaps": raw_gaps, "hypotheses": []}
-        gaps, _ = _draft_records(gap_draft, valid_ids)
-        gap_critique_rounds = []
-        gap_round_summaries = []
-        gap_critique_executed = 0
-
-        for gap_rnd in range(1, max_rounds + 1):
-            active_gaps = _active(gaps)
-            if not active_gaps:
-                break
-            gap_critique = runner.call(
-                _gap_critique_prompt(
-                    topic, additional_prompt, gap_rnd, max_rounds,
-                    active_gaps, cards),
-                stage="gap_self_critique", round_no=gap_rnd)
-            if gap_critique is None:
-                critique_warning = (
-                    f"Pre-hypothesis gap critique round {gap_rnd} failed; "
-                    "retained the previous gap records.")
-                break
-
-            gap_critique_executed += 1
-            gap_changes_raw = gap_critique.get("proposed_changes", [])
-            gap_changes = (
-                [c for c in gap_changes_raw if isinstance(c, dict)]
-                if isinstance(gap_changes_raw, list) else []
+            runner.note(
+                "gap_generation_completed", "success",
+                "Completed one comprehensive gap-generation attempt.",
+                gaps_found=len(raw_gaps), target_min_gaps=target_gap_count,
+                target_reached=len(raw_gaps) >= target_gap_count,
             )
-            if not gap_changes:
-                reason = gap_critique.get("no_change_reason", "")
-                gap_critique_rounds.append({
-                    "round": gap_rnd, "critiques": [], "decisions": [],
-                    "terminated": True, "reason": reason,
-                    "records_after": copy.deepcopy({"research_gaps": active_gaps}),
-                })
-                runner.note(
-                    "gap_critique_terminated", "success",
-                    "No gap changes proposed; pre-hypothesis gap validation stopped.",
-                    round=gap_rnd)
-                break
 
-            gap_revision = runner.call(
-                _revision_prompt(
-                    topic, additional_prompt, gap_rnd, max_rounds,
-                    active_gaps, gap_changes, cards),
-                stage="gap_self_critique_revision", round_no=gap_rnd)
-            if gap_revision is None:
-                critique_warning = (
-                    f"Pre-hypothesis gap revision round {gap_rnd} failed; "
-                    "retained the previous gap records.")
-                gap_critique_rounds.append({
-                    "round": gap_rnd, "critiques": gap_changes,
-                    "decisions": [], "terminated": False, "failed": True,
-                })
-                break
+        gaps, _ = _draft_records(
+            {"research_gaps": raw_gaps, "hypotheses": []}, valid_ids
+        )
+        draft_records["research_gaps"] = copy.deepcopy(gaps)
+        if len(gaps) < target_gap_count:
+            synthesis_warning = (
+                f"Only {len(gaps)} distinct, supported gaps were found; "
+                f"the target was {target_gap_count}."
+            )
 
-            gap_decisions = gap_revision.get("decisions", [])
-            _apply_decisions(gaps, gap_decisions, gap_changes, gap_rnd, valid_ids)
-            gap_summary = gap_revision.get("round_summary", "")
-            if gap_summary:
-                gap_round_summaries.append(gap_summary)
-            gap_critique_rounds.append({
-                "round": gap_rnd, "critiques": gap_changes,
-                "decisions": gap_decisions if isinstance(gap_decisions, list) else [],
-                "round_summary": gap_summary, "terminated": False,
-                "records_after": copy.deepcopy({"research_gaps": _active(gaps)}),
-            })
-
-        # Only validated, non-rejected gaps are passed to hypothesis generation.
-        validated_gaps = _active(gaps)
-        raw_hypotheses = []
-        if validated_gaps:
-            hypothesis_draft = runner.call(
-                _hypothesis_generation_prompt(
-                    topic, additional_prompt, validated_gaps, cards),
-                stage="hypothesis_generation")
-            if hypothesis_draft is None:
-                synthesis_warning = synthesis_warning or (
-                    "Hypothesis-generation request failed or returned invalid structured output.")
-            else:
-                raw_hypotheses = hypothesis_draft.get("hypotheses", [])
-                if not isinstance(raw_hypotheses, list):
-                    raw_hypotheses = []
-
-        # Preserve the validated gap records (including critique history/status)
-        # while validating hypothesis links against their stable IDs.
-        validated_gap_records = copy.deepcopy(gaps)
-        _, hypotheses = _draft_records(
-            {"research_gaps": raw_gaps, "hypotheses": raw_hypotheses}, valid_ids)
-        gaps = validated_gap_records
-        known_gap_ids = {g["id"] for g in gaps}
-        for hypothesis in hypotheses:
-            hypothesis["originating_gap_ids"] = [
-                gid for gid in hypothesis.get("originating_gap_ids", [])
-                if gid in known_gap_ids
-            ]
-
-        if not gaps and not hypotheses:
-            synthesis_warning = synthesis_warning or (
-                "Iterative search returned no usable gap or hypothesis records.")
-        draft_records = copy.deepcopy({"research_gaps": gaps, "hypotheses": hypotheses})
-
-        # Stage 4: self-critique -> revision rounds by the same researcher.
-        # Stage 5: combined post-hypothesis self-critique -> revision rounds.
+        # Stage 3: critique and revise gaps for all rounds before generating hypotheses.
         for rnd in range(1, max_rounds + 1):
-            records = _active(gaps) + _active(hypotheses)
+            records = _active(gaps)
             if not records:
                 break
-            critique = runner.call(
-                _critique_prompt(topic, additional_prompt, rnd, max_rounds, records, cards),
-                stage="self_critique", round_no=rnd)
-            if critique is None:
-                critique_warning = (f"Round {rnd}: critique request failed or returned invalid "
-                                    "JSON; kept the previous records.")
-                break
-            executed += 1
-            raw_changes = critique.get("proposed_changes", [])
-            changes = [c for c in raw_changes if isinstance(c, dict)] if isinstance(raw_changes, list) else []
-            if not changes:
-                runner.note("self_critique_terminated", "success",
-                            "No critique changes; revision and later rounds skipped.", round=rnd)
-                rounds.append({
-                    "round": rnd, "critiques": [], "decisions": [], "terminated": True,
-                    "reason": critique.get("no_change_reason", ""),
-                    "records_after": copy.deepcopy({"research_gaps": _active(gaps),
-                                                    "hypotheses": _active(hypotheses)}),
-                })
-                terminated_early = True
+            try:
+                batches = _critique_batches(records, cards, paper_by_id, topic,
+                                            additional_prompt, rnd, max_rounds,
+                                            "research gap", model_name)
+            except Exception as exc:
+                critique_warning = f"Gap critique token preflight failed: {type(exc).__name__}: {exc}"
                 break
 
+            all_changes, batch_failures = [], []
+            for batch_no, batch in enumerate(batches, start=1):
+                print(f"[SINGLE] GAP CRITIQUE R{rnd}: batch {batch_no}/{len(batches)}, "
+                      f"{len(batch['records'])} gaps, {len(batch['paper_paths'])} PDFs, "
+                      f"{batch['pdf_tokens']:,} PDF tokens / "
+                      f"{batch['input_tokens']:,} total estimated tokens")
+                critique = runner.call(
+                    batch["prompt"], stage="self_critique", round_no=rnd,
+                    paper_paths=batch["paper_paths"],
+                    input_token_estimate=batch["input_tokens"],
+                    pdf_token_estimate=batch["pdf_tokens"])
+                if critique is None:
+                    batch_failures.append(f"gap batch {batch_no} failed")
+                    continue
+                raw = critique.get("proposed_changes", [])
+                all_changes.extend(x for x in raw if isinstance(x, dict)) if isinstance(raw, list) else None
+            if batch_failures:
+                critique_warning = f"Round {rnd}: " + "; ".join(batch_failures)
+                if not all_changes:
+                    break
+            executed += 1
+            if not all_changes:
+                rounds.append({"subject": "research_gaps", "round": rnd,
+                               "critiques": [], "decisions": [], "terminated": True,
+                               "records_after": copy.deepcopy(_active(gaps))})
+                terminated_early = True
+                break
             revision = runner.call(
-                _revision_prompt(topic, additional_prompt, rnd, max_rounds, records, changes, cards),
+                _revision_prompt(topic, additional_prompt, rnd, max_rounds,
+                                 records, all_changes, cards),
                 stage="self_critique_revision", round_no=rnd)
             if revision is None:
-                critique_warning = (f"Round {rnd}: revision request failed or returned invalid "
-                                    "JSON; kept the previous records.")
-                rounds.append({"round": rnd, "critiques": changes, "decisions": [],
-                               "terminated": False, "failed": True})
+                critique_warning = f"Gap revision round {rnd} failed; previous gaps retained."
                 break
             decisions = revision.get("decisions", [])
-            _apply_decisions(records, decisions, changes, rnd, valid_ids)
+            _apply_decisions(records, decisions, all_changes, rnd, valid_ids)
             _sync_gap_links(gaps, hypotheses, runner, rnd)
             summary = revision.get("round_summary", "")
             round_summaries.append(summary)
-            rounds.append({
-                "round": rnd, "critiques": changes,
-                "decisions": decisions if isinstance(decisions, list) else [],
-                "round_summary": summary, "terminated": False,
-                "records_after": copy.deepcopy({"research_gaps": _active(gaps),
-                                                "hypotheses": _active(hypotheses)}),
-            })
+            rounds.append({"subject": "research_gaps", "round": rnd,
+                           "critiques": all_changes,
+                           "decisions": decisions if isinstance(decisions, list) else [],
+                           "round_summary": summary, "terminated": False,
+                           "records_after": copy.deepcopy(_active(gaps))})
+
+        # Stage 4: hypotheses are generated only from finalised gaps.
+        final_gap_context = _active(gaps)
+        if final_gap_context:
+            hyp_draft = runner.call(
+                _hypothesis_prompt(topic, additional_prompt, final_gap_context, cards),
+                stage="hypothesis_generation")
+            if hyp_draft is None:
+                kind, message = runner.last_failure or ("request", "unknown failure")
+                if kind == "parse":
+                    parse_warning = message
+                synthesis_warning = (synthesis_warning or "") + " Hypothesis generation failed or returned invalid JSON."
+            else:
+                known_gap_ids = {g["id"] for g in _active(gaps)}
+                hypotheses = []
+                raw_hypotheses = hyp_draft.get("hypotheses", [])
+                for raw_hyp in raw_hypotheses if isinstance(raw_hypotheses, list) else []:
+                    if not isinstance(raw_hyp, dict) or not raw_hyp.get("hypothesis"):
+                        continue
+                    hyp = _new_record(raw_hyp, f"H{len(hypotheses)+1:03d}", valid_ids)
+                    hyp["originating_gap_ids"] = [
+                        gid for gid in _as_list(raw_hyp.get("originating_gap_ids"))
+                        if gid in known_gap_ids
+                    ]
+                    hypotheses.append(hyp)
+                draft_records["hypotheses"] = copy.deepcopy(hypotheses)
+
+        # Stage 5: critique and revise hypotheses, separately from gaps.
+        for rnd in range(1, max_rounds + 1):
+            records = _active(hypotheses)
+            if not records:
+                break
+            try:
+                batches = _critique_batches(records, cards, paper_by_id, topic,
+                                            additional_prompt, rnd, max_rounds,
+                                            "hypothesis", model_name)
+            except Exception as exc:
+                critique_warning = (critique_warning or "") + (
+                    f" Hypothesis critique token preflight failed: {type(exc).__name__}: {exc}")
+                break
+            all_changes, batch_failures = [], []
+            for batch_no, batch in enumerate(batches, start=1):
+                print(f"[SINGLE] HYPOTHESIS CRITIQUE R{rnd}: batch {batch_no}/{len(batches)}, "
+                      f"{len(batch['records'])} hypotheses, {len(batch['paper_paths'])} PDFs, "
+                      f"{batch['pdf_tokens']:,} PDF tokens / "
+                      f"{batch['input_tokens']:,} total estimated tokens")
+                critique = runner.call(
+                    batch["prompt"], stage="self_critique", round_no=rnd,
+                    paper_paths=batch["paper_paths"],
+                    input_token_estimate=batch["input_tokens"],
+                    pdf_token_estimate=batch["pdf_tokens"])
+                if critique is None:
+                    batch_failures.append(f"hypothesis batch {batch_no} failed")
+                    continue
+                raw = critique.get("proposed_changes", [])
+                all_changes.extend(x for x in raw if isinstance(x, dict)) if isinstance(raw, list) else None
+            if batch_failures:
+                critique_warning = (critique_warning or "") + " " + "; ".join(batch_failures)
+                if not all_changes:
+                    break
+            executed += 1
+            if not all_changes:
+                rounds.append({"subject": "hypotheses", "round": rnd,
+                               "critiques": [], "decisions": [], "terminated": True,
+                               "records_after": copy.deepcopy(_active(hypotheses))})
+                terminated_early = True
+                break
+            revision = runner.call(
+                _revision_prompt(topic, additional_prompt, rnd, max_rounds,
+                                 records, all_changes, cards),
+                stage="self_critique_revision", round_no=rnd)
+            if revision is None:
+                critique_warning = (critique_warning or "") + f" Hypothesis revision round {rnd} failed."
+                break
+            decisions = revision.get("decisions", [])
+            _apply_decisions(records, decisions, all_changes, rnd, valid_ids)
+            summary = revision.get("round_summary", "")
+            round_summaries.append(summary)
+            rounds.append({"subject": "hypotheses", "round": rnd,
+                           "critiques": all_changes,
+                           "decisions": decisions if isinstance(decisions, list) else [],
+                           "round_summary": summary, "terminated": False,
+                           "records_after": copy.deepcopy(_active(hypotheses))})
 
     for rec in gaps + hypotheses:
         if rec.get("status") == "candidate":
@@ -1054,20 +1047,9 @@ def run_single_agent(llm, topic, additional_prompt, pdf_paths, model_name,
     rejected_gaps = [x for x in gaps if x.get("status") == "rejected"]
     rejected_hypotheses = [x for x in hypotheses if x.get("status") == "rejected"]
     merged_or_rejected = [
-        {"id": x["id"], "decision": x["status"],
+        {"id": x["id"], "status": x["status"],
          "reason": x.get("rejection_reason") or x.get("merge_reason", ""),
-         "merged_ids": x.get("merged_ids", []),
-         "merged_into": x.get("merged_into"),
-         "merge_reason": x.get("merge_reason", ""),
-         "gap": x.get("gap", ""),
-         "hypothesis": x.get("hypothesis", ""),
-         "gap_or_hypothesis_text": x.get("gap") or x.get("hypothesis", ""),
-         "why_it_matters": x.get("why_it_matters", ""),
-         "rationale": x.get("rationale", ""),
-         "supporting_papers": x.get("supporting_papers", []),
-         "related_papers": x.get("related_papers", []),
-         "evidence": x.get("evidence", []),
-         "revised_record": x.get("last_decision", {}).get("revised_record", {})}
+         "merged_into": x.get("merged_into")}
         for x in gaps + hypotheses if x.get("status") in ("rejected", "merged")
     ]
 
@@ -1097,12 +1079,14 @@ def run_single_agent(llm, topic, additional_prompt, pdf_paths, model_name,
             "execution": "Sequential API calls; no concurrent requests.",
             "pause_after_response_seconds": pause_sec, "max_retries": max_retries,
             "web_search": False,
-            "pre_hypothesis_gap_critique_rounds_max": max_rounds,
-            "pre_hypothesis_gap_critique_rounds_executed": gap_critique_executed,
+            "target_min_gaps": target_gap_count,
+            "gap_generation_strategy": "One comprehensive attempt targeting at least target_min_gaps; returns fewer only when no further solid distinct gaps are supported.",
             "self_critique_rounds": max_rounds, "refinement_rounds": max_rounds,
             "self_critique_rounds_executed": executed,
-            "target_gap_count": target_gap_count,
-            "gap_generation_strategy": "Iterative batches; stop at target or when no new substantive gaps are returned.",
+            "critique_pdf_attachments": False,
+            "critique_evidence_source": "reader evidence_excerpt fields",
+            "large_request_cooldown_seconds": _LARGE_REQUEST_COOLDOWN_SECONDS,
+            "large_request_cooldown_threshold_tokens": _LARGE_REQUEST_COOLDOWN_THRESHOLD,
         },
         "paper_analyses": papers, "perspective_finder_output": None,
         "historical_analysis": historical_analysis,
@@ -1113,8 +1097,6 @@ def run_single_agent(llm, topic, additional_prompt, pdf_paths, model_name,
         "rejected_hypotheses": rejected_hypotheses,
         "debate_summaries": {"research_gaps": [], "hypotheses": []},
         "draft_records": draft_records,
-        "gap_critique_rounds": gap_critique_rounds if papers else [],
-        "gap_critique_summaries": gap_round_summaries if papers else [],
         "critique_rounds": rounds,
         "curation": {"initial": None, "final_summary": "\n".join(s for s in round_summaries if s),
                      "merged_or_rejected": merged_or_rejected},

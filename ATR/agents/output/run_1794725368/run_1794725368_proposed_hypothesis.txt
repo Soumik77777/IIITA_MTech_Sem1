@@ -1,0 +1,39 @@
+- H001: Formulating optimal trimming regions as non-spherical geometric unions of dispersion-parameterized scatter matrices rather than equal-radius balls enables robust recovery of heterogeneous, nearby, or elongated clusters.
+Rationale: Standard trimmed K-means theoretical characterizations restrict optimal trimming sets and cluster boundaries to unions of spherical balls with equal radii, causing the algorithm to fail or badly detect nonspherical or differentially dispersed clusters.
+Testable prediction: On synthetic and real datasets with elongated or heterogeneous elliptical dispersions, an elliptical-dispersion-based trimming formulation will achieve higher adjusted Rand index (ARI) and better cluster recovery compared to spherical trimmed K-means.
+References: P002, P003
+
+- H002: Coupling relaxed continuous simplex clustering objectives with adaptive, objective-driven model selection criteria (such as adapted X-means/G-means splitting rules) enables automated, data-driven estimation of trimming proportions (alpha) and minimum memberships (s).
+Rationale: Current relaxed robust clustering frameworks rely on manual tuning or arbitrary parameter sweeps over alpha and s, limiting their deployment in fully automated, large-scale data pipelines.
+Testable prediction: An automated parameter selection pipeline that optimizes RTKM objective bounds during iterative cluster splitting will estimate alpha and s within 5% of empirically optimal grid-search values while matching F1-score performance.
+References: P009
+
+- H003: Establishing restricted non-asymptotic breakdown metrics under (rho_1, rho_2)-balanced inlier separation bounds eliminates the worst-case O(1/n) vulnerability paradox for robust K-means algorithms.
+Rationale: Universal breakdown point analyses dictate that robust K-means objectives fail under arbitrary contamination with as few as one or two outliers, creating a false impression of fragility that contradicts their strong empirical success on well-structured data.
+Testable prediction: Under bounded well-separated inlier ball conditions, the maximum tolerable contamination fraction before cluster center perturbation exceeds delta scales independently of total sample size n for unbiased proximal maps.
+References: P005
+
+- H004: Assuming a parametric underlying generative model for Mahalanobis pseudo-isolation scores yields an analytical closed-form probability distribution, permitting exact p-value significance testing for individual edge observations.
+Rationale: Non-parametric frameworks rely on conservative concentration bounds (such as Cantelli's inequality) because exact analytical distributions for pseudo-isolation scores are unknown, preventing exact hypothesis testing.
+Testable prediction: A parametric closed-form density function fitted to pseudo-isolation scores will approximate empirical tail probabilities with a Kolmogorov-Smirnov test statistic p-value > 0.05 on synthetic Gaussian mixture data.
+References: P015
+
+- H005: Replacing non-robust sample mean and covariance estimators with the Minimum Covariance Determinant (MCD) estimator in federated baseline K-means calibration preserves outlier detection recall under dirty commissioning windows with up to 10% attack contamination.
+Rationale: In federated and edge IoT deployments, if initial baseline commissioning windows contain modest amounts of attack traffic, non-robust sample covariance estimators inflate along attack directions, shrinking anomaly distances and destroying detection recall.
+Testable prediction: Integrating MCD into federated baseline K-means maintains detection recall above 85% when commissioning windows contain 5% attack contamination, compared to a drop below 30% for standard sample covariance estimators.
+References: P017
+
+- H006: Coreset condensation and ring-partitioning reductions can eliminate the exponential dependence on the outlier count m in FPT approximation algorithms for metric clustering with outliers, achieving running times FPT in k and epsilon alone.
+Rationale: State-of-the-art parameterized approximation algorithms exhibit running times with an exponential factor ((k+m)/epsilon)^{O(m)} in terms of outliers m, creating scalability bottlenecks for large contamination regimes.
+Testable prediction: A refined coreset sampling construction can bound the size of the enumerated outlier subset independently of m, reducing runtime complexity from ((k+m)/epsilon)^{O(m)} to FPT in k and epsilon while preserving an (1+epsilon)-approximation.
+References: P013
+
+- H007: Approximating recursive attribute-wise robust statistical rules using online streaming sketching (such as distributed quantile sketches) reduces the time complexity of outlier removal to sublinear time in data stream applications.
+Rationale: Recursive attribute-wise robust statistical rules like Tukey's fence or median absolute deviation introduce significant computational overhead when computed iteratively across high-dimensional features in big data streams.
+Testable prediction: Integrating quantile sketching into attribute-wise robust K-means reduces per-iteration runtime by at least 70% on streaming datasets of size n > 1,000,000 while maintaining within 1% of the baseline clustering accuracy and outlier F1-score.
+References: P010
+
+- H008: Equipping federated K-means deployments with lightweight streaming drift detectors (such as Page-Hinkley tests) and dynamic anchor-refresh protocols maintains false-positive rate stability under non-IID concept drift.
+Rationale: IoT and networked systems experience continuous environmental changes, making fixed one-time commissioning anchors stale over extended operational periods and degrading false-positive guarantees.
+Testable prediction: A federated K-means framework augmented with adaptive anchor refresh maintains a stable false-positive rate (FPR variance < 0.005) under continuous concept drift, whereas a static anchor protocol experiences an FPR increase exceeding 15%.
+References: P017

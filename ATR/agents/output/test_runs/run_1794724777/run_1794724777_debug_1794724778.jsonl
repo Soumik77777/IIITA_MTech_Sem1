@@ -1,0 +1,1 @@
+{"time_utc": "2026-11-15T06:39:38.357885+00:00", "event": "run_environment", "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]", "packages": {"langchain-core": "1.7.1", "langchain-google-genai": "4.4.2", "google-genai": "2.33.0", "pydantic": "2.14.1"}}\n

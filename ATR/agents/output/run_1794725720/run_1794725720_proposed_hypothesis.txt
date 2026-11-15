@@ -1,0 +1,44 @@
+- H001: For datasets where the assumed number of clusters k deviates from the true underlying mixture components, the asymptotic breakdown point of trimmed k-means is strictly bounded by the minimum relative mass of the true underlying components rather than the nominal trimming proportion alpha.
+Rationale: Empirical and theoretical counterexamples indicate that when k is misspecified, prospective clusters contain fixed proportions of mass that distort the trimming boundaries, causing structural estimator instability independently of the chosen penalty function or nominal trimming level.
+Testable prediction: As the true underlying mixture proportion of a minor component falls below the nominal trimming level alpha under a misspecified k, the empirical breakdown point will sharply drop to match that component's mass rather than alpha.
+References: P002
+
+- H002: Restricted robustness guarantees and noise-resilience bounds for robust k-means variants fail continuously as the minimum inter-cluster separation distance falls below the threshold determined by the noise variance and cluster radii.
+Rationale: Current restricted robustness theorems rely heavily on strict separation assumptions between inlier balls; overlapping distributions blur the boundary between background noise and cluster mass, inducing estimator failure.
+Testable prediction: When inlier cluster centers are brought closer than the critical separation threshold $v > 4r + 2g^{-1}(\dots)$, the error rate of robust k-means variants will degrade continuously toward the performance level of uncorrected classical k-means.
+References: P005
+
+- H003: An exponential fixed-parameter tractable dependence on the outlier count m is fundamentally necessary for exact approximation algorithms in outlier-constrained metric clustering, and cannot be reduced solely to a function of k and epsilon without incurring a polynomial penalty in n.
+Rationale: Current coreset construction and combinatorial subset enumeration frameworks inherently scale with exponential dependencies on the number of outliers m, reflecting the combinatorial hardness of distinguishing arbitrary outliers from true marginal cluster points.
+Testable prediction: Any algorithm achieving constant-factor approximations for k-MedianOut with a running time polynomial in n and FPT in k and epsilon alone will exhibit unbounded approximation degradation on constructed worst-case metric spaces where outlier distributions mimic true cluster peripheries.
+References: P013
+
+- H004: Replacing standard sample mean and covariance estimators in centroid and threshold update steps with robust minimum-covariance-determinant estimators will prevent collapse under non-spherical and heavily overlapping cluster geometries.
+Rationale: Classical centroid updates and Euclidean variance metrics fail when clusters are anisotropic or overlapping because sample estimators are excessively sensitive to boundary overlap and minor contamination, whereas robust dispersion estimators provide accurate geometric boundaries.
+Testable prediction: Integrating minimum-covariance-determinant estimators into modified centroid update rules (such as RTKM or k-means-sharp) will reduce within-cluster mean squared error by at least 15% and increase F1-scores by over 10% on anisotropic and overlapping synthetic datasets compared to standard implementations.
+References: P003
+
+- H005: Employing continuous relaxation formulations for point-to-cluster assignment weights paired with proximal alternating minimization enables robust solvers to navigate complex objective topographies and avoid local minima when handling multi-membership data with outliers.
+Rationale: Binary restriction in cluster assignments exacerbates sensitivity to bad initializations and boundary outliers, whereas allowing weights to span a continuum [0,1] avoids premature hard assignments and facilitates smoother model space searches.
+Testable prediction: Relaxed robust k-means algorithms utilizing continuous membership formulations will achieve higher average F1 scores and lower variance across random initializations than hard-trimmed k-means variants on multi-membership datasets containing outlier contamination.
+References: P009
+
+- H006: Varying the distance threshold multiplier q in standard deviation-based outlier trimming schemes generates systematic and predictable trade-offs between precision and recall across both low-dimensional and high-dimensional datasets.
+Rationale: Adjusting the multiplier q alters the inlier-outlier boundary during centroid updates. Lower values capture more points (increasing recall), whereas higher values enforce stricter exclusion (increasing precision).
+Testable prediction: Increasing the multiplier q from 2 to 6 will consistently drive precision towards 100% while reducing recall across diverse continuous multi-attribute distributions.
+References: P007, P006
+
+- H007: Inspecting the numerical second derivatives of empirical trimmed k-variance functionals across a continuum of trimming quotas provides clear graphical diagnostics to identify the optimal number of clusters k and contamination levels simultaneously.
+Rationale: Abrupt rate changes or peaks in the second derivative of trimmed k-variance curves correspond to the removal of complete clusters or outlier groups, allowing users to guide exploratory runs without trial-and-error inspection.
+Testable prediction: The local extrema in the numerical second derivative of trimmed k-variance curves will reliably align with the ground-truth proportion of contamination and true cluster boundaries across synthetic mixture models.
+References: P003, P009
+
+- H008: Incorporating minimum-covariance-determinant (MCD) estimators into federated baseline k-means (AF-BKM) prevents precision decay and preserves attack recall during contaminated commissioning windows.
+Rationale: Standard sample mean and covariance estimators are highly sensitive to initial contamination, inflating variance along attack axes and reducing attack detection recall; robust covariance estimation like MCD strengthens the initial anchor calibration.
+Testable prediction: Replacing sample mean and covariance with MCD estimators in AF-BKM will maintain attack recall above 90% even when commissioning windows contain up to 10% malicious traffic.
+References: P017
+
+- H009: Expanding feature sets with qualitative survey and employment history data combined with deep learning ensemble learners improves prediction generalizability for complex target variables like career linearity in female STEM graduates.
+Rationale: Current multi-target random forest models trained on restricted academic records achieve high accuracy for waiting times but underperform on complex targets like job linearity due to missing real-world factors such as industry alignment and personal career preferences.
+Testable prediction: Integrating qualitative survey features and deep neural network multi-target learners will increase the F1-macro score for predicting job linearity above 85% on diverse university datasets.
+References: P016

@@ -1,0 +1,5 @@
+- G001: Absence of robust estimators (such as Minimum Covariance Determinant) beneath the robust threshold and adaptive anchor-refresh mechanisms in federated outlier-aware K-means to prevent severe recall collapse under commissioning-anchor contamination and long-term concept drift. [Papers: P017 (7. Discussion, Limitations, and Future Work, 7.4. Future Work)]
+
+- G002: Lack of a fully parametric extension to derive closed-form distributions for non-parametric pseudo-isolation outlier scores, restricting outlier detection to non-parametric asymptotic bounds. [Papers: P015 (Section 8, Page 18)]
+
+- G003: Determination of whether fixed-parameter tractable (FPT) approximation algorithms for clustering with outliers (such as k-MedianOut and k-MeansOut) can achieve running times dependent on $k$ and $\epsilon$ alone, removing the exponential dependency on the outlier count $m$. [Papers: P013 (5. Concluding Remarks)]

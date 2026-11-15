@@ -1,0 +1,19 @@
+- H001: For any arbitrary mixture of $k$ distinct probability distributions under bounded parameter spaces, the trimmed $k$-means optimization problem cannot be solved to global optimality by any deterministic, non-heuristic polynomial-time algorithm, forcing reliance on stochastic search heuristics.
+Rationale: Existing literature establishes the asymptotic consistency and existence of trimmed $k$-means, yet notes the total absence of a deterministic optimal algorithm, requiring heuristic optimization such as simulated annealing that remains sensitive to initializations.
+Testable prediction: Any deterministic heuristic-free partitioning algorithm attempting exact minimization of trimmed $k$-variance will exhibit exponential time complexity or fail to reach the global minimum on synthetic multi-modal mixtures where simulated annealing succeeds.
+References: P002, P003
+
+- H002: The empirical breakdown point of an $\alpha$-trimmed $k$-means procedure is bounded from above by the minimum probability mass $\min(q_1, \dots, q_k)$ of the true underlying clusters, and can be driven arbitrarily close to zero when contamination configurations coincide with high-density cluster boundaries.
+Rationale: Counterexamples demonstrate that arbitrary contamination placement can degrade breakdown points severely when cluster proportions interact unfavorably with the trimming size.
+Testable prediction: As the contamination configuration is shifted toward the interior boundary of the smallest true cluster, the breakdown point of the $\alpha$-trimmed $k$-means estimator will approach zero regardless of sample size.
+References: P002
+
+- H003: Incorporating scatter estimation matrices and determinant-based dispersion criteria into trimmed clustering algorithms enables successful detection of cluster structures in non-spherical and highly linear datasets where standard spherical trimmed $k$-means fails.
+Rationale: Standard trimmed $k$-means theory relies on optimal trimming regions forming unions of balls, which fails for non-spherical or linear geometries unless covariance-adjusted scatter matrices are used.
+Testable prediction: On highly linear, non-spherical datasets, standard spherical trimmed $k$-means will fail to exhibit distinct second-derivative jumps corresponding to cluster boundaries, whereas covariance-adjusted trimmed criteria will accurately reveal the true cluster proportions.
+References: P002, P003
+
+- H004: Combined feature selection and dataset trimming procedures utilizing Fisher's discriminant ratio and $k$-means are non-invariant under linear transformations or scaling of variables, necessitating explicit descriptor normalization to maintain optimal feature ranking and outlier detection.
+Rationale: Empirical implementation shows that unscaled descriptors yield poor information content selection, confirming that the algorithm lacks mathematical scale-invariance.
+Testable prediction: Applying an unscaled affine transformation to the input feature matrix will significantly alter the selected subset of retained instances and degrade the cross-validated $q^2$ of resulting regression models by more than 15%.
+References: P004

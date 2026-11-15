@@ -1,0 +1,14 @@
+- H001: Replacing sample mean and sample covariance estimators with a Minimum Covariance Determinant (MCD) estimator in federated outlier-aware K-means prevents recall collapse when commissioning-anchor contamination exceeds 5%.
+Rationale: Sample estimators are highly sensitive to contamination in the initial trusted window, leading to distorted Mahalanobis thresholds and sharp recall drops. MCD provides high breakdown point estimates that resist contamination in the commissioning window.
+Testable prediction: Under a 10% contaminated commissioning anchor, federated BKM using MCD will maintain a recall drop of less than 2%, whereas standard sample estimators will suffer a recall collapse exceeding 30%.
+References: P017
+
+- H002: A fully parametric extension of pseudo-isolation scores can be derived by modelling neighborhood ranks through order statistics of transformed Mahalanobis distances, yielding a closed-form cumulative distribution function.
+Rationale: Current pseudo-isolation frameworks rely on non-parametric Cantelli-type inequalities which provide loose asymptotic bounds and prevent exact, analytical outlier hypothesis testing for individual data points.
+Testable prediction: The derived closed-form parametric distribution will yield theoretical p-values for individual test instances that accurately approximate empirical false-alarm frequencies with a Kolmogorov-Smirnov test statistic $p > 0.05$ under simulated Gaussian mixtures.
+References: P015
+
+- H003: The exponential dependency on the outlier count $m$ in fixed-parameter tractable approximation algorithms for $k$-MedianOut can be eliminated by replacing subset enumeration with core-set distance bounding based on continuous relaxations.
+Rationale: Current coreset and enumeration techniques require exploring subsets of size up to $m$, creating combinatorial bottlenecks $(rac{k+m}{\epsilon})^{O(m)}$ for large outlier counts, which can potentially be bypassed using continuous weight relaxations similar to those in robust trimmed k-means.
+Testable prediction: An adapted coreset reduction combined with continuous weight optimization will solve $k$-MedianOut instances with running times scaling polynomially in $m$ rather than factorially or exponentially.
+References: P013
