@@ -1,0 +1,1626 @@
+Deepseek (15 Nov, 2026) | Deep Thinking | Smart Search
+
+
+R01 - G001 - "Lack of exact limiting distributions and asymptotic convergence rates for empirical trimmed k-means estimators"
+
+Novelty Score: 2 (A central limit theorem for generalized trimmed k-means already exists (García-Escudero et al., 1999), though broader distributional extensions may remain open.)
+Significance Score: 3 (Asymptotic distributions are valuable for inference, but the core theoretical result is established, limiting the marginal contribution.)
+Feasibility Score: 3 (Extending existing asymptotic theory is realistic for researchers with the requisite mathematical statistics background.)
+Testability Score: 3 (Theoretical derivations can be checked via simulation studies of coverage probabilities and convergence rates.)
+
+R01 - G002 - "Characterization of universal breakdown points for robust and trimmed k-means under non-spherical or complex cluster structures"
+
+Novelty Score: 3 (Breakdown analysis exists for spherical settings (Georgogiannis, 2016), but systematic characterization under non-spherical geometries is less developed.)
+Significance Score: 4 (Understanding breakdown under realistic cluster shapes is highly valuable for both theory and practice.)
+Feasibility Score: 3 (Amenable to theoretical analysis combined with simulation, though non-spherical cases introduce technical complexity.)
+Testability Score: 4 (Can be empirically tested by measuring breakdown as a function of cluster elongation and contamination.)
+
+R01 - G003 - "Elimination of polynomial FPT dependencies on the number of outliers in exact approximation reduction frameworks"
+
+Novelty Score: 3 (Current FPT algorithms depend on both \(k\) and \(m\) (Agrawal et al., 2022); removing the \(m\)-dependence is a recognized hard open problem.)
+Significance Score: 4 (A major theoretical advance would significantly impact the clustering-with-outliers literature.)
+Feasibility Score: 2 (Likely very difficult; may require fundamentally new algorithmic ideas or lower-bound proofs.)
+Testability Score: 3 (Theoretical result verifiable by proof and runtime analysis; falsifiable via counterexample or complexity lower bound.)
+
+R01 - G004 - "Adaptive cluster-number estimation integrated into continuous-relaxation and robust trimmed k-means frameworks"
+
+Novelty Score: 3 (Adaptive trimming exists (e.g., "wild adaptive trimming"), but joint estimation of \(k\) and trimming proportion within continuous relaxations is less explored.)
+Significance Score: 4 (Eliminating manual tuning of two critical hyperparameters would greatly enhance practical usability.)
+Feasibility Score: 3 (Feasible via joint optimization or model-selection criteria, though convergence guarantees may be challenging.)
+Testability Score: 4 (Highly testable: compare estimated parameters against ground truth on synthetic data and benchmark performance against grid search.)
+
+R01 - G005 - "Extension of robust outlier-aware k-means update rules to handle non-convex and highly complex high-dimensional manifolds without reliance on linear dimensionality reduction"
+
+Novelty Score: 3 (Trimmed/robust methods for non-convex shapes exist (e.g., tk-merge), but the specific constraint of avoiding linear dimensionality reduction in high dimensions adds novelty.)
+Significance Score: 3 (Addresses a real limitation, but kernel/manifold methods are well-known alternatives.)
+Feasibility Score: 2 (High-dimensional manifold clustering without dimensionality reduction is computationally and statistically difficult.)
+Testability Score: 3 (Can be tested on synthetic manifold data and high-dimensional benchmarks with known cluster structures.)
+
+R01 - G006 - "Replacement of non-robust sample mean and covariance estimators with robust alternatives like minimum-covariance-determinant (MCD) in federated and auto-thresholding k-means architectures"
+
+Novelty Score: 3 (MCD is a standard robust estimator; its integration into federated auto-thresholding k-means for commissioning anchors appears underexplored.)
+Significance Score: 4 (Directly addresses a practical vulnerability in federated IoT deployments.)
+Feasibility Score: 4 (Straightforward to implement: swap estimators and evaluate.)
+Testability Score: 5 (Highly testable via controlled contamination experiments with measurable recall/FPR outcomes.)
+
+R01 - G007 - "Integration of qualitative, domain-specific employment and career progression features into robust clustering workflows"
+
+Novelty Score: 1 (The application of K-means LTS to career linearity is already published (Intan Ghayatrie & Fitrianah, 2026).)
+Significance Score: 2 (Application-specific; unlikely to advance general clustering methodology.)
+Feasibility Score: 4 (Data and methods are readily available.)
+Testability Score: 4 (Can be evaluated via classification accuracy on career outcomes.)
+
+R01 - G008 - "Management of feature-space skew, behavioral drift, and non-IID conditions in real-world federated IoT intrusion detection deployments"
+
+Novelty Score: 3 (Concept drift in federated learning is active (e.g., FedDCA, FedPLC), but integration with outlier-aware k-means for IoT intrusion detection remains niche.)
+Significance Score: 4 (Critical for real-world deployment of federated anomaly detection.)
+Feasibility Score: 3 (Requires realistic simulation or testbed, but feasible with available FL simulators.)
+Testability Score: 4 (Can be tested via simulated non-IID drift scenarios with measurable FPR/recall stability.)
+
+R01 - H001 - "Smoothing the indicator boundary functions of trimmed k-means via mollification or kernel penalties enables the derivation of a functional central limit theorem for empirical trimmed estimators."
+
+Novelty Score: 3 (A pointwise CLT exists (García-Escudero et al., 1999), but a *functional* CLT via mollification is a novel technical angle.)
+Significance Score: 3 (Functional CLT would enable broader inference, such as confidence bands for clustering functionals.)
+Feasibility Score: 2 (Mollification of non-smooth trimming functionals is technically demanding.)
+Testability Score: 3 (Can be validated via simulation of the limiting Gaussian process.)
+
+R01 - H002 - "Generalized breakdown bounds for robust and trimmed k-means under non-spherical or anisotropic cluster structures can be established by substituting strict ball separation requirements with minimum cluster volume overlap thresholds."
+
+Novelty Score: 4 (Replacing ball separation with volume-overlap thresholds is a genuinely novel theoretical idea for breakdown analysis.)
+Significance Score: 4 (Would substantially generalize robustness guarantees beyond idealized spherical settings.)
+Feasibility Score: 2 (The theoretical derivation is likely intricate and non-standard.)
+Testability Score: 3 (Falsifiable via constructed counterexamples or simulation showing breakdown under overlap.)
+
+R01 - H003 - "Isolating outlier selection from center location search through sensitivity-based coreset constructions eliminates the polynomial FPT dependence on the number of outliers in exact approximation reduction frameworks."
+
+Novelty Score: 3 (Coreset-based approaches are known, but the specific decoupling via sensitivity is a novel algorithmic strategy for removing \(m\)-dependence.)
+Significance Score: 4 (Would constitute a breakthrough in FPT approximation for clustering with outliers.)
+Feasibility Score: 2 (Highly ambitious; may not be achievable without new lower bounds.)
+Testability Score: 3 (Theoretical claim verifiable by proof or refutation via complexity argument.)
+
+R01 - H004 - "Coupling continuous relaxation objective functions from robust trimmed k-means with Bayesian Information Criterion scoring inside a cluster splitting loop enables simultaneous, data-driven determination of both optimal cluster count and outlier quotas."
+
+Novelty Score: 3 (Model-selection criteria for clustering exist, but joint estimation with trimming quotas via BIC in a continuous relaxation is a novel combination.)
+Significance Score: 4 (Would eliminate two major manual tuning burdens.)
+Feasibility Score: 3 (Conceptually straightforward; implementation and convergence tuning may require effort.)
+Testability Score: 4 (Highly testable: compare estimated \((k, \alpha)\) against ground truth on synthetic mixtures.)
+
+R01 - H005 - "Replacing standard Euclidean distance thresholds in outlier-aware centroid update rules with local neighborhood manifold distances allows robust k-means variants to cluster high-dimensional non-convex structures without preliminary linear dimensionality reduction."
+
+Novelty Score: 3 (Manifold distances are used in clustering, but integrating them specifically into outlier-aware centroid updates is a meaningful extension.)
+Significance Score: 3 (Addresses a practical limitation of spherical assumptions.)
+Feasibility Score: 3 (Implementable using graph-based or geodesic distances, though computational cost rises.)
+Testability Score: 4 (Testable on manifold-structured synthetic data and high-dimensional benchmarks.)
+
+R01 - H006 - "Substituting robust covariance estimators such as minimum-covariance-determinant (MCD) for standard sample covariance in federated calibration windows protects auto-thresholding distance metrics against initial worker contamination."
+
+Novelty Score: 3 (MCD is standard; applying it to federated calibration anchors is a targeted, underexplored application.)
+Significance Score: 4 (Directly mitigates a realistic attack vector in federated IoT.)
+Feasibility Score: 5 (Very straightforward to implement and evaluate.)
+Testability Score: 5 (Highly falsifiable via controlled contamination experiments with measurable recall degradation.)
+
+R01 - H007 - "Incorporating mixed-type dissimilarity metrics (such as Gower's distance) into K-means least trimmed squares (LTS) clustering workflows will enable the seamless integration of qualitative career factors—like industry alignment and personal preferences—without causing data sparsity, thereby improving multi-target classification accuracy for graduate employability."
+
+Novelty Score: 2 (Career LTS clustering is published (Intan Ghayatrie & Fitrianah, 2026); Gower + LTS is incremental.)
+Significance Score: 2 (Application-specific with limited methodological novelty.)
+Feasibility Score: 4 (Gower distance is well-established and easy to integrate.)
+Testability Score: 4 (Classification accuracy can be measured on available survey data.)
+
+R01 - H008 - "Replacing the non-robust Gaussian sample mean and covariance estimators with robust alternatives like minimum-covariance-determinant (MCD) in federated auto-thresholding k-means (AF-BKM) architectures will eliminate false-positive spikes and preserve recall during initial client commissioning contamination."
+
+Novelty Score: 3 (Specific to AF-BKM; not directly studied in the literature found.)
+Significance Score: 4 (Practical importance for federated intrusion detection.)
+Feasibility Score: 5 (Easy to implement and test.)
+Testability Score: 5 (Clear metrics: FPR, recall under controlled contamination.)
+
+R01 - H009 - "Implementing a dynamic sliding-window anchor calibration protocol in federated anomaly-trimmed k-means architectures will successfully accommodate streaming feature-space skew and per-device behavioral drift across heterogeneous IoT client nodes."
+
+Novelty Score: 3 (Streaming drift adaptation exists (FedDCA, FedPLC), but specific to federated anomaly-trimmed k-means with anchor calibration is less explored.)
+Significance Score: 4 (Critical for long-term deployment.)
+Feasibility Score: 4 (Sliding-window mechanisms are well-understood.)
+Testability Score: 4 (Can be evaluated under simulated drift scenarios with FPR/recall stability metrics.)
+
+R02 - G001 - "Characterization of Breakdown Point Behavior Across Diverse Cluster Configurations and Contamination Types"
+
+Novelty Score: 3 (Breakdown analysis exists but is often restricted to spherical or well-separated clusters; systematic characterization across configurations is valuable.)
+Significance Score: 4 (Would provide a comprehensive robustness map for practitioners.)
+Feasibility Score: 3 (Theoretical + simulation approach is feasible.)
+Testability Score: 4 (Can be empirically mapped via simulation across a grid of configurations.)
+
+R02 - G002 - "Convergence Guarantees and Global Optimality for Non-Standard and Regularized Trimmed K-Means Objectives"
+
+Novelty Score: 3 (Convergence of alternating minimization is known, but global optimality for regularized trimmed variants is less established.)
+Significance Score: 4 (Theoretical guarantees are important for trust in robust methods.)
+Feasibility Score: 2 (Global optimality is generally hard to prove for non-convex problems.)
+Testability Score: 3 (Theoretical; can be checked via numerical experiments for convergence to global optima on small instances.)
+
+R02 - G003 - "Lack of cluster-specific or adaptive anomaly thresholds in heuristic trimmed k-means variants"
+
+Novelty Score: 3 (Cluster-specific thresholds are intuitive but surprisingly underexplored in trimmed k-means literature; "wild adaptive trimming" offers global adaptation.)
+Significance Score: 4 (Would improve performance on multi-density data.)
+Feasibility Score: 4 (Implementable with per-cluster dispersion estimates.)
+Testability Score: 5 (Directly comparable against global threshold via MSE and recall on multi-density datasets.)
+
+R02 - G004 - "Absence of principled, automated parameter estimation for trimming proportions and multi-membership constraints"
+
+Novelty Score: 3 (Adaptive trimming exists but joint estimation with multi-membership constraints is less addressed.)
+Significance Score: 4 (Automation is key for practical adoption.)
+Feasibility Score: 3 (Requires developing a principled criterion, but feasible.)
+Testability Score: 4 (Can compare estimated parameters to ground truth on synthetic data.)
+
+R02 - G005 - "Lack of streaming concept-drift adaptation and robust dynamic anchor refresh policies for federated baseline k-means architectures handling temporal distribution shifts."
+
+Novelty Score: 3 (Drift adaptation in FL exists, but specific to outlier-trimmed k-means with anchor refresh is niche.)
+Significance Score: 4 (Important for real-world IoT deployments.)
+Feasibility Score: 4 (Sliding-window or EWMA approaches are implementable.)
+Testability Score: 4 (Testable under simulated drift with FPR/recall metrics.)
+
+R02 - G006 - "Vulnerability of federated robust aggregation to dirty commissioning windows and non-robust covariance estimators under anchor contamination."
+
+Novelty Score: 3 (This specific vulnerability in federated k-means is underexplored.)
+Significance Score: 4 (Security-critical for federated anomaly detection.)
+Feasibility Score: 4 (Can be studied via simulation.)
+Testability Score: 5 (Controlled contamination experiments with measurable recall/FPR.)
+
+R02 - G007 - "Evaluation of Trimmed K-Means and Outlier-Robust Clustering under Non-Gaussian and Complex Multi-Membership Data Structures in Real-World Domains"
+
+Novelty Score: 2 (Evaluation studies exist, though multi-membership is less common; career trajectory application is published.)
+Significance Score: 3 (Useful empirical contribution but limited methodological novelty.)
+Feasibility Score: 4 (Data and methods are accessible.)
+Testability Score: 4 (Standard clustering metrics can be applied.)
+
+R02 - H001 - "Under arbitrary probability distributions with tightly packed clusters and contamination, the breakdown point of alpha-trimmed k-means and robust k-means variants can converge to zero, but can be bounded below by introducing geometric separation constraints or non-convex regularized proximal penalties."
+
+Novelty Score: 3 (Breakdown of robust k-means is known (Georgogiannis, 2016), but the specific claim about bounding below via non-convex penalties is a novel theoretical direction.)
+Significance Score: 4 (Would clarify fundamental limits and potential remedies.)
+Feasibility Score: 2 (Theoretical derivation is challenging.)
+Testability Score: 3 (Falsifiable via constructed counterexamples or proof.)
+
+R02 - H002 - "Generalized robust and trimmed k-means objectives solved via alternating minimization or block coordinate descent exhibit slow indefinite oscillations around cluster centers in symmetric configurations, which can be eliminated using refined step-size damping or variational Moreau envelope smoothing."
+
+Novelty Score: 4 (Oscillation analysis for trimmed k-means is a specific, underexplored dynamical phenomenon.)
+Significance Score: 3 (Addresses convergence stability, important for reliable optimization.)
+Feasibility Score: 3 (Can be studied via numerical experiments and theoretical analysis.)
+Testability Score: 4 (Highly testable via convergence diagnostics on symmetric configurations.)
+
+R02 - H003 - "Incorporating cluster-specific adaptive trimming proportions and local anomaly thresholds into generalized robust k-means objectives improves outlier detection precision in multi-density cluster configurations without causing centroid convergence instability."
+
+Novelty Score: 3 (Cluster-specific trimming is intuitive but not extensively formalized; global adaptive trimming exists.)
+Significance Score: 4 (Directly addresses multi-density outlier detection.)
+Feasibility Score: 4 (Implementable.)
+Testability Score: 5 (Precision/recall and convergence stability can be measured.)
+
+R02 - H004 - "Integrating automated, data-driven parameter estimation strategies based on sample contour derivatives into robust trimmed k-means objectives eliminates manual quota tuning while retaining optimal breakdown performance."
+
+Novelty Score: 4 (Using contour derivatives for parameter estimation is a specific, novel technical proposal.)
+Significance Score: 4 (Would automate a key hyperparameter.)
+Feasibility Score: 2 (Contour derivatives are technically complex to compute and integrate.)
+Testability Score: 3 (Can be tested on synthetic data with known contamination levels.)
+
+R02 - H005 - "Incorporating robust covariance estimators such as the Minimum Covariance Determinant (MCD) instead of standard sample covariance for the trusted benign anchor prevents anchor contamination collapse in federated robust k-means architectures."
+
+Novelty Score: 3 (MCD in federated anchors is a targeted, underexplored application.)
+Significance Score: 4 (Practical importance for security.)
+Feasibility Score: 5 (Easy to implement.)
+Testability Score: 5 (Clear experimental design with contamination levels.)
+
+R02 - H006 - "Designing a streaming concept-drift adaptation protocol with dynamic anchor refresh intervals maintains operational precision and FPR stability in distributed federated k-means under temporal distribution shifts without destabilizing consensus."
+
+Novelty Score: 3 (Drift adaptation in FL is active, but specific to anchor refresh in outlier-aware k-means is niche.)
+Significance Score: 4 (Important for long-term deployment.)
+Feasibility Score: 4 (Implementable with sliding windows.)
+Testability Score: 4 (Testable under simulated drift.)
+
+R02 - H007 - "Deploying robust and trimmed k-means algorithms with fixed global trimming proportions in multi-membership real-world domains (such as heterogeneous alumni career trajectories and multi-target academic progression) causes high false-positive elimination of legitimate minority career paths or retention of domain-specific anomalies."
+
+Novelty Score: 2 (Application to career trajectories is published; the specific claim about fixed trimming causing false positives is a reasonable empirical observation but not highly novel.)
+Significance Score: 3 (Useful cautionary finding for applied researchers.)
+Feasibility Score: 4 (Straightforward empirical study.)
+Testability Score: 4 (Can be measured via false-positive rates on labeled career data.)
+
+R03 - G001 - "Characterizing exact limiting distributions, weak limit theorems, and asymptotic normality bounds for trimmed k-means estimators under general probability distributions."
+
+Novelty Score: 2 (Asymptotic normality for trimmed k-means is established (García-Escudero et al., 1999); "general probability distributions" may still offer room, but the core is not novel.)
+Significance Score: 3 (Extensions are valuable but incremental.)
+Feasibility Score: 3 (Theoretical extension is feasible.)
+Testability Score: 3 (Simulation-based verification.)
+
+R03 - G002 - "Eliminating or improving the FPT dependency on the number of dropped outliers m in optimal approximation algorithms for clustering with outliers."
+
+Novelty Score: 3 (Current FPT depends on \(m\) (Agrawal et al., 2022); removing it is a recognized hard open problem.)
+Significance Score: 4 (Major theoretical impact.)
+Feasibility Score: 2 (Very difficult.)
+Testability Score: 3 (Theoretical claim.)
+
+R03 - G003 - "Improving the universal breakdown point of robust and penalized k-means variants beyond 2/n without relying on restrictive geometric dataset structures."
+
+Novelty Score: 3 (The 2/n bound is known (Georgogiannis, 2016); proving it can be improved without assumptions is a significant open question.)
+Significance Score: 4 (Fundamental theoretical importance.)
+Feasibility Score: 2 (Likely requires a breakthrough or lower-bound proof.)
+Testability Score: 3 (Falsifiable via counterexample or proof.)
+
+R03 - G004 - "Extending rigorous measure-theoretic convergence proofs of the k-process and trimming functionals to general metric spaces for arbitrary values of k and r."
+
+Novelty Score: 4 (Extension to general metric spaces (e.g., CAT(0)) is a specific, advanced theoretical direction.)
+Significance Score: 3 (Theoretical generalization with potential impact beyond Euclidean settings.)
+Feasibility Score: 2 (Highly technical measure theory.)
+Testability Score: 2 (Very difficult to empirically test; primarily proof-based.)
+
+R03 - G005 - "Lack of deterministic, exhaustive, and tractable optimization strategies for optimal trimming set selection and non-spherical geometric variations"
+
+Novelty Score: 3 (Deterministic global optimization for trimmed k-means is known to be hard; specific non-spherical variations add novelty.)
+Significance Score: 3 (Addresses a computational challenge.)
+Feasibility Score: 2 (Global optimization for non-convex problems is generally intractable.)
+Testability Score: 3 (Can compare against heuristics on small instances.)
+
+R03 - G007 - "Absence of principled automated frameworks for jointly estimating cluster counts, trimming proportions, and multi-membership thresholds"
+
+Novelty Score: 3 (Joint estimation is less explored than separate estimation.)
+Significance Score: 4 (Would greatly enhance practical usability.)
+Feasibility Score: 3 (Feasible via joint optimization or validation criteria.)
+Testability Score: 4 (Compare against grid search on synthetic data.)
+
+R03 - G008 - "Evaluating the performance and sensitivity of trimmed k-means variants under extreme high-dimensional manifold structures without relying on heavy linear dimensionality reduction like PCA."
+
+Novelty Score: 3 (Specific evaluation under extreme high-dimensional manifolds without PCA is underexplored.)
+Significance Score: 3 (Useful empirical guidance.)
+Feasibility Score: 3 (Computationally challenging but feasible.)
+Testability Score: 4 (Standard metrics on synthetic manifold data.)
+
+R03 - G009 - "Systematic empirical benchmarking of hyperparameter sensitivity (such as the standard deviation boundary constant q or trimming proportion alpha) across diverse, large-scale, multi-domain datasets beyond small benchmarks like Iris and Ruspini."
+
+Novelty Score: 2 (Sensitivity studies exist; large-scale systematic benchmarking is valuable but not conceptually novel.)
+Significance Score: 4 (Highly practical for guiding hyperparameter choice.)
+Feasibility Score: 5 (Straightforward empirical work.)
+Testability Score: 5 (Directly measurable via performance across datasets.)
+
+R03 - G010 - "Empirical quantification of how clean-window commissioning contamination and dirty anchor distributions degrade the robustness and false-positive rates of adaptive outlier-thresholding k-means."
+
+Novelty Score: 3 (Specific empirical study of this vulnerability is underexplored.)
+Significance Score: 4 (Important for security.)
+Feasibility Score: 5 (Easy to simulate.)
+Testability Score: 5 (Controlled experiments with measurable FPR.)
+
+R03 - G012 - "Theoretical limitations in robust breakdown points and worst-case guarantees under unstructured or complex data contamination."
+
+Novelty Score: 3 (Related to G003; the focus on unstructured contamination is a specific angle.)
+Significance Score: 4 (Fundamental theoretical importance.)
+Feasibility Score: 2 (Hard.)
+Testability Score: 3 (Proof-based.)
+
+R03 - G013 - "Lack of standardized integration of granular real-world domain features and industrial workflows into outlier-aware clustering pipelines for complex career trajectory and employability prediction tasks."
+
+Novelty Score: 1 (Application is published (Intan Ghayatrie & Fitrianah, 2026).)
+Significance Score: 2 (Application-specific.)
+Feasibility Score: 4 (Data accessible.)
+Testability Score: 4 (Classification accuracy.)
+
+R03 - G014 - "Absence of streaming concept-drift adaptation mechanisms in federated outlier-trimmed clustering for resource-constrained IoT intrusion detection."
+
+Novelty Score: 3 (Specific combination is niche.)
+Significance Score: 4 (Important for IoT.)
+Feasibility Score: 4 (Implementable.)
+Testability Score: 4 (Simulated drift scenarios.)
+
+R03 - G015 - "Inadequate handling of descriptor-space transformations and variable-scaling dependencies when combining feature selection and dataset trimming in quantitative structure-activity relationship (QSAR) pipelines."
+
+Novelty Score: 3 (QSAR-specific; feature selection and trimming interactions are underexplored in this niche.)
+Significance Score: 2 (Domain-specific impact.)
+Feasibility Score: 4 (QSAR data and methods are available.)
+Testability Score: 4 (Model performance metrics in QSAR.)
+
+R03 - H001 - "The discontinuity of trimming functions on optimal ball boundaries can be smoothed via mollification schemes, permitting the derivation of explicit central limit theorems and asymptotic normality bounds for empirical trimmed k-means estimators under general continuous distributions."
+
+Novelty Score: 3 (Mollification for CLT is a novel technical approach, though a CLT already exists.)
+Significance Score: 3 (Technical refinement.)
+Feasibility Score: 2 (Technically demanding.)
+Testability Score: 3 (Simulation-based validation.)
+
+R03 - H002 - "Universal breakdown points of robust and penalized k-means algorithms cannot exceed 2/n for arbitrary unstructured adversarial configurations unless the proximal penalty satisfies non-convex coercive growth conditions that penalize isolated high-leverage points."
+
+Novelty Score: 4 (A specific conjecture about the necessity of non-convex coercive penalties is a novel theoretical claim.)
+Significance Score: 4 (Would clarify fundamental limits.)
+Feasibility Score: 2 (Proving impossibility is hard.)
+Testability Score: 3 (Falsifiable via counterexample or proof.)
+
+R03 - H003 - "Measure-theoretic convergence proofs for the k-means process and trimming functionals can be extended from Euclidean domains to general metric spaces of non-positive curvature (CAT(0) spaces) for arbitrary k and penalty orders r by substituting Frechet means for Euclidean centroids."
+
+Novelty Score: 4 (CAT(0) extension is a specific, advanced mathematical proposal.)
+Significance Score: 3 (Theoretical generalization.)
+Feasibility Score: 2 (Highly technical.)
+Testability Score: 2 (Proof-based; difficult to empirically validate.)
+
+R03 - H004 - "Integrating customized non-spherical metric discrepancy measures and matrix factorization update rules into trimmed k-means objectives significantly improves cluster separation on non-convex manifolds without losing computational tractability."
+
+Novelty Score: 3 (Non-spherical trimmed methods exist (tk-merge), but specific matrix-factorization updates are a novel technical angle.)
+Significance Score: 3 (Practical improvement.)
+Feasibility Score: 3 (Implementable but may be complex.)
+Testability Score: 4 (Standard clustering metrics on manifold data.)
+
+R03 - H005 - "Incorporating continuous relaxation capping constraints and joint gradient-based parameter updates into unified k-means objectives enables automatic co-estimation of cluster counts, trimming fractions, and membership thresholds."
+
+Novelty Score: 3 (Joint estimation via continuous relaxation is a meaningful combination.)
+Significance Score: 4 (Practical automation.)
+Feasibility Score: 3 (Implementable.)
+Testability Score: 4 (Compare against ground truth.)
+
+R03 - H006 - "Evaluating trimmed k-means and robust distance-threshold variants directly on high-dimensional non-linear manifolds without linear dimensionality reduction (such as PCA) will exhibit severe degradation in F1-score and false-positive rates due to failure of spherical dispersion assumptions."
+
+Novelty Score: 2 (The claim is plausible and likely already known qualitatively; systematic evaluation adds limited novelty.)
+Significance Score: 3 (Empirical confirmation is useful.)
+Feasibility Score: 5 (Easy to test.)
+Testability Score: 5 (Directly falsifiable via F1/FPR metrics.)
+
+R03 - H007 - "Systematically varying the standard deviation boundary constant q across diverse multi-domain large-scale datasets reveals a strict empirical trade-off where lower values minimize within-cluster MSE and maximize recall, while higher values (q >= 4) saturate precision at near 100%."
+
+Novelty Score: 2 (Hyperparameter sensitivity studies exist; the specific trade-off claim is incremental.)
+Significance Score: 4 (Practical guidance.)
+Feasibility Score: 5 (Straightforward.)
+Testability Score: 5 (Highly testable.)
+
+R03 - H008 - "Contaminating the trusted baseline anchor window during device commissioning leads to severe covariance inflation along attack directions, causing false-positive rates in adaptive federated k-means to spike beyond nominal thresholds."
+
+Novelty Score: 3 (Specific empirical demonstration in federated k-means is underexplored.)
+Significance Score: 4 (Security relevance.)
+Feasibility Score: 5 (Easy to simulate.)
+Testability Score: 5 (Controlled experiments.)
+
+R03 - H009 - "The systematic integration of robust covariance estimators, such as the Minimum Covariance Determinant (MCD), into adaptive thresholding anchors prevents the inflation of covariance matrices along attack directions during commissioning, thereby preserving false-positive stability under contaminated anchor distributions."
+
+Novelty Score: 3 (MCD integration is targeted and underexplored.)
+Significance Score: 4 (Practical security improvement.)
+Feasibility Score: 5 (Easy to implement.)
+Testability Score: 5 (Clear metrics.)
+
+R03 - H010 - "Automated co-estimation frameworks that integrate multi-membership capping constraints and continuous simplex weights into unified objective functions eliminate the precision-recall trade-offs caused by manual hyperparameter selection for trimming proportion alpha and cluster count k."
+
+Novelty Score: 3 (Joint estimation with multi-membership constraints is a meaningful combination.)
+Significance Score: 4 (Practical automation.)
+Feasibility Score: 3 (Implementable.)
+Testability Score: 4 (Compare against grid search.)
+
+R03 - H011 - "Integrating robust covariance estimators or robust dispersion measures into molecular descriptor pipelines enhances transformation-invariant trimming and preserves biological activity structures in QSAR partial least squares regression."
+
+Novelty Score: 3 (QSAR-specific; robust covariance in descriptor pipelines is a reasonable niche extension.)
+Significance Score: 2 (Domain-specific.)
+Feasibility Score: 4 (QSAR data available.)
+Testability Score: 4 (PLSR performance metrics.)
+
+R03 - H012 - "Incorporating lightweight streaming concept-drift detectors and dynamic anchor refresh policies into federated outlier-trimmed clustering frameworks prevents false-positive degradation and stabilizes recall during continuous behavioral drift in resource-constrained IoT intrusion detection."
+
+Novelty Score: 3 (Specific combination is niche.)
+Significance Score: 4 (Practical importance.)
+Feasibility Score: 4 (Implementable.)
+Testability Score: 4 (Simulated drift.)
+
+R03 - H013 - "Integrating granular qualitative employment history features, industry alignment indicators, and alternative multi-target learners directly into outlier-robust clustering pipelines improves the classification accuracy of non-linear career outcomes such as job linearity."
+
+Novelty Score: 1 (Application is published (Intan Ghayatrie & Fitrianah, 2026).)
+Significance Score: 2 (Application-specific.)
+Feasibility Score: 4 (Data accessible.)
+Testability Score: 4 (Classification accuracy.)
+
+R04 - G001 - "Lack of parametric closed-form distributions for pseudo-isolation scores in nonparametric outlier-robust clustering frameworks"
+
+Novelty Score: 3 (Deriving closed-form distributions for pseudo-isolation scores is a specific, underexplored theoretical direction.)
+Significance Score: 3 (Would enable more principled outlier thresholds.)
+Feasibility Score: 3 (Derivation is feasible under distributional assumptions.)
+Testability Score: 3 (Can be validated via simulation against empirical distributions.)
+
+R04 - G002 - "Vulnerability of federated baseline K-means commissioning anchors to contaminated initialization windows"
+
+Novelty Score: 3 (Specific to federated k-means; underexplored vulnerability.)
+Significance Score: 4 (Security-critical.)
+Feasibility Score: 5 (Easy to simulate.)
+Testability Score: 5 (Controlled experiments.)
+
+R04 - G003 - "Absence of streaming concept drift adaptation and anchor refresh policies in federated outlier-robust K-means"
+
+Novelty Score: 3 (Specific combination is niche.)
+Significance Score: 4 (Important for long-term deployment.)
+Feasibility Score: 4 (Implementable.)
+Testability Score: 4 (Simulated drift.)
+
+R04 - G004 - "Absence of a universal, principled parameter-free estimation strategy for tuning both the cluster count k and the trimming proportion alpha simultaneously"
+
+Novelty Score: 3 (Joint parameter-free estimation is a known challenge; underexplored.)
+Significance Score: 4 (High practical value.)
+Feasibility Score: 3 (Feasible via model selection criteria.)
+Testability Score: 4 (Compare against ground truth.)
+
+R04 - G005 - "Inability of standard distance metrics and spherical trimming formulations to natively capture non-spherical or complex linear cluster geometries without custom scatter matrices"
+
+Novelty Score: 3 (Non-spherical limitations are known; custom scatter matrices are a standard remedy, but specific formulation may add novelty.)
+Significance Score: 3 (Addresses a known limitation.)
+Feasibility Score: 3 (Implementable.)
+Testability Score: 4 (Testable on elongated clusters.)
+
+R04 - G006 - "Existence of exponential or polynomial FPT exponent dependencies on the outlier count m in optimal approximation algorithms"
+
+Novelty Score: 3 (Current FPT depends on \(m\) (Agrawal et al., 2022); known open problem.)
+Significance Score: 4 (Theoretical importance.)
+Feasibility Score: 2 (Very hard.)
+Testability Score: 3 (Proof-based.)
+
+R04 - G007 - "Vulnerability of federated novelty-detection false-alarm calibration to anchor-relative distribution drift"
+
+Novelty Score: 3 (Specific calibration vulnerability is underexplored.)
+Significance Score: 4 (Practical security.)
+Feasibility Score: 4 (Simulatable.)
+Testability Score: 4 (Measurable FPR drift.)
+
+R04 - G008 - "Inability of standard FPT clustering-with-outlier reduction frameworks to handle streaming updates without full coreset re-enumeration"
+
+Novelty Score: 3 (Streaming coresets exist (sliding window), but specific integration with FPT outlier reductions is a novel angle.)
+Significance Score: 3 (Algorithmic efficiency.)
+Feasibility Score: 3 (Algorithm design is feasible.)
+Testability Score: 4 (Runtime and approximation ratio comparisons.)
+
+R04 - G009 - "Lack of universal generalizability across diverse data domains for specialized outlier-robust K-means variants"
+
+Novelty Score: 2 (Generalizability is a known challenge; the gap is broad and not highly specific.)
+Significance Score: 3 (Useful but broad.)
+Feasibility Score: 4 (Empirical benchmarking.)
+Testability Score: 4 (Cross-domain evaluation.)
+
+R04 - G010 - "Lack of guaranteed worst-case robustness against adaptive adversaries who craft malicious worker updates or targeted poison in federated outlier-robust K-means"
+
+Novelty Score: 3 (Adaptive adversary robustness is underexplored in federated k-means.)
+Significance Score: 4 (Security-critical.)
+Feasibility Score: 2 (Provable guarantees are hard; simulation is feasible.)
+Testability Score: 3 (Theoretical + simulated adversarial experiments.)
+
+R04 - H001 - "Assuming a multivariate elliptical distribution for the underlying clusters, the pseudo-isolation score distribution can be parameterized via chi-squared approximations derived from Mahalanobis distance order statistics."
+
+Novelty Score: 4 (Specific parametric derivation via order statistics is a novel technical proposal.)
+Significance Score: 3 (Enables closed-form thresholds.)
+Feasibility Score: 3 (Derivable but technically involved.)
+Testability Score: 4 (Simulation-based validation.)
+
+R04 - H002 - "Integrating the Minimum Covariance Determinant (MCD) estimator into the baseline commissioning anchor phase will prevent anomaly recall degradation when commissioning window contamination is present."
+
+Novelty Score: 3 (Targeted application.)
+Significance Score: 4 (Practical.)
+Feasibility Score: 5 (Easy.)
+Testability Score: 5 (Clear metrics.)
+
+R04 - H003 - "Incorporating an exponentially weighted moving average (EWMA) window over worker summary statistics enables adaptive anchor refreshing that tracks gradual concept drift without destabilizing the global model."
+
+Novelty Score: 3 (EWMA for anchor refresh is a specific, sensible combination.)
+Significance Score: 4 (Practical.)
+Feasibility Score: 5 (Easy to implement.)
+Testability Score: 5 (Simulated drift.)
+
+R04 - H004 - "A joint penalized objective function combining squared assignment reconstruction error with an information criterion penalty over both \(k\) and \(\alpha\) can simultaneously optimize cluster count and trimming proportion without grid search."
+
+Novelty Score: 3 (Joint penalized objective is a meaningful combination.)
+Significance Score: 4 (Automation.)
+Feasibility Score: 3 (Implementable.)
+Testability Score: 4 (Compare against grid search.)
+
+R04 - H005 - "Replacing spherical Euclidean distance metrics with Mahalanobis metrics driven by cluster-specific scatter matrices enables robust trimmed k-means to correctly cluster elongated and linear manifolds."
+
+Novelty Score: 3 (Mahalanobis k-means is known, but integration into trimmed k-means with cluster-specific scatter is a reasonable extension.)
+Significance Score: 3 (Practical improvement.)
+Feasibility Score: 4 (Implementable.)
+Testability Score: 4 (Testable on elongated clusters.)
+
+R04 - H006 - "Coreset-based condensation techniques can bound the maximum distance distortion such that the FPT exponent dependency on the outlier count \(m\) can be replaced by a logarithmic dependence."
+
+Novelty Score: 4 (Specific claim about logarithmic dependence via coresets is a novel algorithmic conjecture.)
+Significance Score: 4 (Would be a major improvement.)
+Feasibility Score: 2 (Highly ambitious.)
+Testability Score: 3 (Proof-based or counterexample.)
+
+R04 - H007 - "Normalizing worker local distances against local robust dispersion estimates rather than global anchor statistics will eliminate anchor-relative false-alarm drift under decentralized distribution skew."
+
+Novelty Score: 3 (Local normalization is a sensible but underexplored idea.)
+Significance Score: 4 (Practical for non-IID federated settings.)
+Feasibility Score: 4 (Implementable.)
+Testability Score: 5 (Measurable FPR drift.)
+
+R04 - H008 - "Maintaining dynamic streaming coresets via sliding-window merge-and-reduce trees can approximate k-MeansOut solutions under insertions and deletions without full coreset re-enumeration."
+
+Novelty Score: 4 (Specific merge-and-reduce tree for k-MeansOut is a novel algorithmic proposal.)
+Significance Score: 3 (Algorithmic efficiency.)
+Feasibility Score: 3 (Algorithm design and implementation are non-trivial.)
+Testability Score: 4 (Runtime and approximation comparisons.)
+
+R04 - H009 - "Employing a kernelized distance transformation coupled with adaptive bandwidth selection will unify disparate domain-specific outlier-robust k-means variants into a single robust architecture."
+
+Novelty Score: 3 (Kernel methods are known; unification is ambitious but plausible.)
+Significance Score: 3 (Generalizability.)
+Feasibility Score: 2 (Unification is conceptually difficult.)
+Testability Score: 3 (Testable across domains.)
+
+R04 - H010 - "Replacing mean-based aggregation with trimmed median aggregation over worker parameter updates will provide Byzantine-resilient guarantees against adaptive adversaries in federated k-means."
+
+Novelty Score: 2 (Trimmed median aggregation is standard in Byzantine-robust FL; specific application to k-means is incremental.)
+Significance Score: 3 (Security relevance, but established technique.)
+Feasibility Score: 5 (Easy.)
+Testability Score: 5 (Simulated adversaries.)
+
+R05 - G001 - "Handling streaming concept drift and local distribution shifts in federated outlier-aware clustering frameworks"
+
+Novelty Score: 3 (Active area (FedDCA, FedPLC), but specific to outlier-aware clustering is less explored.)
+Significance Score: 4 (Important.)
+Feasibility Score: 4 (Implementable.)
+Testability Score: 4 (Simulated drift.)
+
+R05 - G002 - "Resilience of commissioning anchors against poisoning and contamination via robust multivariate covariance estimators"
+
+Novelty Score: 3 (Specific application.)
+Significance Score: 4 (Security.)
+Feasibility Score: 5 (Easy.)
+Testability Score: 5 (Controlled experiments.)
+
+R05 - G003 - "Parametric closed-form derivations for pseudo-isolation outlier scoring distributions in clustering frameworks"
+
+Novelty Score: 3 (Underexplored theoretical direction.)
+Significance Score: 3 (Principled thresholds.)
+Feasibility Score: 3 (Derivable under assumptions.)
+Testability Score: 3 (Simulation validation.)
+
+R05 - G004 - "Formal data-driven estimation of hyper-parameter configurations in continuous robust trimmed clustering models"
+
+Novelty Score: 3 (Joint estimation is underexplored.)
+Significance Score: 4 (Practical automation.)
+Feasibility Score: 3 (Feasible via validation criteria.)
+Testability Score: 4 (Compare against ground truth.)
+
+R05 - G005 - "Integration of non-Bregman divergence metrics into universal geometric frameworks for robust K-means centroid updates"
+
+Novelty Score: 4 (Non-Bregman divergence in robust k-means is a specific, advanced theoretical direction.)
+Significance Score: 3 (Theoretical generalization.)
+Feasibility Score: 2 (Highly technical.)
+Testability Score: 3 (Convergence and performance experiments.)
+
+R05 - G006 - "Formal optimization of neighborhood ranks for pseudo-isolation outlier scoring in nonparametric clustering frameworks"
+
+Novelty Score: 4 (Optimizing neighborhood ranks is a specific, underexplored algorithmic problem.)
+Significance Score: 3 (Improves outlier scoring.)
+Feasibility Score: 3 (Optimization problem formulation is feasible.)
+Testability Score: 4 (Compare against fixed-rank conventions.)
+
+R05 - G007 - "Handling feature-space skew and multi-device behavioral drift in decentralized federated outlier-aware clustering"
+
+Novelty Score: 3 (Specific to decentralized settings.)
+Significance Score: 4 (Practical importance.)
+Feasibility Score: 3 (Challenging but feasible with alignment methods.)
+Testability Score: 4 (Simulated non-IID drift.)
+
+R05 - G008 - "Empirical physical edge deployment and direct energy consumption profiling of lightweight federated outlier-aware K-means"
+
+Novelty Score: 3 (Empirical energy profiling is underexplored for this specific method.)
+Significance Score: 3 (Practical deployment guidance.)
+Feasibility Score: 3 (Requires hardware, but feasible.)
+Testability Score: 5 (Directly measurable energy consumption.)
+
+R05 - G009 - "Worst-case robustness guarantees and adaptive evasion defense against joint multi-vector adversary models in federated clustering"
+
+Novelty Score: 4 (Joint multi-vector adversaries is a sophisticated threat model, underexplored.)
+Significance Score: 4 (Security-critical.)
+Feasibility Score: 2 (Provable guarantees are hard.)
+Testability Score: 3 (Theoretical + simulated adversarial experiments.)
+
+R05 - G010 - "Evaluation of ADASYN-Gaussian and outlier removal integration trade-offs across highly imbalanced multi-class categorical datasets"
+
+Novelty Score: 2 (ADASYN and outlier removal are known; specific integration trade-off study is incremental.)
+Significance Score: 2 (Niche application.)
+Feasibility Score: 5 (Easy to implement.)
+Testability Score: 5 (Standard classification metrics.)
+
+R05 - H001 - "Incorporating an online sliding-window fading-memory mechanism into federated cluster aggregation updates enables continuous adaptation to streaming concept drift without requiring manual anchor recalibration."
+
+Novelty Score: 3 (Fading memory is standard in streaming; specific application to federated clustering is a reasonable extension.)
+Significance Score: 4 (Practical automation.)
+Feasibility Score: 4 (Implementable.)
+Testability Score: 5 (Simulated drift.)
+
+R05 - H002 - "Replacing standard sample covariance estimators with Minimum-Covariance-Determinant (MCD) estimators during initial commissioning prevents poisoned anchor contamination from inflating attack direction variances and degrading outlier recall."
+
+Novelty Score: 3 (Targeted application.)
+Significance Score: 4 (Security.)
+Feasibility Score: 5 (Easy.)
+Testability Score: 5 (Clear metrics.)
+
+R05 - H003 - "Assuming an underlying multivariate generalized Pareto distribution for weighted nearest-neighbor distances yields a closed-form parametric expression for pseudo-isolation outlier score probabilities."
+
+Novelty Score: 4 (Generalized Pareto for NN distances is a specific, novel parametric proposal.)
+Significance Score: 3 (Principled outlier scores.)
+Feasibility Score: 3 (Derivation is non-trivial.)
+Testability Score: 3 (Simulation validation.)
+
+R05 - H004 - "Minimizing an information-theoretic stability criterion over validation folds enables principled, automated data-driven estimation of outlier proportions and minimum cluster membership counts in robust trimmed k-means models."
+
+Novelty Score: 3 (Information-theoretic stability for parameter estimation is a meaningful proposal.)
+Significance Score: 4 (Automation.)
+Feasibility Score: 3 (Implementable.)
+Testability Score: 4 (Compare against grid search.)
+
+R05 - H005 - "Embedding cosine similarity and angular distance metrics into a generalized Bregman-type geometric transformation framework preserves monotonic descent convergence guarantees for K-means centroid updates."
+
+Novelty Score: 4 (Bregman-type framework for angular metrics is a specific, advanced theoretical direction.)
+Significance Score: 3 (Theoretical extension.)
+Feasibility Score: 2 (Highly technical.)
+Testability Score: 3 (Convergence experiments.)
+
+R05 - H006 - "Formulating neighborhood rank selection as an optimization problem minimizing local false-discovery rates yields tighter finite-sample outlier score thresholds than standard asymptotic k-NN conventions."
+
+Novelty Score: 4 (FDR-based optimization for rank selection is a specific, novel proposal.)
+Significance Score: 3 (Improves threshold calibration.)
+Feasibility Score: 3 (Formulation and optimization are feasible.)
+Testability Score: 4 (Compare against standard conventions.)
+
+R05 - H007 - "Deploying local feature-space alignment projections prior to worker aggregation enables federated outlier-aware clustering frameworks to handle severe feature-space skew and per-device behavioral drift without exceeding communication overhead limits."
+
+Novelty Score: 3 (Local alignment is known in FL, but specific integration with outlier-aware clustering is a reasonable extension.)
+Significance Score: 4 (Practical for non-IID.)
+Feasibility Score: 3 (Alignment methods add complexity.)
+Testability Score: 4 (Simulated skew.)
+
+R05 - H008 - "Quantizing model parameters to fixed-point 16-bit representations in lightweight federated K-means architectures restricts physical edge energy consumption below 5 milliJoules per inference packet while maintaining classification accuracy within 1% of floating-point implementations."
+
+Novelty Score: 3 (Specific quantization + energy target is a practical engineering hypothesis.)
+Significance Score: 3 (Deployment guidance.)
+Feasibility Score: 4 (Requires hardware, but feasible.)
+Testability Score: 5 (Directly measurable energy and accuracy.)
+
+R05 - H009 - "Integrating adversarial training with min-max robust aggregation across trust gates, worker weights, and commissioning anchors establishes provable worst-case performance bounds against joint multi-vector adversary models in federated clustering."
+
+Novelty Score: 4 (Joint min-max robust aggregation across multiple components is a sophisticated, underexplored proposal.)
+Significance Score: 4 (Security.)
+Feasibility Score: 2 (Provable bounds are very hard.)
+Testability Score: 3 (Theoretical + simulated.)
+
+R05 - H010 - "Replacing hard IQR outlier trimming with adaptive density-based soft-weighting prior to ADASYN-Gaussian augmentation prevents distortion of minority class boundaries and improves downstream multi-target classification F1 scores on severely imbalanced categorical datasets."
+
+Novelty Score: 3 (Soft-weighting before ADASYN is a specific, plausible hypothesis.)
+Significance Score: 3 (Improves imbalanced classification.)
+Feasibility Score: 4 (Implementable.)
+Testability Score: 5 (F1 scores directly measurable.)
+
+R06 - G001 - "Integration of Robust Covariance Estimators for Contaminated Commissioning Anchors in Federated Outlier-Aware K-Means"
+
+Novelty Score: 3 (Targeted application.)
+Significance Score: 4 (Security.)
+Feasibility Score: 5 (Easy.)
+Testability Score: 5 (Controlled experiments.)
+
+R06 - G002 - "Non-Parametric Probabilistic Outlier Scoring for Multi-Membership and Fuzzy K-Means Variants"
+
+Novelty Score: 3 (Specific to fuzzy/multi-membership variants; underexplored.)
+Significance Score: 3 (Principled scoring.)
+Feasibility Score: 3 (Adaptable from nonparametric methods.)
+Testability Score: 4 (Outlier detection metrics.)
+
+R06 - G003 - "Longitudinal Feature-Space Drift Adaptation in Federated Outlier-Aware K-Means"
+
+Novelty Score: 3 (Specific combination is niche.)
+Significance Score: 4 (Important for long-term deployment.)
+Feasibility Score: 4 (Implementable.)
+Testability Score: 4 (Simulated drift.)
+
+R06 - G004 - "Sublinear-Time Constant-Factor Approximation for Trimmed K-Means with Sub-Quadratic Outlier Dependencies"
+
+Novelty Score: 4 (Sublinear-time constant-factor approximation is a strong theoretical goal, underexplored for trimmed k-means.)
+Significance Score: 4 (Algorithmic breakthrough potential.)
+Feasibility Score: 2 (Very hard.)
+Testability Score: 3 (Proof-based.)
+
+R06 - G005 - "Non-Parametric Pseudo-Isolation Scoring for Distributed and Federated Outlier-Aware K-Means"
+
+Novelty Score: 3 (Extension of pseudo-isolation scoring to federated settings is underexplored.)
+Significance Score: 3 (Distributed outlier detection.)
+Feasibility Score: 4 (Implementable with summary statistics.)
+Testability Score: 4 (Detection performance.)
+
+R06 - G006 - "Handling Non-Convex Cluster Geometries in Trimmed and Robust K-Means Variants"
+
+Novelty Score: 2 (This is a well-known limitation; tk-merge and manifold methods exist.)
+Significance Score: 3 (Important but established problem.)
+Feasibility Score: 3 (Approaches exist.)
+Testability Score: 4 (Testable on non-convex data.)
+
+R06 - G007 - "Principled Parameter-Free Estimation of Trimming Proportions and Cluster Counts in Dynamic Datasets"
+
+Novelty Score: 3 (Joint parameter-free estimation is underexplored.)
+Significance Score: 4 (Practical automation.)
+Feasibility Score: 3 (Feasible via model selection.)
+Testability Score: 4 (Compare against ground truth.)
+
+R06 - G008 - "Integration of Trimmed Least Squares and Multi-Target Regression Metrics for Career Linearity and Placement Forecasting"
+
+Novelty Score: 1 (Application is published (Intan Ghayatrie & Fitrianah, 2026).)
+Significance Score: 2 (Application-specific.)
+Feasibility Score: 4 (Data accessible.)
+Testability Score: 4 (Forecast accuracy.)
+
+R06 - G009 - "Privacy-Preserving Secure Multi-Party Computation for Distributed Trimmed K-Means and Pseudo-Isolation Scoring"
+
+Novelty Score: 4 (SMC for trimmed k-means is a specific, privacy-focused direction.)
+Significance Score: 3 (Privacy is important, but niche.)
+Feasibility Score: 2 (SMC is computationally expensive and complex.)
+Testability Score: 3 (Privacy and accuracy trade-off experiments.)
+
+R06 - G010 - "Evaluation and Adaptation of Trimmed K-Means Architectures on Mixed-Type and Categorical Data Spaces"
+
+Novelty Score: 3 (Mixed-type trimmed k-means is underexplored; Gower distance integration is known but evaluation is limited.)
+Significance Score: 3 (Practical for real data.)
+Feasibility Score: 4 (Implementable.)
+Testability Score: 4 (Clustering metrics on mixed data.)
+
+R06 - H001 - "Integrating Minimum Covariance Determinant (MCD) estimators into the initial benign anchor calibration phase of federated outlier-aware K-Means prevents covariance inflation along attack directions and improves anomaly recall under contaminated commissioning conditions."
+
+Novelty Score: 3 (Targeted application.)
+Significance Score: 4 (Security.)
+Feasibility Score: 5 (Easy.)
+Testability Score: 5 (Clear metrics.)
+
+R06 - H002 - "Formulating non-parametric pseudo-isolation scores with Cantelli inequality false-alarm rate control for multi-membership K-means variants (such as RTKM) enables parameter-free outlier rejection while preserving proximal alternating minimization convergence guarantees."
+
+Novelty Score: 4 (Cantelli-based false-alarm control for pseudo-isolation scores is a specific, novel proposal.)
+Significance Score: 3 (Principled rejection.)
+Feasibility Score: 3 (Technically involved but feasible.)
+Testability Score: 4 (False-alarm rate and convergence experiments.)
+
+R06 - H003 - "Equipping federated outlier-aware K-Means with lightweight concept drift detectors and periodic sliding-window anchor refreshes maintains stable false-positive rates and high anomaly recall under longitudinal feature-space drift."
+
+Novelty Score: 3 (Specific combination is niche.)
+Significance Score: 4 (Practical.)
+Feasibility Score: 4 (Implementable.)
+Testability Score: 5 (Simulated drift.)
+
+R06 - H004 - "Employing deterministic sublinear sampling primitives combined with penalty-based Lagrangian relaxations achieves constant-factor approximation guarantees for trimmed K-means in strictly O~(nk) time without polynomial inflation factors in cluster or outlier counts."
+
+Novelty Score: 4 (Sublinear sampling for constant-factor approximation is a strong, specific algorithmic proposal.)
+Significance Score: 4 (Theoretical breakthrough potential.)
+Feasibility Score: 2 (Very hard.)
+Testability Score: 3 (Proof-based.)
+
+R06 - H005 - "Transmitting compressed decentralized nearest-neighbor summary statistics across federated workers enables global non-parametric pseudo-isolation scoring without violating bandwidth constraints or exposing raw client data."
+
+Novelty Score: 3 (Compressed summaries for federated pseudo-isolation is a practical, underexplored proposal.)
+Significance Score: 3 (Privacy and efficiency.)
+Feasibility Score: 4 (Implementable.)
+Testability Score: 4 (Bandwidth and detection performance.)
+
+R06 - H006 - "Incorporating kernel density estimations and manifold-distance metrics into trimmed K-means objective functions allows robust clustering and outlier rejection in arbitrary, non-convex cluster geometries."
+
+Novelty Score: 3 (KDE + manifold distances in trimmed k-means is a reasonable extension; some related work exists.)
+Significance Score: 3 (Addresses non-convex limitation.)
+Feasibility Score: 3 (Computationally intensive but feasible.)
+Testability Score: 4 (Testable on non-convex data.)
+
+R06 - H007 - "Formulating a joint bi-level optimization objective that penalizes both cluster dispersion and excessive trimming proportions enables simultaneous, data-driven estimation of optimal cluster counts (k) and contamination levels (alpha)."
+
+Novelty Score: 3 (Bi-level optimization for joint estimation is a meaningful combination.)
+Significance Score: 4 (Automation.)
+Feasibility Score: 3 (Implementable.)
+Testability Score: 4 (Compare against ground truth.)
+
+R06 - H008 - "Coupling K-means Least Trimmed Squares (LTS) objective functions directly with multi-target regression loss surfaces optimizes feature selection and outlier removal simultaneously for multi-objective prediction tasks like career linearity."
+
+Novelty Score: 1 (Application is published (Intan Ghayatrie & Fitrianah, 2026).)
+Significance Score: 2 (Application-specific.)
+Feasibility Score: 4 (Data accessible.)
+Testability Score: 4 (Prediction accuracy.)
+
+R06 - H009 - "Executing distributed trimmed K-means and nearest-neighbor pseudo-isolation scoring under cryptographic secure multi-party computation (SMC) preserves exact outlier detection performance while preventing raw intermediate distance leakage."
+
+Novelty Score: 4 (SMC for trimmed k-means is a specific, privacy-focused proposal.)
+Significance Score: 3 (Privacy is important, but niche.)
+Feasibility Score: 2 (SMC is complex and slow.)
+Testability Score: 3 (Privacy-performance trade-offs.)
+
+R06 - H010 - "Integrating Gower's dissimilarity metric and mixed-type dissimilarity updating rules into trimmed K-means objective functions enables robust clustering and outlier detection on datasets containing continuous, ordinal, and categorical attributes."
+
+Novelty Score: 3 (Gower + trimmed k-means is a reasonable extension; some related work exists.)
+Significance Score: 3 (Practical for mixed data.)
+Feasibility Score: 4 (Implementable.)
+Testability Score: 4 (Clustering metrics.)
+
+R07 - G001 - "Lack of principled, data-driven automation for tuning contamination and minimum-membership parameters in robust trimmed k-means variants"
+
+Novelty Score: 3 (Underexplored automation.)
+Significance Score: 4 (Practical.)
+Feasibility Score: 3 (Feasible.)
+Testability Score: 4 (Compare against grid search.)
+
+R07 - G002 - "Vulnerability of federated robust baseline k-means architectures to poisoned initial commissioning windows and lack of streaming concept-drift adaptation"
+
+Novelty Score: 3 (Specific vulnerability is underexplored.)
+Significance Score: 4 (Security.)
+Feasibility Score: 4 (Simulatable.)
+Testability Score: 4 (Controlled experiments.)
+
+R07 - G003 - "Absence of automated data-driven optimization for neighborhood ranks in nonparametric pseudo-isolation outlier frameworks"
+
+Novelty Score: 4 (Specific optimization problem, underexplored.)
+Significance Score: 3 (Improves outlier scoring.)
+Feasibility Score: 3 (Feasible.)
+Testability Score: 4 (Compare against fixed conventions.)
+
+R07 - G004 - "Lack of theoretical guarantees and tractable algorithmic formulations for extending robust trimmed k-means frameworks to non-spherical and varying-radius cluster geometries"
+
+Novelty Score: 3 (Non-spherical extensions exist (tk-merge), but theoretical guarantees and varying-radius formulations may be less developed.)
+Significance Score: 3 (Addresses known limitation.)
+Feasibility Score: 3 (Challenging but feasible.)
+Testability Score: 4 (Clustering accuracy on synthetic geometries.)
+
+R07 - G005 - "Computational intractability and lack of deterministic global optimization guarantees in robust alternating minimization clustering variants"
+
+Novelty Score: 2 (Intractability of alternating minimization is known.)
+Significance Score: 3 (Theoretical understanding is important but established.)
+Feasibility Score: 2 (Hard.)
+Testability Score: 3 (Proof-based.)
+
+R07 - G006 - "Exponential parameter dependency on outlier count in FPT approximation algorithms for metric clustering with outliers"
+
+Novelty Score: 3 (Known open problem (Agrawal et al., 2022).)
+Significance Score: 4 (Theoretical importance.)
+Feasibility Score: 2 (Very hard.)
+Testability Score: 3 (Proof-based.)
+
+R07 - G007 - "Lack of evaluation regarding the sensitivity and optimal choice of tuning coefficients in standard-deviation-based distance thresholds across high-dimensional and non-convex datasets"
+
+Novelty Score: 2 (Sensitivity studies exist; specific to high-dimensional/non-convex adds incremental value.)
+Significance Score: 3 (Practical guidance.)
+Feasibility Score: 5 (Easy.)
+Testability Score: 5 (Directly measurable.)
+
+R07 - G008 - "Absence of empirical validation and complexity scaling analyses for integrating adapted robust outlier removal rules into alternative partitioning algorithms such as fuzzy c-means and k-medoids"
+
+Novelty Score: 3 (Extension to fuzzy c-means/k-medoids is underexplored.)
+Significance Score: 3 (Broader applicability.)
+Feasibility Score: 4 (Implementable.)
+Testability Score: 4 (Comparative performance.)
+
+R07 - G009 - "Lack of unified, universal generalized K-means algorithms capable of simultaneously handling mixed data types, high dimensionality, and arbitrary cluster shapes without domain-specific customization"
+
+Novelty Score: 2 (Broad and ambitious; "universal" algorithms are unlikely and existing methods partially address this.)
+Significance Score: 3 (Ambitious goal.)
+Feasibility Score: 2 (Likely infeasible as a single universal algorithm.)
+Testability Score: 3 (Would require extensive benchmarking.)
+
+R07 - G010 - "Lack of physical on-device energy consumption and real-world pilot evaluations for lightweight federated robust clustering protocols"
+
+Novelty Score: 3 (Empirical deployment studies are underexplored.)
+Significance Score: 3 (Deployment guidance.)
+Feasibility Score: 3 (Requires hardware.)
+Testability Score: 5 (Directly measurable.)
+
+R07 - H001 - "Integrating a bilevel cross-validation and gradient-based tuning scheme into the robust trimmed k-means (RTKM) objective function will automatically optimize the contamination parameter alpha and minimum cluster membership s, matching the outlier detection F1-score of manual grid search."
+
+Novelty Score: 3 (Bilevel optimization for RTKM is a meaningful proposal.)
+Significance Score: 4 (Automation.)
+Feasibility Score: 3 (Implementable.)
+Testability Score: 4 (Compare F1 against grid search.)
+
+R07 - H002 - "Incorporating a sliding-window concept-drift detector and robust covariance estimator into the federated baseline k-means (AF-BKM) architecture will maintain stable false-positive rates under continuous distribution shift and poisoned commissioning windows."
+
+Novelty Score: 3 (Specific combination.)
+Significance Score: 4 (Security + drift.)
+Feasibility Score: 4 (Implementable.)
+Testability Score: 5 (Simulated experiments.)
+
+R07 - H003 - "Formulating a data-driven cross-validation criterion for neighborhood ranks (h, l) in the nonparametric pseudo-isolation framework (ODK-means) will improve outlier detection precision across complex data topologies compared to fixed asymptotic conventions."
+
+Novelty Score: 4 (CV-based rank selection is a specific, novel proposal.)
+Significance Score: 3 (Improves outlier detection.)
+Feasibility Score: 3 (Feasible.)
+Testability Score: 4 (Compare precision.)
+
+R07 - H004 - "Replacing spherical distance penalties in trimmed k-means with Mahalanobis and elliptical scatter-matrix penalties will reduce cluster recovery error on non-spherical and eccentric distributions."
+
+Novelty Score: 3 (Mahalanobis trimmed k-means is known, but systematic evaluation on eccentric distributions is useful.)
+Significance Score: 3 (Practical improvement.)
+Feasibility Score: 4 (Implementable.)
+Testability Score: 4 (Cluster recovery error.)
+
+R07 - H005 - "Applying semidefinite programming (SDP) relaxations to the non-convex trimmed k-means objective will bound the suboptimality gap and yield lower objective values than heuristic simulated annealing initializations."
+
+Novelty Score: 4 (SDP for trimmed k-means is a specific, advanced algorithmic proposal.)
+Significance Score: 3 (Theoretical and practical optimization.)
+Feasibility Score: 2 (SDP is computationally expensive and complex.)
+Testability Score: 3 (Compare objective values.)
+
+R07 - H006 - "Integrating randomized coreset condensation into FPT approximation algorithms for metric clustering with outliers will decouple the runtime exponent from the outlier count m, achieving runtimes dependent only on k and epsilon."
+
+Novelty Score: 4 (Randomized coreset for decoupling \(m\) is a specific, novel algorithmic idea.)
+Significance Score: 4 (Theoretical breakthrough potential.)
+Feasibility Score: 2 (Very hard.)
+Testability Score: 3 (Proof-based.)
+
+R07 - H007 - "Systematic sensitivity calibration of the standard-deviation tuning coefficient q across high-dimensional ODDS benchmarks will reveal optimal multipliers that differ significantly from low-dimensional recommendations."
+
+Novelty Score: 2 (Sensitivity study; incremental.)
+Significance Score: 3 (Practical guidance.)
+Feasibility Score: 5 (Easy.)
+Testability Score: 5 (Directly measurable.)
+
+R07 - H008 - "Integrating adapted Tukey's outlier filtering rules into fuzzy c-means clustering will improve membership estimation accuracy in contaminated soft-clustering tasks without exceeding a polynomial time complexity growth."
+
+Novelty Score: 3 (Tukey + fuzzy c-means is a reasonable extension.)
+Significance Score: 3 (Improves soft clustering.)
+Feasibility Score: 4 (Implementable.)
+Testability Score: 4 (Membership accuracy.)
+
+R07 - H009 - "Combining kernel metric embeddings with robust trimming and categorical distance measures into a single generalized K-means framework will outperform domain-specific adaptations across mixed-type, high-dimensional datasets."
+
+Novelty Score: 3 (Ambitious combination; some components exist.)
+Significance Score: 3 (Generalizability.)
+Feasibility Score: 2 (Complex to unify.)
+Testability Score: 3 (Cross-domain benchmarking.)
+
+R07 - H010 - "Deploying the federated baseline k-means (AF-BKM) protocol on physical edge IoT hardware will confirm low on-device energy consumption and latency profiles while maintaining intrusion detection accuracy."
+
+Novelty Score: 3 (Empirical deployment study.)
+Significance Score: 3 (Practical.)
+Feasibility Score: 3 (Requires hardware.)
+Testability Score: 5 (Directly measurable.)
+
+R08 - G001 - "Theoretical characterization of breakdown points under misspecified cluster counts and arbitrary data distributions"
+
+Novelty Score: 3 (Breakdown under misspecification is underexplored theoretically.)
+Significance Score: 4 (Important theoretical gap.)
+Feasibility Score: 2 (Hard.)
+Testability Score: 3 (Proof-based.)
+
+R08 - G002 - "Relaxing spherical cluster and equal-radius constraints in optimal trimming formulations"
+
+Novelty Score: 3 (Non-spherical trimming exists (tk-merge), but "optimal trimming formulations" relaxation may be less explored.)
+Significance Score: 3 (Known limitation.)
+Feasibility Score: 3 (Feasible.)
+Testability Score: 4 (Clustering accuracy.)
+
+R08 - G003 - "Principled estimation frameworks for user-defined tuning parameters in robust and trimmed K-means"
+
+Novelty Score: 3 (Underexplored automation.)
+Significance Score: 4 (Practical.)
+Feasibility Score: 3 (Feasible.)
+Testability Score: 4 (Compare against grid search.)
+
+R08 - G004 - "Integration of streaming concept drift and dynamic anchor refresh mechanisms in robust federated baselines"
+
+Novelty Score: 3 (Specific combination.)
+Significance Score: 4 (Practical.)
+Feasibility Score: 4 (Implementable.)
+Testability Score: 4 (Simulated drift.)
+
+R08 - G005 - "Robustification of calibration estimators against contaminated commissioning windows"
+
+Novelty Score: 3 (Specific security vulnerability.)
+Significance Score: 4 (Security.)
+Feasibility Score: 5 (Easy.)
+Testability Score: 5 (Controlled experiments.)
+
+R08 - H001 - "When the number of clusters \(k\) is misspecified relative to the true generative mixture, the breakdown point of alpha-trimmed K-means decreases monotonically with the degree of cluster overlap and approaches zero as the contamination rate matches or exceeds the smallest true cluster proportion."
+
+Novelty Score: 4 (A specific, testable theoretical conjecture about misspecification and breakdown.)
+Significance Score: 4 (Important theoretical insight.)
+Feasibility Score: 3 (Can be tested via simulation and partial theory.)
+Testability Score: 4 (Simulation can verify the monotonic relationship.)
+
+R08 - H002 - "Incorporating Minimum Covariance Determinant (MCD) scatter estimators into optimal trimming formulations enables consistent clustering of non-spherical elliptical mixtures without sacrificing breakdown robustness."
+
+Novelty Score: 3 (MCD + non-spherical trimming is a reasonable combination.)
+Significance Score: 3 (Improves robustness and shape handling.)
+Feasibility Score: 3 (Implementable.)
+Testability Score: 4 (Clustering consistency experiments.)
+
+R08 - H003 - "Jointly optimizing the expected outlier proportion \(\alpha\) and minimum cluster membership \(s\) via an outer-loop validation objective in Robust Trimmed K-means (RTKM) matches ground-truth parameter values more accurately than heuristic grid search."
+
+Novelty Score: 3 (Validation-based joint optimization is a practical proposal.)
+Significance Score: 4 (Automation.)
+Feasibility Score: 3 (Implementable.)
+Testability Score: 4 (Compare parameter accuracy.)
+
+R08 - H004 - "Integrating a sliding-window exponential moving average into federated baseline K-means anchor updates maintains false-positive rate stability under gradual streaming concept drift."
+
+Novelty Score: 3 (EWMA for anchor updates is a sensible combination.)
+Significance Score: 4 (Practical.)
+Feasibility Score: 5 (Easy.)
+Testability Score: 5 (Simulated drift.)
+
+R08 - H005 - "Replacing sample mean and covariance estimators with Minimum Covariance Determinant (MCD) estimators during initial calibration preserves intrusion detection recall under contaminated commissioning windows."
+
+Novelty Score: 3 (Targeted application.)
+Significance Score: 4 (Security.)
+Feasibility Score: 5 (Easy.)
+Testability Score: 5 (Clear metrics.)
+
+R09 - G001 - "Absence of robust estimators (such as Minimum Covariance Determinant) beneath the robust threshold and adaptive anchor-refresh mechanisms in federated outlier-aware K-means to prevent severe recall collapse under commissioning-anchor contamination and long-term concept drift."
+
+Novelty Score: 3 (Combines two underexplored vulnerabilities.)
+Significance Score: 4 (Security + drift.)
+Feasibility Score: 4 (Implementable.)
+Testability Score: 5 (Controlled + drift experiments.)
+
+R09 - G002 - "Lack of a fully parametric extension to derive closed-form distributions for non-parametric pseudo-isolation outlier scores, restricting outlier detection to non-parametric asymptotic bounds."
+
+Novelty Score: 3 (Underexplored theoretical direction.)
+Significance Score: 3 (Principled scoring.)
+Feasibility Score: 3 (Derivable under assumptions.)
+Testability Score: 3 (Simulation validation.)
+
+R09 - G003 - "Determination of whether fixed-parameter tractable (FPT) approximation algorithms for clustering with outliers (such as k-MedianOut and k-MeansOut) can achieve running times dependent on \(k\) and \(\epsilon\) alone, removing the exponential dependency on the outlier count \(m\)."
+
+Novelty Score: 3 (Known open problem (Agrawal et al., 2022).)
+Significance Score: 4 (Theoretical importance.)
+Feasibility Score: 2 (Very hard.)
+Testability Score: 3 (Proof-based.)
+
+R09 - H001 - "Replacing sample mean and sample covariance estimators with a Minimum Covariance Determinant (MCD) estimator in federated outlier-aware K-means prevents recall collapse when commissioning-anchor contamination exceeds 5%."
+
+Novelty Score: 3 (Specific quantitative threshold adds testable specificity.)
+Significance Score: 4 (Security.)
+Feasibility Score: 5 (Easy.)
+Testability Score: 5 (Directly falsifiable.)
+
+R09 - H002 - "A fully parametric extension of pseudo-isolation scores can be derived by modelling neighborhood ranks through order statistics of transformed Mahalanobis distances, yielding a closed-form cumulative distribution function."
+
+Novelty Score: 4 (Order statistics of transformed Mahalanobis distances is a specific, novel derivation.)
+Significance Score: 3 (Principled scoring.)
+Feasibility Score: 3 (Technically involved but feasible.)
+Testability Score: 3 (Simulation validation.)
+
+R09 - H003 - "The exponential dependency on the outlier count \(m\) in fixed-parameter tractable approximation algorithms for \(k\)-MedianOut can be eliminated by replacing subset enumeration with core-set distance bounding based on continuous relaxations."
+
+Novelty Score: 4 (Specific coreset-distance-bounding strategy is a novel algorithmic proposal.)
+Significance Score: 4 (Theoretical breakthrough potential.)
+Feasibility Score: 2 (Very hard.)
+Testability Score: 3 (Proof-based or counterexample.)
+
+R10 - G001 - "Lack of deterministic, non-exhaustive algorithms for identifying optimal trimming regions without enforcing strict spherical symmetry and equal dispersion radii across clusters."
+
+Novelty Score: 3 (Non-spherical trimming exists, but deterministic non-exhaustive optimization is underexplored.)
+Significance Score: 3 (Algorithmic challenge.)
+Feasibility Score: 2 (Hard.)
+Testability Score: 3 (Compare against heuristics.)
+
+R10 - G002 - "Absence of principled, automated approaches for estimating data-dependent trimming parameters (alpha) and minimum membership thresholds (s) in relaxed robust clustering frameworks."
+
+Novelty Score: 3 (Underexplored automation.)
+Significance Score: 4 (Practical.)
+Feasibility Score: 3 (Feasible.)
+Testability Score: 4 (Compare against ground truth.)
+
+R10 - G003 - "The mismatch between worst-case universal breakdown point vulnerability (O(1/n)) and robust practical performance under well-structured data assumptions."
+
+Novelty Score: 3 (Known paradox (Georgogiannis, 2016), but systematic investigation is valuable.)
+Significance Score: 4 (Important theoretical reconciliation.)
+Feasibility Score: 3 (Can be studied via restricted robustness metrics.)
+Testability Score: 4 (Simulation across structured/unstructured data.)
+
+R10 - G004 - "Lack of parametric closed-form probability distributions for pseudo-isolation and distance-based outlier scores in nonparametric trimming frameworks."
+
+Novelty Score: 3 (Underexplored theoretical direction.)
+Significance Score: 3 (Principled scoring.)
+Feasibility Score: 3 (Derivable.)
+Testability Score: 3 (Simulation.)
+
+R10 - G005 - "Vulnerability of federated outlier-aware K-means calibration to commissioning window contamination and non-robust sample covariance estimators."
+
+Novelty Score: 3 (Specific vulnerability.)
+Significance Score: 4 (Security.)
+Feasibility Score: 5 (Easy.)
+Testability Score: 5 (Controlled experiments.)
+
+R10 - G006 - "Unresolved exponential dependence on the outlier count m in FPT approximation algorithms for metric clustering with outliers."
+
+Novelty Score: 3 (Known open problem (Agrawal et al., 2022).)
+Significance Score: 4 (Theoretical.)
+Feasibility Score: 2 (Very hard.)
+Testability Score: 3 (Proof-based.)
+
+R10 - G007 - "Computational trade-offs and scalability bottlenecks of recursive, attribute-wise robust statistical rules (such as Tukey's fence or median absolute deviation) when applied to large-scale high-dimensional data streams."
+
+Novelty Score: 3 (Scalability of attribute-wise rules in streams is a practical, underexplored issue.)
+Significance Score: 3 (Engineering importance.)
+Feasibility Score: 4 (Can be benchmarked.)
+Testability Score: 5 (Runtime and scalability metrics.)
+
+R10 - G008 - "Lack of streaming concept drift and adaptive refresh mechanisms for benign anchors in federated and distributed outlier-detection K-means deployments."
+
+Novelty Score: 3 (Specific combination.)
+Significance Score: 4 (Practical.)
+Feasibility Score: 4 (Implementable.)
+Testability Score: 4 (Simulated drift.)
+
+R10 - H001 - "Formulating optimal trimming regions as non-spherical geometric unions of dispersion-parameterized scatter matrices rather than equal-radius balls enables robust recovery of heterogeneous, nearby, or elongated clusters."
+
+Novelty Score: 4 (Union of scatter matrices is a specific, novel geometric formulation.)
+Significance Score: 3 (Improves non-spherical clustering.)
+Feasibility Score: 2 (Complex optimization.)
+Testability Score: 4 (Recovery experiments on synthetic geometries.)
+
+R10 - H002 - "Coupling relaxed continuous simplex clustering objectives with adaptive, objective-driven model selection criteria (such as adapted X-means/G-means splitting rules) enables automated, data-driven estimation of trimming proportions (alpha) and minimum memberships (s)."
+
+Novelty Score: 3 (Adapting X-means/G-means for trimming is a reasonable combination.)
+Significance Score: 4 (Automation.)
+Feasibility Score: 3 (Implementable.)
+Testability Score: 4 (Compare against ground truth.)
+
+R10 - H003 - "Establishing restricted non-asymptotic breakdown metrics under (rho_1, rho_2)-balanced inlier separation bounds eliminates the worst-case O(1/n) vulnerability paradox for robust K-means algorithms."
+
+Novelty Score: 4 (Specific restricted breakdown metrics with separation bounds is a novel theoretical direction.)
+Significance Score: 4 (Reconciles theory and practice.)
+Feasibility Score: 2 (Technically demanding.)
+Testability Score: 3 (Theoretical + simulation.)
+
+R10 - H004 - "Assuming a parametric underlying generative model for Mahalanobis pseudo-isolation scores yields an analytical closed-form probability distribution, permitting exact p-value significance testing for individual edge observations."
+
+Novelty Score: 3 (Parametric derivation is underexplored; p-value testing is a useful application.)
+Significance Score: 3 (Principled outlier testing.)
+Feasibility Score: 3 (Derivable under assumptions.)
+Testability Score: 4 (Validation of p-values.)
+
+R10 - H005 - "Replacing non-robust sample mean and covariance estimators with the Minimum Covariance Determinant (MCD) estimator in federated baseline K-means calibration preserves outlier detection recall under dirty commissioning windows with up to 10% attack contamination."
+
+Novelty Score: 3 (Specific contamination threshold adds testable specificity.)
+Significance Score: 4 (Security.)
+Feasibility Score: 5 (Easy.)
+Testability Score: 5 (Directly falsifiable.)
+
+R10 - H006 - "Coreset condensation and ring-partitioning reductions can eliminate the exponential dependence on the outlier count m in FPT approximation algorithms for metric clustering with outliers, achieving running times FPT in k and epsilon alone."
+
+Novelty Score: 4 (Ring-partitioning + coreset is a specific, novel algorithmic proposal.)
+Significance Score: 4 (Theoretical breakthrough potential.)
+Feasibility Score: 2 (Very hard.)
+Testability Score: 3 (Proof-based.)
+
+R10 - H007 - "Approximating recursive attribute-wise robust statistical rules using online streaming sketching (such as distributed quantile sketches) reduces the time complexity of outlier removal to sublinear time in data stream applications."
+
+Novelty Score: 3 (Streaming sketches for attribute-wise rules is a practical, underexplored engineering proposal.)
+Significance Score: 3 (Scalability.)
+Feasibility Score: 4 (Implementable with sketching algorithms.)
+Testability Score: 5 (Runtime and accuracy.)
+
+R10 - H008 - "Equipping federated K-means deployments with lightweight streaming drift detectors (such as Page-Hinkley tests) and dynamic anchor-refresh protocols maintains false-positive rate stability under non-IID concept drift."
+
+Novelty Score: 3 (Page-Hinkley + anchor refresh is a specific, sensible combination.)
+Significance Score: 4 (Practical.)
+Feasibility Score: 5 (Easy.)
+Testability Score: 5 (Simulated drift.)
+
+R11 - G001 - "Characterization of Breakdown Points under Unmatched and Misspecified Cluster Structures"
+
+Novelty Score: 3 (Underexplored theoretical direction.)
+Significance Score: 4 (Important.)
+Feasibility Score: 3 (Feasible.)
+Testability Score: 3 (Proof-based + simulation.)
+
+R11 - G002 - "Relaxation of Strict Separation Bounds for Restricted Robustness Guarantees"
+
+Novelty Score: 4 (Relaxing separation bounds is a specific, valuable theoretical direction.)
+Significance Score: 4 (Bridges theory-practice gap.)
+Feasibility Score: 2 (Technically hard.)
+Testability Score: 3 (Theoretical + simulation.)
+
+R11 - G003 - "Asymptotic Complexity Bounds and Parameter-Free FPT Trade-offs for Outlier-Constrained Clustering"
+
+Novelty Score: 3 (Parameter-free FPT is a known challenge.)
+Significance Score: 4 (Theoretical importance.)
+Feasibility Score: 2 (Very hard.)
+Testability Score: 3 (Proof-based.)
+
+R11 - G004 - "Optimization and convergence guarantees for trimmed k-means and related relaxed variants when dealing with non-spherical, anisotropic, or overlapping cluster distributions."
+
+Novelty Score: 3 (Convergence for non-spherical is less developed.)
+Significance Score: 3 (Theoretical importance.)
+Feasibility Score: 2 (Hard.)
+Testability Score: 3 (Proof-based + numerical.)
+
+R11 - G005 - "Principled, automated parameter estimation for contamination rates and trimming thresholds in outlier-robust k-means formulations."
+
+Novelty Score: 3 (Underexplored automation.)
+Significance Score: 4 (Practical.)
+Feasibility Score: 3 (Feasible.)
+Testability Score: 4 (Compare against ground truth.)
+
+R11 - G006 - "Evaluation of hyperparameter sensitivity and trade-offs for outlier-aware k-means variants is predominantly restricted to low-dimensional, simple benchmark datasets, leaving their behavior across complex, high-dimensional, and non-Gaussian distributions largely unexplored."
+
+Novelty Score: 2 (Sensitivity studies exist; extension to complex data is valuable but not novel.)
+Significance Score: 4 (Practical guidance.)
+Feasibility Score: 5 (Straightforward.)
+Testability Score: 5 (Directly measurable.)
+
+R11 - G007 - "The lack of systematic sensitivity analyses regarding the number of standard deviations or threshold multiplier in distance-based outlier trimming schemes across diverse data geometries."
+
+Novelty Score: 2 (Sensitivity analyses exist; specific to diverse geometries adds incremental value.)
+Significance Score: 3 (Practical.)
+Feasibility Score: 5 (Easy.)
+Testability Score: 5 (Directly measurable.)
+
+R11 - G008 - "Absence of automated exploratory diagnostics or principled adaptation rules for selecting the trimming proportion alpha and cluster count k simultaneously during exploratory runs."
+
+Novelty Score: 3 (Underexplored automation.)
+Significance Score: 4 (Practical.)
+Feasibility Score: 3 (Feasible.)
+Testability Score: 4 (Compare against ground truth.)
+
+R11 - G009 - "Lack of streaming concept-drift adaptation and robust covariance estimation in federated baseline k-means for IoT intrusion detection during contaminated commissioning windows."
+
+Novelty Score: 3 (Specific combination.)
+Significance Score: 4 (Security + drift.)
+Feasibility Score: 4 (Implementable.)
+Testability Score: 5 (Simulated experiments.)
+
+R11 - G010 - "Limited feature expressiveness and generalizability of K-means least trimmed square (LTS) integration in predicting complex target variables like career linearity for female STEM graduates."
+
+Novelty Score: 1 (Application is published (Intan Ghayatrie & Fitrianah, 2026).)
+Significance Score: 2 (Application-specific.)
+Feasibility Score: 4 (Data accessible.)
+Testability Score: 4 (Prediction accuracy.)
+
+R11 - H001 - "For datasets where the assumed number of clusters k deviates from the true underlying mixture components, the asymptotic breakdown point of trimmed k-means is strictly bounded by the minimum relative mass of the true underlying components rather than the nominal trimming proportion alpha."
+
+Novelty Score: 4 (Specific theoretical conjecture about misspecification and breakdown bounds.)
+Significance Score: 4 (Important theoretical insight.)
+Feasibility Score: 3 (Can be tested via simulation and partial theory.)
+Testability Score: 4 (Simulation can verify the bound.)
+
+R11 - H002 - "Restricted robustness guarantees and noise-resilience bounds for robust k-means variants fail continuously as the minimum inter-cluster separation distance falls below the threshold determined by the noise variance and cluster radii."
+
+Novelty Score: 4 (Specific continuous failure threshold conjecture.)
+Significance Score: 4 (Important theoretical characterization.)
+Feasibility Score: 3 (Testable via simulation and theory.)
+Testability Score: 4 (Simulation can map the failure boundary.)
+
+R11 - H003 - "An exponential fixed-parameter tractable dependence on the outlier count m is fundamentally necessary for exact approximation algorithms in outlier-constrained metric clustering, and cannot be reduced solely to a function of k and epsilon without incurring a polynomial penalty in n."
+
+Novelty Score: 4 (Impossibility conjecture about FPT lower bounds.)
+Significance Score: 4 (Fundamental theoretical importance.)
+Feasibility Score: 2 (Proving impossibility is very hard.)
+Testability Score: 3 (Falsifiable via counterexample or proof.)
+
+R11 - H004 - "Replacing standard sample mean and covariance estimators in centroid and threshold update steps with robust minimum-covariance-determinant estimators will prevent collapse under non-spherical and heavily overlapping cluster geometries."
+
+Novelty Score: 3 (MCD in centroid/threshold updates is a reasonable extension.)
+Significance Score: 3 (Improves robustness.)
+Feasibility Score: 4 (Implementable.)
+Testability Score: 4 (Collapse resistance experiments.)
+
+R11 - H005 - "Employing continuous relaxation formulations for point-to-cluster assignment weights paired with proximal alternating minimization enables robust solvers to navigate complex objective topographies and avoid local minima when handling multi-membership data with outliers."
+
+Novelty Score: 3 (Continuous relaxation + proximal AM is a meaningful algorithmic combination.)
+Significance Score: 3 (Optimization improvement.)
+Feasibility Score: 3 (Implementable.)
+Testability Score: 4 (Local minima avoidance experiments.)
+
+R11 - H006 - "Varying the distance threshold multiplier q in standard deviation-based outlier trimming schemes generates systematic and predictable trade-offs between precision and recall across both low-dimensional and high-dimensional datasets."
+
+Novelty Score: 2 (Trade-off is intuitive; systematic characterization adds limited novelty.)
+Significance Score: 3 (Practical guidance.)
+Feasibility Score: 5 (Easy.)
+Testability Score: 5 (Directly measurable.)
+
+R11 - H007 - "Inspecting the numerical second derivatives of empirical trimmed k-variance functionals across a continuum of trimming quotas provides clear graphical diagnostics to identify the optimal number of clusters k and contamination levels simultaneously."
+
+Novelty Score: 4 (Second-derivative diagnostics for joint parameter selection is a specific, novel proposal.)
+Significance Score: 4 (Practical automation.)
+Feasibility Score: 3 (Computable but numerically delicate.)
+Testability Score: 4 (Compare identified parameters against ground truth.)
+
+R11 - H008 - "Incorporating minimum-covariance-determinant (MCD) estimators into federated baseline k-means (AF-BKM) prevents precision decay and preserves attack recall during contaminated commissioning windows."
+
+Novelty Score: 3 (Targeted application.)
+Significance Score: 4 (Security.)
+Feasibility Score: 5 (Easy.)
+Testability Score: 5 (Clear metrics.)
+
+R11 - H009 - "Expanding feature sets with qualitative survey and employment history data combined with deep learning ensemble learners improves prediction generalizability for complex target variables like career linearity in female STEM graduates."
+
+Novelty Score: 1 (Application area is published; deep learning ensemble is a standard extension.)
+Significance Score: 2 (Application-specific.)
+Feasibility Score: 4 (Data accessible.)
+Testability Score: 4 (Prediction accuracy.)
+
+R12 - G001 - "Evaluation of cluster-specific versus global adaptive distance thresholds for outlier rejection during centroid updates in trimmed k-means variants"
+
+Novelty Score: 3 (Cluster-specific thresholds are intuitive but underexplored systematically.)
+Significance Score: 4 (Practical improvement for multi-density data.)
+Feasibility Score: 4 (Implementable.)
+Testability Score: 5 (Directly comparable via MSE/recall.)
+
+R12 - G002 - "Optimization of trade-offs across clustering accuracy, precision, and recall when varying the distance threshold multiplier parameter q"
+
+Novelty Score: 2 (Trade-off study; incremental.)
+Significance Score: 3 (Practical guidance.)
+Feasibility Score: 5 (Easy.)
+Testability Score: 5 (Directly measurable.)
+
+R12 - G003 - "Integration of automated stream-based drift detection, robust covariance estimators, and adaptive anchor refresh mechanisms in federated robust centroid updating"
+
+Novelty Score: 3 (Comprehensive integration is underexplored.)
+Significance Score: 4 (Practical + security.)
+Feasibility Score: 4 (Implementable.)
+Testability Score: 5 (Simulated experiments.)
+
+R12 - G004 - "Universal breakdown point limitations and restricted robustness bounds under arbitrary vs. well-structured contamination models"
+
+Novelty Score: 3 (Known paradox (Georgogiannis, 2016), but systematic comparison is valuable.)
+Significance Score: 4 (Theoretical reconciliation.)
+Feasibility Score: 3 (Feasible via theory + simulation.)
+Testability Score: 4 (Simulation can map bounds.)
+
+R12 - G005 - "Lack of fully parametric closed-form distributions for pseudo-isolation and nonparametric outlier scores in objective-based clustering"
+
+Novelty Score: 3 (Underexplored theoretical direction.)
+Significance Score: 3 (Principled scoring.)
+Feasibility Score: 3 (Derivable.)
+Testability Score: 3 (Simulation.)
+
+R12 - H001 - "Implementing cluster-specific adaptive distance thresholds during centroid updates in trimmed k-means algorithms significantly reduces mean squared error on multi-density datasets compared to a single global threshold, while introducing a predictable increase in computational cost."
+
+Novelty Score: 3 (Specific performance/cost hypothesis.)
+Significance Score: 4 (Practical improvement.)
+Feasibility Score: 4 (Implementable.)
+Testability Score: 5 (Directly measurable.)
+
+R12 - H002 - "Systematic sweeping of the distance threshold multiplier parameter q from 2 to 6 in outlier-aware k-means algorithms traces a predictable Pareto frontier where precision approaches 100% at higher values while recall and cluster accuracy degrade."
+
+Novelty Score: 2 (Trade-off is intuitive; specific Pareto frontier claim is incremental.)
+Significance Score: 3 (Practical guidance.)
+Feasibility Score: 5 (Easy.)
+Testability Score: 5 (Directly measurable.)
+
+R12 - H003 - "Integrating lightweight stream-based concept drift detectors and Minimum-Covariance-Determinant (MCD) estimators into federated robust baseline k-means prevents merge-induced precision decay and hardens calibration against dirty commissioning windows."
+
+Novelty Score: 3 (Specific integration.)
+Significance Score: 4 (Security + drift.)
+Feasibility Score: 4 (Implementable.)
+Testability Score: 5 (Simulated experiments.)
+
+R12 - H004 - "For any continuous probability measure P_X admitting a density, the universal breakdown point of robust k-means formulations based on unbiased proximal maps or Moreau envelopes cannot exceed 2/n under unrestricted adversarial contamination without imposing structural geometric separation bounds on the underlying components."
+
+Novelty Score: 4 (Specific impossibility conjecture for proximal robust k-means.)
+Significance Score: 4 (Fundamental theoretical importance.)
+Feasibility Score: 2 (Very hard to prove.)
+Testability Score: 3 (Falsifiable via counterexample or proof.)
+
+R12 - H005 - "Deriving a parametric closed-form distribution for pseudo-isolation scores under mild spatial continuity assumptions enables exact, analytical p-value computation for individual outlier rejection, replacing Cantelli-based empirical bounds."
+
+Novelty Score: 4 (Specific parametric derivation with p-value application.)
+Significance Score: 3 (Principled rejection.)
+Feasibility Score: 3 (Technically involved.)
+Testability Score: 4 (Validation of p-values.)
+
+R12 - H006 - "Incorporating cluster-specific adaptive dispersion estimators into probabilistic score formulations reduces false-positive rejections in dense clusters compared to global variance assumptions."
+
+Novelty Score: 3 (Cluster-specific dispersion is a sensible extension.)
+Significance Score: 3 (Improves outlier detection.)
+Feasibility Score: 4 (Implementable.)
+Testability Score: 4 (FPR comparison.)
+
+R12 - H007 - "Replacing sample covariance matrices with Minimum-Covariance-Determinant (MCD) estimators in robust federated centroid updates stabilizes calibration anchors against contaminated commissioning windows under non-IID conditions."
+
+Novelty Score: 3 (Targeted application.)
+Significance Score: 4 (Security.)
+Feasibility Score: 5 (Easy.)
+Testability Score: 5 (Controlled experiments.)
+
+R12 - H008 - "Deploying cluster-specific adaptive distance thresholds instead of a single global dispersion metric in exploratory trimmed k-means will improve outlier detection recall and boundary fidelity across multi-density datasets, at the expense of a modest increase in computational overhead."
+
+Novelty Score: 3 (Specific performance/cost hypothesis; similar to H001.)
+Significance Score: 4 (Practical.)
+Feasibility Score: 4 (Implementable.)
+Testability Score: 5 (Directly measurable.)
+
+R12 - H009 - "Systematic sweeping of the outlier rejection sensitivity multiplier parameter q in exploratory trimmed k-means workflows will reveal predictable, domain-specific trade-offs where precision approaches 100% at higher multiplier values while recall degrades."
+
+Novelty Score: 2 (Trade-off study; incremental.)
+Significance Score: 3 (Practical.)
+Feasibility Score: 5 (Easy.)
+Testability Score: 5 (Directly measurable.)
+
+R12 - H010 - "Integrating lightweight streaming concept drift detectors and minimum-covariance-determinant estimators into federated robust centroid updating will eliminate false-positive precision decay caused by operational distribution drift and dirty commissioning windows."
+
+Novelty Score: 3 (Specific integration; similar to H003.)
+Significance Score: 4 (Security + drift.)
+Feasibility Score: 4 (Implementable.)
+Testability Score: 5 (Simulated experiments.)
+
+R13 - G001 - "Universal Breakdown Bounds Versus Practical Resilience in Center-Based Clustering with Penalties or Trimming"
+
+Novelty Score: 3 (Known paradox (Georgogiannis, 2016), but systematic investigation is valuable.)
+Significance Score: 4 (Theoretical reconciliation.)
+Feasibility Score: 3 (Feasible via theory + simulation.)
+Testability Score: 4 (Simulation can map bounds.)
+
+R13 - G002 - "Generalizing Trimmed and Robust K-Means Beyond Spherical Geometry and Equal Dispersions"
+
+Novelty Score: 2 (Well-known limitation; tk-merge and Mahalanobis methods exist.)
+Significance Score: 3 (Important but established problem.)
+Feasibility Score: 3 (Approaches exist.)
+Testability Score: 4 (Clustering accuracy.)
+
+R13 - G003 - "Parameterized FPT Running Time Dependencies on the Number of Outliers in Clustering Optimization"
+
+Novelty Score: 3 (Known open problem (Agrawal et al., 2022).)
+Significance Score: 4 (Theoretical importance.)
+Feasibility Score: 2 (Very hard.)
+Testability Score: 3 (Proof-based.)
+
+R13 - G004 - "Evaluation of cluster-specific versus global distance thresholds in outlier-aware heuristic k-means variants."
+
+Novelty Score: 3 (Underexplored systematic evaluation.)
+Significance Score: 4 (Practical.)
+Feasibility Score: 4 (Implementable.)
+Testability Score: 5 (Directly comparable.)
+
+R13 - G005 - "Extension of nonparametric pseudo-isolation and robust trimming scoring frameworks to non-spherical and non-convex cluster topologies."
+
+Novelty Score: 3 (Underexplored extension.)
+Significance Score: 3 (Broader applicability.)
+Feasibility Score: 3 (Feasible.)
+Testability Score: 4 (Outlier detection metrics.)
+
+R13 - G006 - "Hardening federated and streaming outlier-aware k-means against commissioning-window contamination using robust covariance estimators."
+
+Novelty Score: 3 (Specific security hardening.)
+Significance Score: 4 (Security.)
+Feasibility Score: 5 (Easy.)
+Testability Score: 5 (Controlled experiments.)
+
+R13 - H001 - "Incorporating restricted balanced inlier separation conditions into theoretical bounds will reconcile the pessimistic 2/n universal breakdown bounds with the strong empirical stability observed in robust and trimmed k-means."
+
+Novelty Score: 4 (Specific restricted-condition reconciliation is a valuable theoretical direction.)
+Significance Score: 4 (Bridges theory-practice gap.)
+Feasibility Score: 3 (Feasible via restricted robustness theory.)
+Testability Score: 4 (Simulation can compare bounds.)
+
+R13 - H002 - "Incorporating group-specific dispersion and scatter estimation matrices into trimmed and robust k-means objective functions will enable accurate cluster detection in non-spherical and anisotropic mixtures."
+
+Novelty Score: 3 (Group-specific scatter is a known extension (e.g., TCLUST); still relevant but not highly novel.)
+Significance Score: 3 (Practical improvement.)
+Feasibility Score: 4 (Implementable.)
+Testability Score: 4 (Clustering accuracy.)
+
+R13 - H003 - "It is possible to eliminate the exponential FPT dependence on the outlier count m in clustering coreset and reduction frameworks, yielding running times dependent solely on k and epsilon."
+
+Novelty Score: 3 (Known open problem; specific coreset/reduction angle adds some novelty.)
+Significance Score: 4 (Theoretical breakthrough potential.)
+Feasibility Score: 2 (Very hard.)
+Testability Score: 3 (Proof-based.)
+
+R13 - H006 - "Employing cluster-specific dispersion thresholds instead of a single global threshold will improve outlier detection accuracy and reduce false positives across heterogeneous multi-cluster datasets."
+
+Novelty Score: 3 (Sensible but not highly novel.)
+Significance Score: 4 (Practical.)
+Feasibility Score: 4 (Implementable.)
+Testability Score: 5 (Directly measurable.)
+
+R13 - H007 - "Integrating nonparametric pseudo-isolation scoring modules with flexible covariance clustering models (such as Gaussian-mixture models or spectral clustering) will enable robust outlier detection on complex non-spherical data topologies."
+
+Novelty Score: 3 (Combining pseudo-isolation with GMM/spectral is a meaningful extension.)
+Significance Score: 3 (Broader applicability.)
+Feasibility Score: 3 (Implementable but complex.)
+Testability Score: 4 (Outlier detection on non-spherical data.)
+
+R13 - H009 - "Deploying robust covariance estimators such as minimum-covariance-determinant (MCD) underneath robust threshold rules in federated baseline k-means (AF-BKM) will preserve attack detection recall when initial commissioning windows are contaminated with anomaly traces."
+
+Novelty Score: 3 (Targeted application.)
+Significance Score: 4 (Security.)
+Feasibility Score: 5 (Easy.)
+Testability Score: 5 (Clear metrics.)
+
+R14 - G001 - "Universal Breakdown Bounds and Worst-Case Robustness Limits in Arbitrary versus Well-Structured Metric Spaces"
+
+Novelty Score: 3 (Known paradox (Georgogiannis, 2016), but systematic comparison is valuable.)
+Significance Score: 4 (Theoretical reconciliation.)
+Feasibility Score: 3 (Feasible.)
+Testability Score: 4 (Simulation + theory.)
+
+R14 - G002 - "FPT Dependency Limits and Parameter Exponential Scaling in Clustering with Outliers"
+
+Novelty Score: 3 (Known open problem (Agrawal et al., 2022).)
+Significance Score: 4 (Theoretical importance.)
+Feasibility Score: 2 (Very hard.)
+Testability Score: 3 (Proof-based.)
+
+R14 - G003 - "Mathematical Limits and Closed-Form Analytical Distribution of Nonparametric Pseudo-Isolation Scores"
+
+Novelty Score: 3 (Underexplored theoretical direction.)
+Significance Score: 3 (Principled scoring.)
+Feasibility Score: 3 (Derivable.)
+Testability Score: 3 (Simulation.)
+
+R14 - G004 - "Generalization of trimmed k-means and robust distance metrics beyond mixtures of spherical or isotropic distributions"
+
+Novelty Score: 2 (Well-known limitation; approaches exist.)
+Significance Score: 3 (Important but established.)
+Feasibility Score: 3 (Approaches exist.)
+Testability Score: 4 (Clustering accuracy.)
+
+R14 - G005 - "Principled, automated parameter estimation for outlier proportions and cluster cardinality in robust k-means variants"
+
+Novelty Score: 3 (Underexplored automation.)
+Significance Score: 4 (Practical.)
+Feasibility Score: 3 (Feasible.)
+Testability Score: 4 (Compare against ground truth.)
+
+R14 - G007 - "Integration of robust covariance estimators and streaming concept-drift mechanisms into federated and distributed outlier-aware k-means architectures"
+
+Novelty Score: 3 (Specific integration.)
+Significance Score: 4 (Security + drift.)
+Feasibility Score: 4 (Implementable.)
+Testability Score: 5 (Simulated experiments.)
+
+R14 - G008 - "The empirical and trade-off sensitivity of robust thresholding coefficients (such as q standard deviations or trimming proportions alpha) across diverse non-Gaussian, high-dimensional, and large-scale data distributions remains underexplored beyond basic low-dimensional benchmarks."
+
+Novelty Score: 2 (Sensitivity studies exist; large-scale extension is valuable but incremental.)
+Significance Score: 4 (Practical guidance.)
+Feasibility Score: 5 (Straightforward.)
+Testability Score: 5 (Directly measurable.)
+
+R14 - G010 - "Integration of real-world qualitative and behavioral factors into robust clustering pipelines for predictive applications such as educational employability and career linearity."
+
+Novelty Score: 1 (Application is published (Intan Ghayatrie & Fitrianah, 2026).)
+Significance Score: 2 (Application-specific.)
+Feasibility Score: 4 (Data accessible.)
+Testability Score: 4 (Prediction accuracy.)
+
+R14 - G011 - "Handling streaming concept drift and automated dynamic anchor refreshing in resource-constrained federated outlier-aware clustering environments."
+
+Novelty Score: 3 (Specific combination.)
+Significance Score: 4 (Practical.)
+Feasibility Score: 4 (Implementable.)
+Testability Score: 4 (Simulated drift.)
+
+R14 - H001 - "Alternative penalty functions, non-convex proximal maps, or modified objective formulations cannot fundamentally elevate universal breakdown bounds beyond O(1/n) on arbitrary, unconstrained datasets without requiring prior geometric restrictions."
+
+Novelty Score: 4 (Specific impossibility conjecture about breakdown bounds.)
+Significance Score: 4 (Fundamental theoretical importance.)
+Feasibility Score: 2 (Very hard to prove.)
+Testability Score: 3 (Falsifiable via counterexample or proof.)
+
+R14 - H002 - "The exponential FPT dependence on the number of outliers m is a fundamental computational barrier that cannot be eliminated or relaxed to depend solely on k and epsilon."
+
+Novelty Score: 4 (Specific impossibility conjecture about FPT lower bounds.)
+Significance Score: 4 (Fundamental theoretical importance.)
+Feasibility Score: 2 (Very hard to prove.)
+Testability Score: 3 (Falsifiable via counterexample or proof.)
+
+R14 - H003 - "A fully parametric extension and closed-form analytical distribution for pseudo-isolation scores can be derived to enable exact hypothesis testing."
+
+Novelty Score: 4 (Specific parametric derivation with hypothesis testing application.)
+Significance Score: 3 (Principled outlier testing.)
+Feasibility Score: 3 (Technically involved.)
+Testability Score: 4 (Validation of p-values.)
+
+R14 - H004 - "Replacing non-robust sample covariance estimators with Minimum Covariance Determinant (MCD) estimators and robust dispersion updates in robust trimmed k-means optimization loops and federated architectures will maintain high anomaly recall and prevent cluster center degradation under directional adversarial contamination."
+
+Novelty Score: 3 (Targeted application.)
+Significance Score: 4 (Security.)
+Feasibility Score: 5 (Easy.)
+Testability Score: 5 (Controlled experiments.)
+
+R14 - H005 - "Embedding automated information-theoretic criteria (such as Minimum Description Length or Bayesian Information Criterion penalties) into the objective functions of robust trimmed k-means will enable simultaneous joint optimization of cluster count k, minimum cluster size s, and trimming proportion alpha without grid searching."
+
+Novelty Score: 3 (MDL/BIC for joint estimation is a reasonable combination.)
+Significance Score: 4 (Automation.)
+Feasibility Score: 3 (Implementable.)
+Testability Score: 4 (Compare against grid search.)
+
+R14 - H006 - "Replacing spherical distance metrics in trimmed k-means with cluster-specific Mahalanobis distances derived from iterative scatter estimation matrices will improve clustering accuracy and outlier separation on elliptical and non-spherical mixtures."
+
+Novelty Score: 3 (Mahalanobis trimmed k-means is known; iterative cluster-specific scatter is a reasonable extension.)
+Significance Score: 3 (Practical improvement.)
+Feasibility Score: 4 (Implementable.)
+Testability Score: 4 (Clustering accuracy.)
+
+R14 - H007 - "Systematic parameter sweeps of threshold coefficients (q) and trimming proportions (alpha) across diverse non-Gaussian and high-dimensional ODDS benchmark datasets will demonstrate distinct Pareto frontiers where low threshold coefficients maximize cluster purity while higher coefficients optimize precision at the expense of recall."
+
+Novelty Score: 2 (Trade-off study; incremental.)
+Significance Score: 4 (Practical guidance.)
+Feasibility Score: 5 (Easy.)
+Testability Score: 5 (Directly measurable.)
+
+R14 - H010 - "Mechanisms for streaming concept-drift adaptation and automated anchor refreshing will keep benign calibration valid over extended operational lifespans without manual intervention in federated IoT intrusion detection systems."
+
+Novelty Score: 3 (Specific practical hypothesis.)
+Significance Score: 4 (Practical.)
+Feasibility Score: 4 (Implementable.)
+Testability Score: 5 (Simulated drift experiments.)
