@@ -1,0 +1,360 @@
+\documentclass[sigconf,review,anonymous=false]{acmart}
+
+\AtBeginDocument{\providecommand\BibTeX{{Bib\TeX}}}
+\setcopyright{none}
+\settopmatter{printacmref=false}
+\renewcommand\footnotetextcopyrightpermission[1]{}
+\pagestyle{plain}
+
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{amsmath}
+
+\title{Single-LLM Refinement vs. Multi-Agent Debate for Scientific Research Gap Identification and Hypothesis Generation}
+
+\author{Soumik Bhattacharyya}
+\affiliation{%
+  \institution{Indian Institute of Information Technology Allahabad}
+  \city{Prayagraj}
+  \state{Uttar Pradesh}
+  \country{India}}
+\email{mde2026005@iiita.ac.in}
+
+\keywords{large language models, scientific hypothesis generation, single-LLM systems, multi-agent systems, debate, experimental evaluation}
+
+\begin{document}
+\begin{abstract}
+Large language models (LLMs) offer promising capabilities for literature-based scientific research gap identification and hypothesis generation. However, it remains unclear whether distributing these tasks across multiple debating agents provides meaningful improvements over iterative refinement by a single LLM. This study implements and compares two approaches using a common language model and a shared corpus of 17 research papers on outlier trimming in K-means and related clustering algorithms. The single-LLM pipeline performs paper-level analysis, literature synthesis, and iterative self-critique, whereas the multi-agent pipeline employs topic-adaptive perspectives, independent generation, specialised criticism, and structured debate. Generated research gaps and hypotheses are evaluated independently across novelty, significance, feasibility, and testability. The results show that multi-agent debate does not inherently outperform single-LLM refinement. The overall evaluation scores are nearly identical (3.40 versus 3.39), with the multi-agent approach showing advantages primarily in feasibility, while the single-agent approach performs slightly better in novelty and testability. Later role-differentiated configurations show improved performance, although the effect cannot be attributed to role differentiation alone. These improvements come at approximately 2.3 times the token consumption. The findings highlight the trade-off between research-idea quality and computational efficiency and motivate more controlled evaluations of multi-agent scientific ideation.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}
+Scientific research involves identifying gaps in existing knowledge, developing explanations for observed phenomena, and formulating hypotheses that can be investigated through experiments or further analysis. Computational approaches to scientific discovery have a long history, from systems that identify regularities in observations to literature-based discovery that connects information distributed across publications \cite{langley1987scientific,swanson1986undiscovered}.
+
+Recent advances in large language models (LLMs) have introduced new possibilities for these processes. LLMs can analyse scientific publications, connect concepts across papers, propose mechanisms, and formulate candidate hypotheses. Studies have explored direct scientific hypothesis generation and open-domain research ideation \cite{zhou2024hypothesis,yang2024large}, as well as broader workflows involving literature analysis, experimentation, and research automation \cite{lu2024ai,gottweis2025towards}.
+
+Two prominent approaches are single-LLM systems and multi-agent systems. A single-LLM system uses one model instance for research analysis and hypothesis generation, potentially through structured prompting, self-critique, and iterative refinement. Methods such as Self-Refine and Reflexion demonstrate how model-generated feedback can improve outputs without requiring multiple independently instantiated agents \cite{madaan2023selfrefine,shinn2023reflexion}. Multi-agent systems instead distribute tasks across specialised agents that generate, evaluate, and challenge research proposals. Prior work has explored debate for improving reasoning and factuality \cite{du2024improving}, and collaborative agent-based approaches for scientific idea generation \cite{su2025many,ueda2025design,gottweis2025towards}. However, additional interaction introduces computational and coordination costs, while agreement among agents does not necessarily establish correctness \cite{smit2024mad,choi2025debatevote}.
+
+Despite growing interest in both approaches, their relative benefits for scientific hypothesis generation remain insufficiently established. Improvements attributed to multi-agent systems may arise from independent generation, perspective diversity, specialised evaluation, additional inference, or iterative criticism. A meaningful comparison should therefore consider both output quality and computational requirements. Evaluation also requires care: novelty cannot be established from linguistic plausibility alone, and structured benchmarks and human assessment have been proposed for evaluating generated research ideas \cite{guo2025ideabench,qi2024biomedical,si2025novel}.
+
+This study implements and experimentally compares a single-LLM pipeline and a multi-agent debate pipeline for literature-based research gap identification and hypothesis generation. Both use a common corpus and investigate outlier trimming in K-means and related clustering algorithms. The single-LLM approach performs paper-level analysis, cross-paper synthesis, and iterative self-critique. The multi-agent approach uses topic-adaptive perspectives, independent generation, structured criticism, and centralised adjudication. Research gaps and hypotheses are evaluated separately across novelty, significance, feasibility, and testability. The study examines whether distributing analysis and criticism across agents yields quality improvements sufficient to justify the additional computational cost.
+
+\section{Related Work}
+\subsection{LLMs for Scientific Hypothesis Generation}
+Computational scientific discovery predates modern language models, with early work identifying regularities and relationships across otherwise disconnected knowledge sources \cite{langley1987scientific,swanson1986undiscovered}. Recent LLM-based approaches extend these capabilities through flexible language understanding and generation. Studies have investigated hypothesis generation from scientific context and open-domain scientific discovery \cite{zhou2024hypothesis,yang2024large}. SciMON uses retrieved literature to guide the generation and refinement of research ideas \cite{wang2024scimon}, while large-scale human evaluation highlights the importance of expert judgement when assessing novelty and feasibility \cite{si2025novel}.
+
+\subsection{Single-LLM Generation and Iterative Refinement}
+Single-LLM approaches can perform multiple stages of analysis and generation using structured instructions, feedback, and iterative refinement. Self-Refine generates an initial response, critiques it, and revises it using the resulting feedback \cite{madaan2023selfrefine}. Reflexion similarly uses verbal feedback to improve subsequent attempts \cite{shinn2023reflexion}. These methods show that iterative evaluation can be implemented without separate agents. However, self-critique remains dependent on the same model that produced the original output, which may fail to recognise its own unsupported assumptions.
+
+\subsection{Multi-Agent Systems and Debate}
+Multi-agent systems distribute reasoning and evaluation across roles such as proposer, critic, evaluator, and synthesiser. Debate has been shown to improve reasoning and factuality in some settings, although its effectiveness depends on the task and interaction strategy \cite{du2024improving,smit2024mad}. Scientific ideation systems have explored multi-agent generation and dialogue design \cite{su2025many,ueda2025design}. The AI co-scientist also uses specialised agents to generate, debate, and evolve scientific proposals \cite{gottweis2025towards}. Nevertheless, agents with similar models and evidence may reinforce correlated errors, and consensus or voting does not guarantee better decisions \cite{choi2025debatevote}.
+
+\subsection{Evaluation of Scientific Research Ideas}
+Research ideas involve several distinct quality dimensions: novelty, significance, feasibility, and testability. IdeaBench provides a benchmark for evaluating LLM-generated research ideas \cite{guo2025ideabench}; other work examines LLMs as biomedical hypothesis generators and the role of human evaluation in judging novelty and feasibility \cite{qi2024biomedical,si2025novel}. Experimental validation provides stronger evidence of scientific usefulness than linguistic plausibility alone. Autonomous research workflows and laboratory studies illustrate efforts to move from generated proposals toward empirical investigation \cite{boiko2023autonomous,scientific2025laboratory}.
+
+\subsection{Research Gap and Positioning of This Study}
+Existing work establishes the potential of both single-LLM refinement and multi-agent scientific ideation. However, the additional benefits of debate must be considered alongside the costs of additional generation and coordination. This study provides an implementation-level comparison using a shared model and literature corpus. It contrasts paper-level analysis, synthesis, and self-critique with perspective identification, independent analysis, structured debate, and centralised refinement. Both approaches produce separate research-gap and hypothesis outputs, evaluated across the same four dimensions.
+
+\section{Methodology}
+\subsection{System Overview and Literature Processing}
+Both pipelines operate on the same research topic and literature corpus and use a shared underlying language model. Their primary distinction lies in how research ideas are generated, evaluated, and refined. Both begin by processing supplied papers individually. Each paper is provided to the LLM as a PDF attachment with structured reading instructions. The model extracts bibliographic information, research question, context, methodology, findings, assumptions, stated limitations, open questions, and candidate hypotheses.
+
+Potential gaps and hypotheses are accompanied by contextual evidence excerpts and section or page references. Explicitly stated limitations are distinguished from inferred research opportunities. Paper analyses are assigned unique identifiers and consolidated into structured summaries, which form the common literature context. Paper references are validated against the supplied corpus to maintain traceability.
+
+\subsection{Single-LLM Pipeline}
+The single-LLM pipeline employs one model acting as a scientific researcher throughout the process:
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Research-gap generation:} The model examines the paper summaries and identifies distinct gaps, describing established knowledge, unresolved questions, motivation, evidence, and relevant references.
+  \item \textbf{Iterative self-critique and revision:} The same model critiques each gap for insufficient support, existing solutions, infeasibility, ambiguity, and lack of falsifiability. It decides whether to retain, revise, merge, or reject each record while preserving evidence and provenance.
+  \item \textbf{Hypothesis generation:} The model generates hypotheses grounded in surviving gaps. Each includes a rationale, testable prediction, proposed experimental test, supporting literature, and originating gap identifiers.
+  \item \textbf{Hypothesis refinement:} The same critique-and-revision procedure is applied independently to the hypotheses.
+\end{enumerate}
+The critique--revision process runs for a maximum of three rounds for each subject (research gaps and hypotheses), terminating early when no changes requiring action are identified. No separate agent personas or adversarial debate are introduced.
+
+\subsection{Multi-Agent Debate Pipeline}
+The multi-agent pipeline distributes ideation and evaluation across specialised LLM roles. Rather than relying on predefined disciplinary perspectives, it dynamically identifies perspectives appropriate to the topic:
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Perspective discovery:} A topic-adaptive perspective finder identifies perspectives that cover the research space. Each specifies its scope, exclusions, ownership boundaries, and rationale.
+  \item \textbf{Perspective-specific gap generation:} Independent generators identify gaps within their assigned scopes and provide supporting papers and evidence.
+  \item \textbf{Initial curation and corpus analysis:} A curator merges equivalent records and rejects duplicates or invalid candidates. It examines each candidate against the complete corpus, including papers not originally cited.
+  \item \textbf{Perspective-based critique:} Each perspective independently evaluates active gaps for novelty, soundness, feasibility, significance, and testability, as applicable. Critics identify substantive weaknesses and propose concrete improvements without manufacturing disagreements.
+  \item \textbf{Centralised adjudication:} A scientific adjuster evaluates each critique, accepting, partially accepting, or rejecting its arguments. It decides whether to retain, revise, merge, or reject each record, preserving justified evidence and unresolved uncertainty.
+  \item \textbf{Hypothesis generation and debate:} Independent generators propose testable hypotheses under the same perspectives. These undergo the same critique and adjudication process.
+  \item \textbf{Final curation:} A final curator removes substantive duplicates while preserving identifiers, references, evidence, and originating gap relationships.
+\end{enumerate}
+The debate procedure allows a maximum of three rounds for each subject. If the adjuster determines that no substantive changes are necessary, subsequent rounds terminate. Individual critiques are evaluated on their merits rather than by majority vote.
+
+\subsection{Provenance and Output Management}
+Both pipelines maintain persistent identifiers for research gaps and hypotheses. Identifiers are not renumbered during revisions or merges; when records are merged, one existing identifier is retained and absorbed identifiers are recorded. Supporting papers, section references, evidence, and revision histories are preserved. Final outputs include research gaps and hypotheses together with inference histories and execution metadata.
+
+\section{Experimental Setup}
+\subsection{Research Domain and Literature Corpus}
+The experimental topic is \emph{Status and direction of outlier trimming in K-means and similar algorithms}. A curated corpus of 17 papers on K-means clustering, outlier detection, and robust clustering is used as the input knowledge base. The papers span 1967--2026 and are maintained as PDFs in publication-year directories. The maximum publication-year cutoff is configurable and was set to 2026. Both systems receive the same selected corpus. Unsuccessful paper-reading requests are recorded rather than silently treated as successfully processed documents. The original corpus is listed in Appendix~\ref{app:corpus}.
+
+\subsection{Model and Implementation}
+Both configurations are implemented in Python and LangChain, using the Google Gemini API. The primary model is \texttt{gemini-3.5-flash-lite}; \texttt{gemini-3-flash-preview} is supported as an alternative. The model is accessed through LangChain's \texttt{ChatGoogleGenerativeAI} interface. Structured outputs maintain consistent schemas for paper analyses, research gaps, hypotheses, critiques, and adjudication decisions. The requested temperature was set to 0.2 in the experiment configuration, but was not applied to the primary model because its parameter allowlist excludes this setting. The primary configuration therefore uses the provider's default sampling behaviour.
+
+\subsection{Experimental Conditions}
+Table~\ref{tab:conditions} summarises the configurations.
+\begin{table}[t]
+\caption{Compared research-generation configurations.}
+\label{tab:conditions}
+\centering\small
+\begin{tabularx}{\columnwidth}{lXX}
+\toprule
+Characteristic & Single-LLM & Multi-Agent \\
+\midrule
+Underlying model & Gemini 3.5 Flash-Lite & Gemini 3.5 Flash-Lite \\
+Literature input & Same corpus & Same corpus \\
+Paper analysis & One call per paper & One call per paper \\
+Generation & Single researcher & Perspective-specific generators \\
+Evaluation & Self-critique & Independent perspective critics \\
+Revision & Same researcher & Centralised adjuster \\
+Maximum refinement rounds & 3 per subject & 3 per subject \\
+Final curation & Not separate & Dedicated final curator \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Execution Protocol and Reproducibility}
+The experiment is executed sequentially through a common entry-point script. Execution mode, research topic, model identifier, publication-year cutoff, and refinement controls are configurable. The maximum number of refinement rounds is three. A minimum interval of ten seconds is maintained between consecutive API requests, with up to three attempts for retryable API errors. Multi-agent perspective discovery, generation, critique, and adjudication calls execute sequentially; the single-agent pipeline similarly processes papers and refinement stages sequentially. Both configurations use corpus-only evidence: external web-search grounding and automated external literature verification are disabled.
+
+Each run produces a separate output directory containing generated gaps and hypotheses, model usage statistics, inference history, and a snapshot of the corresponding agent implementation. Execution records capture timestamps, roles, stages, round numbers, request outcomes, execution times, and available input/output token counts. Failed requests and structured-output parsing errors are also recorded. Python environment and package versions are retained.
+
+\subsection{Output Evaluation}
+Research gaps and hypotheses are retained as separate evaluation units, with supporting literature, evidence, and identifiers. Five LLM evaluators independently score each record on a five-point scale across four dimensions:
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Novelty:} Whether the idea represents a new research direction relative to available literature.
+  \item \textbf{Significance:} The potential scientific or practical importance of addressing the gap or testing the hypothesis.
+  \item \textbf{Feasibility:} Whether the research can reasonably be investigated using available methods, resources, and knowledge.
+  \item \textbf{Testability:} Whether the proposal can be evaluated through a concrete and falsifiable investigation.
+\end{enumerate}
+Execution statistics, including token consumption, API calls, and runtime, are retained separately to assess computational efficiency.
+
+\section{Results}
+\subsection{Experimental Runs and Execution Statistics}
+Fourteen runs were conducted: seven single-agent and seven multi-agent. All used \texttt{gemini-3.5-flash-lite}, with different iterations of the respective architectures. Table~\ref{tab:runs} summarises execution characteristics.
+\begin{table*}[t]
+\caption{Experimental run metadata and computational requirements.}
+\label{tab:runs}
+\centering\scriptsize
+\begin{tabular}{ll l l r r r r r r r}
+\toprule
+Run & Mode & Dataset & Arch. & Max. rounds & Executed & API calls & Failed & Tokens (K) & Runtime (s) & Papers \\
+\midrule
+R01 & Multi & D01 & M01 & 3 & 2 & 31 & 1 & 464.9 & 344.4 & 17 \\
+R02 & Multi & D01 & M01 & 3 & 1 & 30 & 1 & 391.3 & 330.9 & 17 \\
+R03 & Multi & D01 & M01 & 3 & 1 & 32 & 0 & 560.1 & 683.3 & 17 \\
+R04 & Single & D01 & S01 & 3 & 1 & 23 & 0 & 284.6 & 196.9 & 17 \\
+R05 & Single & D01 & S01 & 3 & 1 & 23 & 0 & 288.2 & 581.5 & 17 \\
+R06 & Single & D01 & S02 & 3 & 1 & 25 & 0 & 342.7 & 253.6 & 17 \\
+R07 & Single & D01 & S02 & 3 & 2 & 26 & 0 & 412.2 & 360.1 & 17 \\
+R08 & Single & D02 & S03 & 3 & 1 & 29 & 6 & 367.8 & 2131.1 & 15 \\
+R09 & Single & D03 & S04 & 3 & 1 & 22 & 0 & 277.6 & 294.8 & 13 \\
+R10 & Single & D01 & S05 & 3 & 1 & 21 & 0 & 310.6 & 210.2 & 17 \\
+R11 & Multi & D01 & M02 & 3 & 1 & 30 & 0 & 539.6 & 305.5 & 17 \\
+R12 & Multi & D01 & M03 & 3 & 2 & 48 & 0 & 1301.4 & 673.3 & 17 \\
+R13 & Multi & D01 & M04 & 3 & 2 & 42 & 0 & 1172.1 & 566.3 & 17 \\
+R14 & Multi & D04 & M04 & 3 & 2 & 43 & 0 & 1189.0 & 802.3 & 16 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+D01 represents the original 17-paper corpus. D02, D03, and D04 contain 15, 13, and 16 papers, respectively. These variants resulted from temporary API failures during paper processing rather than deliberate dataset construction. They are subsets of the same corpus and are excluded from direct architecture comparisons. The primary comparison therefore uses five single-agent runs (R04--R07 and R10) and six multi-agent runs (R01--R03 and R11--R13).
+
+\subsection{Research Gap and Hypothesis Quality}
+Each generated research gap and hypothesis was independently evaluated by five LLM evaluators across the four dimensions. Scores are averages across evaluators and generated records. Table~\ref{tab:scores} reports the run-level averages.
+\begin{table*}[t]
+\caption{Average evaluation scores by run, separately for research gaps and hypotheses.}
+\label{tab:scores}
+\centering\scriptsize
+\begin{tabular}{lrrrrr rrrrr}
+\toprule
+& \multicolumn{5}{c}{Research gaps} & \multicolumn{5}{c}{Hypotheses} \\
+\cmidrule(lr){2-6}\cmidrule(lr){7-11}
+Run & Nov. & Sig. & Feas. & Test. & Overall & Nov. & Sig. & Feas. & Test. & Overall \\
+\midrule
+R01 & 2.68 & 3.40 & 3.25 & 3.78 & 3.28 & 2.89 & 3.29 & 3.42 & 4.07 & 3.42 \\
+R02 & 2.60 & 3.49 & 3.74 & 4.26 & 3.52 & 2.74 & 3.29 & 3.60 & 4.11 & 3.44 \\
+R03 & 2.58 & 3.20 & 3.25 & 3.71 & 3.19 & 2.60 & 3.12 & 3.55 & 4.02 & 3.32 \\
+R04 & 2.64 & 3.30 & 3.34 & 3.96 & 3.31 & 2.72 & 3.28 & 3.54 & 4.22 & 3.44 \\
+R05 & 2.74 & 3.08 & 3.42 & 4.14 & 3.34 & 2.88 & 3.08 & 3.36 & 4.20 & 3.38 \\
+R06 & 2.84 & 3.30 & 3.24 & 4.10 & 3.37 & 2.94 & 3.30 & 3.18 & 4.18 & 3.40 \\
+R07 & 2.48 & 3.28 & 3.22 & 3.88 & 3.22 & 2.62 & 3.26 & 3.34 & 4.04 & 3.31 \\
+R08 & 2.68 & 3.60 & 3.48 & 4.04 & 3.45 & 2.84 & 3.52 & 3.76 & 4.24 & 3.59 \\
+R09 & 2.93 & 3.47 & 3.00 & 3.60 & 3.25 & 3.07 & 3.53 & 3.13 & 3.80 & 3.38 \\
+R10 & 2.62 & 3.45 & 3.28 & 3.85 & 3.30 & 2.88 & 3.48 & 3.32 & 4.05 & 3.43 \\
+R11 & 2.56 & 3.32 & 3.38 & 3.72 & 3.24 & 2.62 & 3.16 & 3.44 & 3.80 & 3.26 \\
+R12 & 2.48 & 3.28 & 3.80 & 4.04 & 3.40 & 2.56 & 3.24 & 4.02 & 4.24 & 3.52 \\
+R13 & 2.60 & 3.50 & 3.40 & 4.03 & 3.38 & 2.73 & 3.57 & 3.53 & 4.03 & 3.46 \\
+R14 & 2.42 & 3.36 & 3.38 & 3.89 & 3.26 & 2.65 & 3.45 & 3.42 & 3.85 & 3.34 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+Across the D01 runs, the two architectures achieved nearly identical overall scores: 3.39 for the single-agent system and 3.40 for multi-agent debate. The multi-agent system achieved higher mean feasibility (3.60 versus 3.35), while the single-agent system performed slightly better in novelty (2.81 versus 2.69) and testability (4.14 versus 4.04). Significance was identical at 3.28. For research gaps, overall scores were 3.31 versus 3.33; for hypotheses, they were 3.39 versus 3.40.
+
+\begin{figure}[t]
+\centering
+\fbox{\parbox[c][1.45in][c]{0.92\columnwidth}{\centering Figure 1 placeholder\\[2pt]\small Evaluation scores across research gaps and hypotheses for D01 runs.}}
+\caption{Evaluation scores across research gaps and hypotheses for the D01 runs. Bars represent means of run-level averages; individual points represent experimental runs.}
+\label{fig:scores}
+\end{figure}
+
+\subsection{Computational Cost}
+Across D01 runs, the single-agent system consumed approximately 328 thousand tokens per run, compared with approximately 738 thousand for the multi-agent system, or about 2.3 times as many tokens. Average API calls increased from 23.6 to 35.5 per run, while output-token consumption increased from approximately 29 thousand to 68 thousand. These differences reflect perspective-specific generation, independent critique, adjudication, and curation.
+
+\begin{figure}[t]
+\centering
+\fbox{\parbox[c][1.35in][c]{0.92\columnwidth}{\centering Figure 2 placeholder\\[2pt]\small Computational cost comparison for D01.}}
+\caption{Computational cost comparison between single-agent and multi-agent configurations on D01. Bars represent run means, error bars one standard deviation, and points individual runs.}
+\label{fig:cost}
+\end{figure}
+
+\subsection{Relationship Between Token Consumption and Quality}
+For D01 runs, the Spearman rank correlation between token consumption and overall evaluation score was approximately $-0.02$, indicating virtually no monotonic association. More expensive runs did not consistently achieve higher evaluation scores.
+
+\begin{figure}[t]
+\centering
+\fbox{\parbox[c][1.35in][c]{0.92\columnwidth}{\centering Figure 3 placeholder\\[2pt]\small Token consumption versus evaluation score.}}
+\caption{Relationship between total token consumption and evaluation scores across individual runs. Filled points represent D01 runs; hollow points represent incomplete-corpus runs.}
+\label{fig:tokens-quality}
+\end{figure}
+
+\section{Discussion}
+\subsection{Comparative Performance and Computational Trade-off}
+The results do not support the assumption that introducing multiple agents necessarily improves scientific research-gap identification or hypothesis generation. Although the multi-agent system achieved a marginally higher overall score, the difference was negligible (3.40 versus 3.39). Its advantages were concentrated in feasibility, while novelty and testability were slightly higher for the single-agent system. Generating more perspectives or conducting additional debate rounds therefore did not automatically produce more original research directions.
+
+The multi-agent system required approximately 2.3 times the total tokens of the single-agent system, with increases in API calls and output-token consumption. The near-zero Spearman correlation between token consumption and overall quality further suggests that additional computation does not necessarily translate into better research outputs. Additional interactions may be useful when they support structured evaluation, but indiscriminately increasing the number of agents or debate rounds is unlikely to be efficient. Selective debate or targeted critique may provide a better allocation of model interactions.
+
+\subsection{Effect of Role Differentiation}
+The later multi-agent runs show an improvement over the earlier M02 configuration. R11 achieved overall scores of 3.24 for research gaps and 3.26 for hypotheses; these increased to 3.40 and 3.52 in R12, and 3.38 and 3.46 in R13. Hypothesis feasibility increased from 3.44 in R11 to 4.02 in R12. These observations suggest that explicit responsibilities, independent perspective-specific critics, and a dedicated adjuster may be beneficial. However, the runs also differed in other architectural details and computational requirements. The improvement should therefore be interpreted as an association with the revised architecture, not definitive evidence that role assignment alone caused it. R14 used an incomplete corpus and is not included in this comparison.
+
+\subsection{Novelty Evaluation and Literature Grounding}
+The relatively low novelty scores highlight a fundamental challenge in automated scientific hypothesis generation. Novelty cannot be reliably established solely through an LLM's linguistic reasoning: an apparently original idea may already have been investigated, while a genuinely novel direction may be missed without broad literature coverage. Both architectures use the same supplied corpus and preserve paper references, but neither performs external literature retrieval or automated verification beyond that corpus. Consequently, adding critique perspectives does not necessarily improve novelty judgements. Literature-grounded verification may provide a greater benefit than simply adding debate rounds.
+
+\section{Limitations and Future Work}
+\subsection{Limited Literature Coverage and Novelty Verification}
+Both architectures rely primarily on the supplied corpus, without systematic external retrieval or independent verification against the broader scientific literature. The model's pretrained knowledge may provide awareness of related work, but it is neither exhaustive nor independently verifiable within this pipeline. Future work should retrieve relevant publications for each proposed gap or hypothesis and compare proposed contributions against existing methods.
+
+\subsection{Corpus Size and Composition}
+The experiments use a relatively small corpus of 17 papers focused on outlier trimming in K-means and related clustering algorithms. The corpus may not represent the full breadth of robust clustering research. D02--D04 resulted from temporary API failures and are subsets of the original corpus, not independent datasets. Future experiments should use larger, more comprehensive corpora and separate scientific domains.
+
+\subsection{Limited Number of Experimental Runs}
+Although fourteen runs were conducted, directly comparable D01 runs comprised five single-agent and six multi-agent runs. Multiple architecture revisions also limit the statistical strength of comparisons and make it difficult to isolate individual components. Future work should conduct more repeated runs under fixed architecture configurations and systematically vary perspectives, role definitions, critique procedures, and refinement rounds.
+
+\subsection{Evaluation Dependence on LLM Judges}
+Five LLM evaluators reduce dependence on a single model's judgement, but LLM-based evaluation remains susceptible to subjective scoring, correlated biases, and differences in interpreting novelty and significance. The scores should not be treated as objective measurements of scientific validity or research impact. Future experiments should include blinded domain-expert evaluation, inter-rater agreement, and evaluator calibration.
+
+\subsection{Computational Cost and Execution Variability}
+The computational comparison relies primarily on token consumption, API-call counts, and execution time. Token consumption is a cost proxy rather than a direct monetary measurement because pricing was not configured in the reported runs. Execution times may also reflect API latency, retries, and service-level variation. Future work should use fixed architecture snapshots, record actual API charges, and conduct repeated measurements under comparable conditions.
+
+\subsection{Future Experimental Directions}
+The main directions are: (1) literature-grounded generation and automated verification; (2) larger and independent corpora; (3) controlled architectural ablations isolating role differentiation, perspective diversity, independent criticism, and centralised adjudication; (4) human evaluation alongside LLM-based scoring; and (5) efficiency optimisation through selective debate, adaptive refinement, or targeted critique.
+
+\section{Conclusion}
+This study implemented and compared single-LLM refinement and multi-agent debate for literature-based research-gap identification and hypothesis generation. The two approaches achieved nearly identical overall evaluation scores (3.39 and 3.40). Multi-agent debate performed better primarily in feasibility, while single-LLM refinement performed slightly better in novelty and testability. Later role-differentiated configurations showed improved scores, although the effect cannot be attributed to role differentiation alone. These results came at approximately 2.3 times the token consumption. The findings suggest that multi-agent systems are not inherently superior: their effectiveness depends on role design, evidence quality, and decision-making structure. Larger corpora, external literature verification, controlled ablations, and expert evaluation are needed to establish whether these observations generalise.
+
+\appendix
+\section{Research Corpus}\label{app:corpus}
+Table~\ref{tab:corpus} lists the 17 publications included in the original experimental corpus (D01).
+\begin{table*}[t]
+\caption{Research papers included in the experimental corpus (D01).}
+\label{tab:corpus}
+\centering\small
+\begin{tabularx}{\textwidth}{c c X}
+\toprule
+ID & Year & Publication \\
+\midrule
+P01 & 1967 & Some Methods for Classification and Analysis of Multivariate Observations \cite{macqueen1967} \\
+P02 & 1997 & Trimmed $k$-Means: An Attempt to Robustify Quantizers \cite{cuesta1997} \\
+P03 & 2003 & Trimming Tools in Exploratory Data Analysis \cite{garcia2003} \\
+P04 & 2004 & Implementing the Fisher's Discriminant Ratio in a $k$-Means Clustering Algorithm for Feature Selection and Data Set Trimming \cite{lin2004} \\
+P05 & 2016 & Robust $k$-Means: A Theoretical Revisit \cite{georgogiannis2016} \\
+P06 & 2017 & $k$-Means-Sharp: Modified Centroid Update for Outlier-Robust $k$-Means Clustering \cite{olukanmi2017sharp} \\
+P07 & 2017 & Sensitivity Analysis of an Outlier-Aware $k$-Means Clustering Algorithm \cite{olukanmi2017sensitivity} \\
+P08 & 2020 & Adapting $k$-Means Algorithms for Outliers \cite{grunau2020} \\
+P09 & 2021 & Robust Trimmed $k$-Means \cite{dorabiala2021} \\
+P10 & 2021 & An Adaptive Outlier Removal Aided $k$-Means Clustering Algorithm \cite{shrifan2021} \\
+P11 & 2021 & Outlier Detection Method Based on Improved $k$-Means Clustering Algorithm \cite{liu2021outlier} \\
+P12 & 2022 & $k$-Means Clustering Algorithms: A Comprehensive Review, Variants Analysis, and Advances in the Era of Big Data \cite{ikotun2022} \\
+P13 & 2022 & Clustering What Matters: Optimal Approximation for Clustering with Outliers \cite{agrawal2022} \\
+P14 & 2023 & Transforming Complex Problems into $k$-Means Solutions \cite{liu2023transforming} \\
+P15 & 2026 & Nonparametric Framework for the Definition, Adaptive Detection and Probabilistic Interpretation of Outliers \cite{iannaccio2026} \\
+P16 & 2026 & Adaptive Federated Baseline K-Means for Lightweight IoT Intrusion Detection: Auto-Thresholding and Robust Statistics Aggregation \cite{alsaleh2026} \\
+P17 & 2026 & An Integration Clustering and Multi-Target Classification Approach to Explore Employability and Career Linearity \cite{ghayatrie2026} \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\section{Prompt and Example-Run Documentation}\label{app:prompts}
+The implementation uses stage-specific structured prompts. The following summaries document their functional instructions; dynamic paper summaries, research topic, candidate records, and previous-round outputs are inserted at runtime and are not reproduced here.
+
+\subsection{Single-LLM prompt stages}
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Paper analysis:} Extract bibliographic metadata, research question, context, methodology, findings, assumptions, stated limitations, open questions, and candidate hypotheses. Attach evidence excerpts and section/page references; distinguish explicit limitations from inferred gaps.
+  \item \textbf{Research-gap generation:} Synthesize the supplied paper summaries into distinct research gaps. For each gap, provide established knowledge, unresolved question, motivation, supporting evidence, and paper references.
+  \item \textbf{Gap critique and revision:} Examine each gap for literature support, prior solutions, feasibility, ambiguity, and falsifiability. Decide to retain, revise, merge, or reject, preserving identifiers and provenance.
+  \item \textbf{Hypothesis generation:} Generate testable hypotheses grounded in surviving gaps, including rationale, prediction, proposed test, supporting literature, and originating gap IDs.
+  \item \textbf{Hypothesis critique and revision:} Apply the same structured critique and revision process to hypotheses, terminating early when no actionable changes remain.
+\end{enumerate}
+
+\subsection{Multi-agent prompt stages}
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Perspective finder:} Identify a small set of topic-adaptive perspectives with scope, exclusions, ownership boundaries, and rationale.
+  \item \textbf{Perspective generator:} Generate research gaps or hypotheses only within the assigned perspective, with evidence and corpus references.
+  \item \textbf{Curator:} Merge equivalent records, remove duplicates or invalid candidates, and inspect all candidates against the complete paper corpus without ranking them.
+  \item \textbf{Perspective critic:} Independently assess active records for novelty, soundness, feasibility, significance, and testability; identify concrete weaknesses without inventing disagreement.
+  \item \textbf{Adjuster/adjudicator:} Evaluate each critique on its merits and decide to retain, revise, merge, or reject. Preserve identifiers, evidence, and unresolved uncertainty.
+  \item \textbf{Final curator:} Consolidate surviving records and preserve gap/hypothesis relationships and provenance.
+\end{enumerate}
+
+The illustrative single-agent run is R\texttt{1794725368}; its prompt snapshot and final outputs are stored as \texttt{run\_1794725368\_prompt\_snapshot.py}, \texttt{run\_1794725368\_identified\_research\_gaps.txt}, and \texttt{run\_1794725368\_proposed\_hypothesis.txt}. The illustrative multi-agent run is R\texttt{1794730841}; corresponding files are \texttt{run\_1794730841\_prompt\_snapshot.py}, \texttt{run\_1794730841\_identified\_research\_gaps.txt}, and \texttt{run\_1794730841\_proposed\_hypothesis.txt}. These examples are illustrative and are distinct from the aggregate runs in the main evaluation. The full outputs are retained as accompanying run artefacts rather than duplicated in this manuscript.
+
+\begin{thebibliography}{36}
+\bibitem{scientific2025laboratory} 2025. Scientific Hypothesis Generation by Large Language Models: Laboratory Validation in Breast Cancer Treatment. \emph{Journal of the Royal Society Interface} (2025). doi:10.1098/rsif.2024.0674.
+\bibitem{agrawal2022} Akanksha Agrawal, Tanmay Inamdar, Saket Saurabh, and Jie Xue. 2022. Clustering What Matters: Optimal Approximation for Clustering with Outliers. In \emph{AAAI Conference on Artificial Intelligence}.
+\bibitem{boiko2023autonomous} D. A. Boiko, R. MacKnight, B. Kline, and G. Gomes. 2023. Autonomous Chemical Research with Large Language Models. \emph{Nature} 624 (2023), 570--578. doi:10.1038/s41586-023-06792-0.
+\bibitem{choi2025debatevote} Hyeong Kyu Choi, Xiaojin Zhu, and Sharon Li. 2025. Debate or Vote: Which Yields Better Decisions in Multi-Agent Large Language Models? In \emph{Advances in Neural Information Processing Systems} 38. doi:10.52202/085713-3405.
+\bibitem{cuesta1997} Juan Antonio Cuesta-Albertos, Alfonso Gordaliza, and Carlos Matrán. 1997. Trimmed $k$-means: An Attempt to Robustify Quantizers. \emph{Annals of Statistics} 25 (1997), 553--576.
+\bibitem{dorabiala2021} Olga Dorabiala, J. Nathan Kutz, and Aleksandr Y. Aravkin. 2021. Robust Trimmed $k$-means. \emph{Pattern Recognition Letters} 161 (2021), 9--16.
+\bibitem{du2024improving} Y. Du, S. Li, A. Torralba, J. B. Tenenbaum, and I. Mordatch. 2024. Improving Factuality and Reasoning in Language Models through Multiagent Debate. In \emph{Proceedings of ICML 2024}, 11733--11763. doi:10.48550/arXiv.2305.14325.
+\bibitem{garcia2003} Luis Angel García-Escudero, Alfonso Gordaliza, and Carlos Matrán. 2003. Trimming Tools in Exploratory Data Analysis. \emph{Journal of Computational and Graphical Statistics} 12 (2003), 434--449.
+\bibitem{georgogiannis2016} Alexandros Georgogiannis. 2016. Robust $k$-means: A Theoretical Revisit. In \emph{Advances in Neural Information Processing Systems}.
+\bibitem{ghayatrie2026} Nadzla Andrita Intan Ghayatrie and Devi Fitrianah. 2026. An Integration Clustering and Multi-Target Classification Approach to Explore Employability and Career Linearity. \emph{International Journal of Informatics and Communication Technology} (2026).
+\bibitem{gottweis2025towards} J. Gottweis et al. 2025. Towards an AI Co-Scientist. arXiv:2502.18864. doi:10.48550/arXiv.2502.18864.
+\bibitem{grunau2020} Christoph Grunau and Václav Rozhoň. 2020. Adapting $k$-means Algorithms for Outliers. In \emph{Proceedings of ICML 2020}.
+\bibitem{guo2025ideabench} T. Guo et al. 2025. IdeaBench: Benchmarking Large Language Models for Research Idea Generation. arXiv:2411.02429.
+\bibitem{iannaccio2026} Tiziano Iannaccio and Maurizio Vichi. 2026. Nonparametric Framework for the Definition, Adaptive Detection and Probabilistic Interpretation of Outliers.
+\bibitem{ikotun2022} Abiodun Motunrayo Ikotun, Ezugwu E. Absalom, Laith Mohammad Abualigah, Belal Abuhaija, and Heming Jia. 2022. K-means Clustering Algorithms: A Comprehensive Review, Variants Analysis, and Advances in the Era of Big Data. \emph{Information Sciences} 622 (2022), 178--210.
+\bibitem{langley1987scientific} P. Langley, H. A. Simon, G. L. Bradshaw, and J. M. Zytkow. 1987. \emph{Scientific Discovery: Computational Explorations of the Creative Processes}. MIT Press.
+\bibitem{lin2004} Thy-Hou Lin, Huan Li, and Keng-Chang Tsai. 2004. Implementing the Fisher's Discriminant Ratio in a $k$-Means Clustering Algorithm for Feature Selection and Data Set Trimming. \emph{Journal of Chemical Information and Computer Sciences} 44 (2004), 76--87.
+\bibitem{liu2021outlier} Wen-Fen Liu, Nan Wang, and Yue-Hua Huang. 2021. Outlier Detection Method Based on Improved K-means Clustering Algorithm. In \emph{Proceedings of the 2021 5th International Conference on Electronic Information Technology and Computer Engineering}.
+\bibitem{liu2023transforming} Hong-Fu Liu, Junxiang Chen, Jennifer G. Dy, and Yun Raymond Fu. 2023. Transforming Complex Problems into K-means Solutions. \emph{IEEE Transactions on Pattern Analysis and Machine Intelligence} 45 (2023), 9149--9168.
+\bibitem{lu2024ai} C. Lu, C. Lu, R. T. Lange, J. Foerster, J. Clune, and D. Ha. 2024. The AI Scientist: Towards Fully Automated Open-Ended Scientific Discovery. arXiv:2408.06292.
+\bibitem{macqueen1967} J. MacQueen. 1967. Some Methods for Classification and Analysis of Multivariate Observations.
+\bibitem{madaan2023selfrefine} A. Madaan, N. Tandon, P. Gupta, et al. 2023. Self-Refine: Iterative Refinement with Self-Feedback. In \emph{Advances in Neural Information Processing Systems} 36.
+\bibitem{olukanmi2017sharp} Peter O. Olukanmi and Bhekisipho Twala. 2017. K-means-Sharp: Modified Centroid Update for Outlier-Robust K-means Clustering. In \emph{PRASA-RobMech 2017}, 14--19.
+\bibitem{olukanmi2017sensitivity} Peter O. Olukanmi and Bhekisipho Twala. 2017. Sensitivity Analysis of an Outlier-Aware K-means Clustering Algorithm. In \emph{PRASA-RobMech 2017}, 68--73.
+\bibitem{qi2024biomedical} Qi et al. 2024. Large Language Models as Biomedical Hypothesis Generators: A Comprehensive Evaluation. arXiv:2407.08940.
+\bibitem{shinn2023reflexion} N. Shinn, F. Cassano, E. Berman, A. Gopinath, K. Narasimhan, and S. Yao. 2023. Reflexion: Language Agents with Verbal Reinforcement Learning. In \emph{Advances in Neural Information Processing Systems} 36.
+\bibitem{shrifan2021} Nawaf H. M. M. Shrifan, Muhammad Firdaus Akbar, and Nor Ashidi Mat Isa. 2021. An Adaptive Outlier Removal Aided K-means Clustering Algorithm. \emph{Journal of King Saud University -- Computer and Information Sciences} 34 (2021), 6365--6376.
+\bibitem{si2025novel} C. Si, D. Yang, and T. Hashimoto. 2025. Can LLMs Generate Novel Research Ideas? A Large-Scale Human Study with 100+ NLP Researchers. In \emph{ICLR 2025}.
+\bibitem{smit2024mad} A. P. Smit, N. Grinsztajn, P. Duckworth, T. D. Barrett, and A. Pretorius. 2024. Should We Be Going MAD? A Look at Multi-Agent Debate Strategies for LLMs. In \emph{Proceedings of ICML 2024}, 45883--45905.
+\bibitem{su2025many} Y. Su et al. 2025. Many Heads Are Better Than One: Improved Scientific Idea Generation by a LLM-Based Multi-Agent System. In \emph{Proceedings of ACL 2025}, 28201--28240. doi:10.18653/v1/2025.acl-long.1368.
+\bibitem{swanson1986undiscovered} D. R. Swanson. 1986. Undiscovered Public Knowledge. \emph{The Library Quarterly} 56, 2 (1986), 103--118. doi:10.1086/601720.
+\bibitem{ueda2025design} Keisuke Ueda, Wataru Hirota, Takuto Asakura, Takahiro Omi, Kosuke Takahashi, Kosuke Arima, and Tatsuya Ishigaki. 2025. Exploring the Design of Multi-Agent LLM Dialogues for Research Ideation. In \emph{Proceedings of SIGDIAL 2025}, 322--337. doi:10.18653/v1/2025.sigdial-1.26.
+\bibitem{wang2024scimon} X. Wang et al. 2024. SciMON: Scientific Inspiration Machines Optimized for Novelty. In \emph{Proceedings of ACL 2024}, 279--299. doi:10.18653/v1/2024.acl-long.18.
+\bibitem{yang2024large} Z. Yang, X. Du, J. Li, J. Zheng, S. Poria, and E. Cambria. 2024. Large Language Models for Automated Open-Domain Scientific Hypotheses Discovery. In \emph{Findings of ACL 2024}, 13545--13565. doi:10.18653/v1/2024.findings-acl.804.
+\bibitem{zhou2024hypothesis} Y. Zhou, H. Liu, T. Srivastava, H. Mei, and C. Tan. 2024. Hypothesis Generation with Large Language Models. In \emph{Proceedings of the 1st Workshop on NLP for Science}, 117--139. doi:10.18653/v1/2024.nlp4science-1.10.
+\bibitem{alsaleh2026} Mohammed Al Saleh and Joseph Azar. 2026. Adaptive Federated Baseline K-Means for Lightweight IoT Intrusion Detection: Auto-Thresholding and Robust Statistics Aggregation. \emph{IoT} (2026).
+\end{thebibliography}
+
+\end{document}

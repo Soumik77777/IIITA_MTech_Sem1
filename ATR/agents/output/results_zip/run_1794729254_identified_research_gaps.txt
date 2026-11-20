@@ -1,0 +1,11 @@
+- G001: Universal Breakdown Bounds Versus Practical Resilience in Center-Based Clustering with Penalties or Trimming [Papers: P002 (5. Conclusions, Page 16); P005 (3.3 Restricted robustness of robust k-means for well-clustered data, page 5, 5 Relating (RKM) to trimmed k-means, page 7)]
+
+- G002: Generalizing Trimmed and Robust K-Means Beyond Spherical Geometry and Equal Dispersions [Papers: P002 (4. Application, Page 9); P003 (Section 4. MIXTURES OF ELLIPTICAL DISTRIBUTIONS, Page 16)]
+
+- G003: Parameterized FPT Running Time Dependencies on the Number of Outliers in Clustering Optimization [Papers: P013 (5. Concluding Remarks, Page 16)]
+
+- G004: Evaluation of cluster-specific versus global distance thresholds in outlier-aware heuristic k-means variants. [Papers: P006 (VI. CONCLUSION, Page 5)]
+
+- G005: Extension of nonparametric pseudo-isolation and robust trimming scoring frameworks to non-spherical and non-convex cluster topologies. [Papers: P015 (6 Simulations, Page 12)]
+
+- G006: Hardening federated and streaming outlier-aware k-means against commissioning-window contamination using robust covariance estimators. [Papers: P017 (7. Discussion, Limitations, and Future Work, 7.4. Future Work, Page 22, 6. Results and Analysis, 6.7. Contamination of the Trusted Anchor)]

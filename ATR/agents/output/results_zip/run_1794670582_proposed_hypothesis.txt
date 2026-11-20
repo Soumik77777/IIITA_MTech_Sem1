@@ -1,0 +1,49 @@
+- H001: Assuming a multivariate elliptical distribution for the underlying clusters, the pseudo-isolation score distribution can be parameterized via chi-squared approximations derived from Mahalanobis distance order statistics.
+Rationale: Current nonparametric bounds like Cantelli inequality prevent exact probabilistic calibration during iterative trimming because they lack closed-form parametric forms.
+Testable prediction: Replacing Cantelli-based bounds with a parametric chi-squared probability density function will yield a more precise false-alarm calibration with lower variance in false-positive rates.
+References: P015
+
+- H002: Integrating the Minimum Covariance Determinant (MCD) estimator into the baseline commissioning anchor phase will prevent anomaly recall degradation when commissioning window contamination is present.
+Rationale: Standard sample mean and covariance estimators are highly vulnerable to small fractions of planted or natural outliers during the initial trust-anchor setup.
+Testable prediction: Using MCD-based covariance estimation will maintain anomaly recall above 90% even when the commissioning window contains up to 10% outlier contamination.
+References: P017
+
+- H003: Incorporating an exponentially weighted moving average (EWMA) window over worker summary statistics enables adaptive anchor refreshing that tracks gradual concept drift without destabilizing the global model.
+Rationale: Static commissioning anchors degrade over time when operational environments experience continuous shifts in normal user behavior, leading to miscalibrated false-alarm thresholds.
+Testable prediction: An adaptive anchor refresh policy will maintain false-alarm rates within 1% of the target alpha under simulated gradual concept drift, whereas static anchors will exhibit false-alarm spikes exceeding 5%.
+References: P017
+
+- H004: A joint penalized objective function combining squared assignment reconstruction error with an information criterion penalty over both $k$ and $\alpha$ can simultaneously optimize cluster count and trimming proportion without grid search.
+Rationale: Practitioners currently rely on costly trial-and-error grid searches because no principled parameter-free estimation strategy exists for tuning $k$ and $\alpha$ simultaneously.
+Testable prediction: Minimizing the joint objective function will yield optimal $(k, \alpha)$ pairs whose silhouette scores are within 5% of exhaustive grid search results while reducing computation time by at least an order of magnitude.
+References: P002, P009
+
+- H005: Replacing spherical Euclidean distance metrics with Mahalanobis metrics driven by cluster-specific scatter matrices enables robust trimmed k-means to correctly cluster elongated and linear manifolds.
+Rationale: Standard spherical trimming formulations misclassify boundary inliers as outliers when confronted with non-spherical or complex linear geometries.
+Testable prediction: Scatter-matrix-adjusted trimmed k-means will achieve a Rand index improvement of at least 20% over spherical trimmed k-means on synthetic datasets featuring elongated linear clusters.
+References: P003
+
+- H006: Coreset-based condensation techniques can bound the maximum distance distortion such that the FPT exponent dependency on the outlier count $m$ can be replaced by a logarithmic dependence.
+Rationale: Current optimal approximation algorithms scale poorly because their running times depend exponentially or polynomially on the outlier count $m$ in the FPT exponent.
+Testable prediction: A coreset condensation preprocessing step will reduce empirical execution time by over 50% when $m$ is large, without degrading the constant approximation factor by more than epsilon.
+References: P013
+
+- H007: Normalizing worker local distances against local robust dispersion estimates rather than global anchor statistics will eliminate anchor-relative false-alarm drift under decentralized distribution skew.
+Rationale: When worker local distributions diverge from the centralized trusted anchor, anchor-relative false-alarm calibration fails and causes uncontrolled local false-positive rates.
+Testable prediction: Local robust dispersion normalization will maintain worker false-positive rates within 0.5% of target alpha regardless of Dirichlet label skew magnitude across nodes.
+References: P017
+
+- H008: Maintaining dynamic streaming coresets via sliding-window merge-and-reduce trees can approximate k-MeansOut solutions under insertions and deletions without full coreset re-enumeration.
+Rationale: Standard FPT clustering-with-outlier reduction frameworks rely on static batch coreset construction, making them intractable for streaming updates.
+Testable prediction: A streaming merge-and-reduce coreset framework will achieve approximation guarantees within a (1 + epsilon) factor of batch FPT methods while processing streaming updates 10x faster.
+References: P013
+
+- H009: Employing a kernelized distance transformation coupled with adaptive bandwidth selection will unify disparate domain-specific outlier-robust k-means variants into a single robust architecture.
+Rationale: Most robust variants are highly tailored to specific domains, lacking universal generalizability across heterogeneous data modalities.
+Testable prediction: A unified kernelized robust k-means variant will achieve top-3 F1 ranking across diverse data domains (image, text, and tabular numerical) without requiring manual hyperparameter re-tuning.
+References: P012
+
+- H010: Replacing mean-based aggregation with trimmed median aggregation over worker parameter updates will provide Byzantine-resilient guarantees against adaptive adversaries in federated k-means.
+Rationale: Existing federated outlier-robust k-means systems lack guaranteed worst-case robustness against adaptive adversaries who craft malicious worker updates.
+Testable prediction: Trimmed median aggregation will bound the global model distortion under white-box gradient poisoning attacks, keeping false-positive spikes below 2% when up to 30% of workers are malicious.
+References: P017

@@ -1,0 +1,49 @@
+- H001: Implementing cluster-specific adaptive distance thresholds during centroid updates in trimmed k-means algorithms significantly reduces mean squared error on multi-density datasets compared to a single global threshold, while introducing a predictable increase in computational cost.
+Rationale: A single global dispersion measure assumes homoscedasticity across all clusters, causing dense clusters to falsely reject valid points and sparse clusters to absorb outliers. Computing localized dispersion metrics (such as cluster-specific median absolute deviation) accommodates heterogeneous cluster densities.
+Testable prediction: On synthetic multi-density datasets with varying cluster variances, trimmed k-means with cluster-specific adaptive thresholds will achieve a lower mean squared error and higher outlier detection F1 score than the global threshold counterpart, at the expense of an increase in execution time.
+References: P006
+
+- H002: Systematic sweeping of the distance threshold multiplier parameter q from 2 to 6 in outlier-aware k-means algorithms traces a predictable Pareto frontier where precision approaches 100% at higher values while recall and cluster accuracy degrade.
+Rationale: The multiplier q directly scales the dispersion threshold that filters points during centroid updates. Increasing q tightens outlier inclusion boundaries, thereby raising precision at the expense of missing genuine cluster instances (lowering recall).
+Testable prediction: Varying q from 2 to 6 across benchmark outlier-contaminated datasets will monotonically increase outlier detection precision while decreasing recall, allowing the identification of an optimal q balancing F1 score for specific domain risk tolerances.
+References: P007
+
+- H003: Integrating lightweight stream-based concept drift detectors and Minimum-Covariance-Determinant (MCD) estimators into federated robust baseline k-means prevents merge-induced precision decay and hardens calibration against dirty commissioning windows.
+Rationale: Static commissioning anchors degrade over time due to temporal concept drift, and sample covariance estimators are vulnerable to contamination during initial training rounds. Replacing standard covariance estimators with MCD and adding adaptive anchor refresh policies maintains centroid stability in decentralized IoT intrusion detection.
+Testable prediction: Under non-IID federated settings with gradual concept drift and contaminated commissioning windows, federated robust k-means augmented with MCD and adaptive anchor refresh will exhibit significantly lower false-positive rate degradation and stable precision compared to static-anchor baselines.
+References: P017
+
+- H004: For any continuous probability measure P_X admitting a density, the universal breakdown point of robust k-means formulations based on unbiased proximal maps or Moreau envelopes cannot exceed 2/n under unrestricted adversarial contamination without imposing structural geometric separation bounds on the underlying components.
+Rationale: While trimmed k-means and robust k-means enjoy strong consistency under well-structured ball components (as shown in P005 and P002), the combinatorial fragility of centroid updates under arbitrary adversarial replacement implies that the universal breakdown point is inherently capped at 2/n due to the existence of bad configurations where a single replacement observation distorts the Moreau envelope gradient.
+Testable prediction: Constructing an adversarial contamination set of size 2 for an arbitrary n-element empirical distribution will always induce an unbounded center shift in unbiased proximal map formulations, whereas restricting the support to (rho_1, rho_2)-balanced ball components will maintain asymptotic stability.
+References: P005, P002
+
+- H005: Deriving a parametric closed-form distribution for pseudo-isolation scores under mild spatial continuity assumptions enables exact, analytical p-value computation for individual outlier rejection, replacing Cantelli-based empirical bounds.
+Rationale: Existing nonparametric frameworks rely on empirical score distributions and Cantelli bounds to threshold outliers without analytical guarantees. Obtaining a fully parametric closed-form distribution for pseudo-isolation scores allows direct inferential significance testing for anomalous points.
+Testable prediction: The analytically derived p-values for pseudo-isolation scores will closely approximate the empirical false-positive rate across synthetic Gaussian and heavy-tailed mixture distributions, maintaining tight nominal significance levels without requiring empirical bootstrap bounds.
+References: P015
+
+- H006: Incorporating cluster-specific adaptive dispersion estimators into probabilistic score formulations reduces false-positive rejections in dense clusters compared to global variance assumptions.
+Rationale: Using a single global dispersion metric assumes homoscedasticity across all clusters, which distorts outlier thresholds in multi-density environments. Cluster-specific adaptation models local variance accurately and improves probabilistic inference fidelity.
+Testable prediction: Replacing global standard deviation or MAD thresholds with cluster-specific adaptive variance estimators in outlier-robust k-means variants will significantly increase outlier detection recall in sparse clusters while decreasing false-positive rejections in dense clusters.
+References: P006
+
+- H007: Replacing sample covariance matrices with Minimum-Covariance-Determinant (MCD) estimators in robust federated centroid updates stabilizes calibration anchors against contaminated commissioning windows under non-IID conditions.
+Rationale: Static commissioning anchors degrade when underlying operational distributions drift or are contaminated by malicious updates. Robust estimation estimators underneath the robust threshold harden calibration against dirty windows.
+Testable prediction: Integrating MCD estimators into federated baseline k-means architectures will reduce false-positive rates by at least 25% and maintain near-zero precision decay over long-running training epochs under simulated adversarial poisoning.
+References: P017
+
+- H008: Deploying cluster-specific adaptive distance thresholds instead of a single global dispersion metric in exploratory trimmed k-means will improve outlier detection recall and boundary fidelity across multi-density datasets, at the expense of a modest increase in computational overhead.
+Rationale: Using a single global dispersion threshold assumes homoscedasticity across clusters, which causes dense clusters to falsely reject valid points and sparse clusters to absorb outliers. Cluster-specific adaptation addresses this mechanical flaw in applied settings.
+Testable prediction: On multi-density exploratory datasets, trimmed k-means variants utilizing cluster-specific MAD thresholds will achieve higher F1-scores and lower overall mean squared error compared to global threshold baselines, while increasing execution time by less than 15%.
+References: P006
+
+- H009: Systematic sweeping of the outlier rejection sensitivity multiplier parameter q in exploratory trimmed k-means workflows will reveal predictable, domain-specific trade-offs where precision approaches 100% at higher multiplier values while recall degrades.
+Rationale: Varying the sensitivity multiplier q shifts the boundaries of outlier inclusion and exclusion during centroid updates, governing the operational balance between false positives and false negatives based on domain risk tolerance.
+Testable prediction: Increasing the multiplier q from 2 to 6 across diverse exploratory corpora will systematically increase outlier precision to near 100% while decreasing recall and F1-score in predictable, non-linear trajectories.
+References: P007
+
+- H010: Integrating lightweight streaming concept drift detectors and minimum-covariance-determinant estimators into federated robust centroid updating will eliminate false-positive precision decay caused by operational distribution drift and dirty commissioning windows.
+Rationale: Static commissioning anchors degrade over time when operational distributions shift, and contaminated commissioning windows introduce persistent false positives in decentralized exploratory settings like IoT intrusion detection.
+Testable prediction: Federated robust centroid updating augmented with adaptive anchor refresh policies and MCD estimators will maintain a stable first-to-last-epoch precision change close to zero under simulated stream drift, reducing false-positive rates by over 30% compared to static anchor baselines.
+References: P017

@@ -1,0 +1,19 @@
+- G001: Lack of parametric closed-form distributions for pseudo-isolation scores in nonparametric outlier-robust clustering frameworks [Papers: P015 (8 Discussion)]
+
+- G002: Vulnerability of federated baseline K-means commissioning anchors to contaminated initialization windows [Papers: P017 (Section 6.7, Section 7.4)]
+
+- G003: Absence of streaming concept drift adaptation and anchor refresh policies in federated outlier-robust K-means [Papers: P017 (Section 7.1, Section 7.4)]
+
+- G004: Absence of a universal, principled parameter-free estimation strategy for tuning both the cluster count k and the trimming proportion alpha simultaneously [Papers: P002 (Section 4, Section 5); P009 (3.2. Robust trimmed k-means, 6. Conclusions and future work)]
+
+- G005: Inability of standard distance metrics and spherical trimming formulations to natively capture non-spherical or complex linear cluster geometries without custom scatter matrices [Papers: P003 (Section 4)]
+
+- G006: Existence of exponential or polynomial FPT exponent dependencies on the outlier count m in optimal approximation algorithms [Papers: P013 (5. Concluding Remarks)]
+
+- G007: Vulnerability of federated novelty-detection false-alarm calibration to anchor-relative distribution drift [Papers: P017 (Section 7.4)]
+
+- G008: Inability of standard FPT clustering-with-outlier reduction frameworks to handle streaming updates without full coreset re-enumeration [Papers: P013 (5. Concluding Remarks)]
+
+- G009: Lack of universal generalizability across diverse data domains for specialized outlier-robust K-means variants [Papers: P012 (6. Open issues and challenges, 7. Conclusion)]
+
+- G010: Lack of guaranteed worst-case robustness against adaptive adversaries who craft malicious worker updates or targeted poison in federated outlier-robust K-means [Papers: P017 (Section 7.4)]

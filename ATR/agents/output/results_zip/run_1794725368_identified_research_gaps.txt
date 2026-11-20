@@ -1,0 +1,15 @@
+- G001: Lack of deterministic, non-exhaustive algorithms for identifying optimal trimming regions without enforcing strict spherical symmetry and equal dispersion radii across clusters. [Papers: P002 (4. Application); P003 (4. MIXTURES OF ELLIPTICAL DISTRIBUTIONS)]
+
+- G002: Absence of principled, automated approaches for estimating data-dependent trimming parameters (alpha) and minimum membership thresholds (s) in relaxed robust clustering frameworks. [Papers: P009 (6. Conclusions and future work)]
+
+- G003: The mismatch between worst-case universal breakdown point vulnerability (O(1/n)) and robust practical performance under well-structured data assumptions. [Papers: P005 (3.2 Unbiased proximal maps: the case of non-convex f\lambda, 3.3 Restricted robustness of robust k-means for well-clustered data)]
+
+- G004: Lack of parametric closed-form probability distributions for pseudo-isolation and distance-based outlier scores in nonparametric trimming frameworks. [Papers: P015 (8 Discussion)]
+
+- G005: Vulnerability of federated outlier-aware K-means calibration to commissioning window contamination and non-robust sample covariance estimators. [Papers: P017 (Section 6.7. Contamination of the Trusted Anchor, Section 7.4. Future Work)]
+
+- G006: Unresolved exponential dependence on the outlier count m in FPT approximation algorithms for metric clustering with outliers. [Papers: P013 (5. Concluding Remarks)]
+
+- G007: Computational trade-offs and scalability bottlenecks of recursive, attribute-wise robust statistical rules (such as Tukey's fence or median absolute deviation) when applied to large-scale high-dimensional data streams. [Papers: P010 (7. Conclusion and future work)]
+
+- G008: Lack of streaming concept drift and adaptive refresh mechanisms for benign anchors in federated and distributed outlier-detection K-means deployments. [Papers: P017 (Section 7.4. Future Work)]

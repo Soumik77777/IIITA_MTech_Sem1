@@ -1,0 +1,19 @@
+- G001: Characterization of Breakdown Points under Unmatched and Misspecified Cluster Structures [Papers: P002 (5. Conclusions, Page 16)]
+
+- G002: Relaxation of Strict Separation Bounds for Restricted Robustness Guarantees [Papers: P005 (3.3 Restricted robustness of robust k-means for well-clustered data, Page 5)]
+
+- G003: Asymptotic Complexity Bounds and Parameter-Free FPT Trade-offs for Outlier-Constrained Clustering [Papers: P013 (5. Concluding Remarks, Page 16)]
+
+- G004: Optimization and convergence guarantees for trimmed k-means and related relaxed variants when dealing with non-spherical, anisotropic, or overlapping cluster distributions. [Papers: P002 (5. Conclusions); P003 (1. INTRODUCTION, 4. MIXTURES OF ELLIPTICAL DISTRIBUTIONS); P005 (3.3 Restricted robustness of robust k-means for well-clustered data)]
+
+- G005: Principled, automated parameter estimation for contamination rates and trimming thresholds in outlier-robust k-means formulations. [Papers: P007 (Section I); P009 (6. Conclusions and future work)]
+
+- G006: Evaluation of hyperparameter sensitivity and trade-offs for outlier-aware k-means variants is predominantly restricted to low-dimensional, simple benchmark datasets, leaving their behavior across complex, high-dimensional, and non-Gaussian distributions largely unexplored. [Papers: P007 (Section I, Page 1)]
+
+- G007: The lack of systematic sensitivity analyses regarding the number of standard deviations or threshold multiplier in distance-based outlier trimming schemes across diverse data geometries. [Papers: P006 (VI. CONCLUSION, Page 5)]
+
+- G008: Absence of automated exploratory diagnostics or principled adaptation rules for selecting the trimming proportion alpha and cluster count k simultaneously during exploratory runs. [Papers: P003 (1. INTRODUCTION); P009 (6. Conclusions and future work, Page 15)]
+
+- G009: Lack of streaming concept-drift adaptation and robust covariance estimation in federated baseline k-means for IoT intrusion detection during contaminated commissioning windows. [Papers: P017 (6.7. Contamination of the Trusted Anchor, 7. Discussion, Limitations, and Future Work)]
+
+- G010: Limited feature expressiveness and generalizability of K-means least trimmed square (LTS) integration in predicting complex target variables like career linearity for female STEM graduates. [Papers: P016 (4. CONCLUSION)]

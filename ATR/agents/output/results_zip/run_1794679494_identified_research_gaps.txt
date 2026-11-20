@@ -1,0 +1,9 @@
+- G001: Theoretical characterization of breakdown points under misspecified cluster counts and arbitrary data distributions [Papers: P002 (Section 5)]
+
+- G002: Relaxing spherical cluster and equal-radius constraints in optimal trimming formulations [Papers: P002 (Section 3, Section 4); P003 (4. MIXTURES OF ELLIPTICAL DISTRIBUTIONS, P. 16)]
+
+- G003: Principled estimation frameworks for user-defined tuning parameters in robust and trimmed K-means [Papers: P009 (3.2. Robust trimmed k-means, 4. Experiments, 6. Conclusions and future work)]
+
+- G004: Integration of streaming concept drift and dynamic anchor refresh mechanisms in robust federated baselines [Papers: P017 (Section 6, Section 7.4)]
+
+- G005: Robustification of calibration estimators against contaminated commissioning windows [Papers: P017 (Section 6.7, Section 7.4)]

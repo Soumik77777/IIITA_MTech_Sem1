@@ -1,0 +1,17 @@
+- G001: Universal Breakdown Bounds and Worst-Case Robustness Limits in Arbitrary versus Well-Structured Metric Spaces [Papers: P002 (5. Conclusions); P005 (3.3 Restricted robustness of robust k-means for well-clustered data, 5)]
+
+- G002: FPT Dependency Limits and Parameter Exponential Scaling in Clustering with Outliers [Papers: P013 (5. Concluding Remarks)]
+
+- G003: Mathematical Limits and Closed-Form Analytical Distribution of Nonparametric Pseudo-Isolation Scores [Papers: P015 (8 Discussion)]
+
+- G004: Generalization of trimmed k-means and robust distance metrics beyond mixtures of spherical or isotropic distributions [Papers: P003 (4. MIXTURES OF ELLIPTICAL DISTRIBUTIONS, Page 15); P015 (8 Discussion)]
+
+- G005: Principled, automated parameter estimation for outlier proportions and cluster cardinality in robust k-means variants [Papers: P002 (5. Conclusions, Page 16); P009 (6. Conclusions and future work, Page 15); P014 (Section II, Section II-D, Page 3)]
+
+- G007: Integration of robust covariance estimators and streaming concept-drift mechanisms into federated and distributed outlier-aware k-means architectures [Papers: P017 (4. The AF-BKM Method, 6. Results and Analysis, 6.7. Contamination of the Trusted Anchor)]
+
+- G008: The empirical and trade-off sensitivity of robust thresholding coefficients (such as q standard deviations or trimming proportions alpha) across diverse non-Gaussian, high-dimensional, and large-scale data distributions remains underexplored beyond basic low-dimensional benchmarks. [Papers: P006 (VI. CONCLUSION); P007 (I. INTRODUCTION); P011 (3 Experiment, 3.1 Data Set)]
+
+- G010: Integration of real-world qualitative and behavioral factors into robust clustering pipelines for predictive applications such as educational employability and career linearity. [Papers: P016 (4. CONCLUSION, Page 7)]
+
+- G011: Handling streaming concept drift and automated dynamic anchor refreshing in resource-constrained federated outlier-aware clustering environments. [Papers: P017 (4. The AF-BKM Method, 4.2. Threat Model)]

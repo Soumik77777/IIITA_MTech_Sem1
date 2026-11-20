@@ -1,0 +1,19 @@
+- G001: Integration of Robust Covariance Estimators for Contaminated Commissioning Anchors in Federated Outlier-Aware K-Means [Papers: P017 (Section 6.7, Section 7.4)]
+
+- G002: Non-Parametric Probabilistic Outlier Scoring for Multi-Membership and Fuzzy K-Means Variants [Papers: P015 (8 Discussion); P009 (3.2. Robust trimmed k-means)]
+
+- G003: Longitudinal Feature-Space Drift Adaptation in Federated Outlier-Aware K-Means [Papers: P017 (Section 6, Section 7.1)]
+
+- G004: Sublinear-Time Constant-Factor Approximation for Trimmed K-Means with Sub-Quadratic Outlier Dependencies [Papers: P008 (Section 6, Theorem 5)]
+
+- G005: Non-Parametric Pseudo-Isolation Scoring for Distributed and Federated Outlier-Aware K-Means [Papers: P015 (8 Discussion); P017 (Section 6, Section 7)]
+
+- G006: Handling Non-Convex Cluster Geometries in Trimmed and Robust K-Means Variants [Papers: P003 (Section 4); P011 (3 Experiment, 3.1 Data Set); P015 (8 Discussion)]
+
+- G007: Principled Parameter-Free Estimation of Trimming Proportions and Cluster Counts in Dynamic Datasets [Papers: P002 (Section 5. Conclusions); P009 (3.2. Robust trimmed k-means, 6. Conclusions and future work)]
+
+- G008: Integration of Trimmed Least Squares and Multi-Target Regression Metrics for Career Linearity and Placement Forecasting [Papers: P016 (3. RESULTS AND DISCUSSION, 4. CONCLUSION)]
+
+- G009: Privacy-Preserving Secure Multi-Party Computation for Distributed Trimmed K-Means and Pseudo-Isolation Scoring [Papers: P017 (Section 6, Section 7); P015 (8 Discussion)]
+
+- G010: Evaluation and Adaptation of Trimmed K-Means Architectures on Mixed-Type and Categorical Data Spaces [Papers: P012 (Section 5, Section 6. Open issues and challenges)]

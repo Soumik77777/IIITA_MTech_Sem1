@@ -1,0 +1,25 @@
+- G001: Characterizing exact limiting distributions, weak limit theorems, and asymptotic normality bounds for trimmed k-means estimators under general probability distributions. [Papers: P002 (Section 3)]
+
+- G002: Eliminating or improving the FPT dependency on the number of dropped outliers m in optimal approximation algorithms for clustering with outliers. [Papers: P013 (5. Concluding Remarks)]
+
+- G003: Improving the universal breakdown point of robust and penalized k-means variants beyond 2/n without relying on restrictive geometric dataset structures. [Papers: P005 (Section 3.2)]
+
+- G004: Extending rigorous measure-theoretic convergence proofs of the k-process and trimming functionals to general metric spaces for arbitrary values of k and r. [Papers: P001 (Section 4)]
+
+- G005: Lack of deterministic, exhaustive, and tractable optimization strategies for optimal trimming set selection and non-spherical geometric variations [Papers: P002 (Section 1, Section 3, Section 4); P003 (Section 4)]
+
+- G007: Absence of principled automated frameworks for jointly estimating cluster counts, trimming proportions, and multi-membership thresholds [Papers: P009 (3.2. Robust trimmed k-means, 6. Conclusions and future work); P002 (Section 3, Section 5); P014 (II. PRELIMINARIES ON K-MEANS)]
+
+- G008: Evaluating the performance and sensitivity of trimmed k-means variants under extreme high-dimensional manifold structures without relying on heavy linear dimensionality reduction like PCA. [Papers: P011 (3.1 Data Set, 3.3 Experiment and Result Analysis); P015]
+
+- G009: Systematic empirical benchmarking of hyperparameter sensitivity (such as the standard deviation boundary constant q or trimming proportion alpha) across diverse, large-scale, multi-domain datasets beyond small benchmarks like Iris and Ruspini. [Papers: P006 (Section V, Section VI); P007 (I, III)]
+
+- G010: Empirical quantification of how clean-window commissioning contamination and dirty anchor distributions degrade the robustness and false-positive rates of adaptive outlier-thresholding k-means. [Papers: P017 (Section 6.7, Section 7.4)]
+
+- G012: Theoretical limitations in robust breakdown points and worst-case guarantees under unstructured or complex data contamination. [Papers: P002 (Section 3, Section 5); P005 (Section 3.2); P017 (Section 6.7, Section 7.4)]
+
+- G013: Lack of standardized integration of granular real-world domain features and industrial workflows into outlier-aware clustering pipelines for complex career trajectory and employability prediction tasks. [Papers: P016 (4. CONCLUSION)]
+
+- G014: Absence of streaming concept-drift adaptation mechanisms in federated outlier-trimmed clustering for resource-constrained IoT intrusion detection. [Papers: P017 (Section 7, Section 7.4)]
+
+- G015: Inadequate handling of descriptor-space transformations and variable-scaling dependencies when combining feature selection and dataset trimming in quantitative structure-activity relationship (QSAR) pipelines. [Papers: P004 (CONCLUSION)]

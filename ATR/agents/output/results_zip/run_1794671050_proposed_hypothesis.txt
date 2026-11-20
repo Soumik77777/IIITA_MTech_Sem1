@@ -1,0 +1,49 @@
+- H001: Incorporating an online sliding-window fading-memory mechanism into federated cluster aggregation updates enables continuous adaptation to streaming concept drift without requiring manual anchor recalibration.
+Rationale: AF-BKM relies on a static commissioning-anchor calibration which causes rising false positive rates when local traffic distributions shift over time.
+Testable prediction: A federated K-means clustering framework equipped with an exponential fading-memory weight on historical worker updates will maintain a false positive rate variance below 5% across progressive distribution shifts, whereas the static commissioning anchor will experience an increase exceeding 25%.
+References: P017
+
+- H002: Replacing standard sample covariance estimators with Minimum-Covariance-Determinant (MCD) estimators during initial commissioning prevents poisoned anchor contamination from inflating attack direction variances and degrading outlier recall.
+Rationale: Planted attack rows in initial commissioning distort standard sample means and covariances, shrinking attack distances and reducing outlier detection recall.
+Testable prediction: Using MCD estimators for commissioning-anchor calibration will preserve outlier detection recall above 90% even when initial anchor data contains up to 10% planted malicious contamination, compared to a drop below 70% under standard sample covariance.
+References: P017
+
+- H003: Assuming an underlying multivariate generalized Pareto distribution for weighted nearest-neighbor distances yields a closed-form parametric expression for pseudo-isolation outlier score probabilities.
+Rationale: Current nonparametric implementations rely on running sample estimators and Cantelli bounds, which prevent exact finite-sample tail probability evaluations.
+Testable prediction: A parametric closed-form tail probability derived from generalized Pareto assumptions will approximate empirical outlier score frequencies with a Kolmogorov-Smirnov test p-value greater than 0.05 across standard benchmark datasets.
+References: P015
+
+- H004: Minimizing an information-theoretic stability criterion over validation folds enables principled, automated data-driven estimation of outlier proportions and minimum cluster membership counts in robust trimmed k-means models.
+Rationale: Models like Robust Trimmed k-means (RTKM) currently rely on user-specified parameters for outlier proportions and cluster membership counts, hindering practical deployment.
+Testable prediction: An automated hyper-parameter search minimizing cross-validation clustering instability will yield F1-scores within 2% of the optimal manually tuned configuration across heterogeneous test datasets.
+References: P009
+
+- H005: Embedding cosine similarity and angular distance metrics into a generalized Bregman-type geometric transformation framework preserves monotonic descent convergence guarantees for K-means centroid updates.
+Rationale: Cosine similarity cannot be natively expressed via Bregman divergences, preventing existing generalized K-means transformation frameworks from providing convergence guarantees under such angular measures.
+Testable prediction: A transformed K-means objective function utilizing projected angular coordinates will achieve convergence within a bounded number of iterations (equivalent to standard Lloyd iterations) while maintaining strictly non-increasing objective values.
+References: P014
+
+- H006: Formulating neighborhood rank selection as an optimization problem minimizing local false-discovery rates yields tighter finite-sample outlier score thresholds than standard asymptotic k-NN conventions.
+Rationale: Nonparametric outlier detection modules rely on neighbourhood ranks and running sample estimators based on standard asymptotic conventions, which can be suboptimal for finite or heavily contaminated samples.
+Testable prediction: Optimizing neighborhood rank parameters (h, l) via local false-discovery rate minimization will improve outlier detection precision by at least 15% on small finite samples compared to fixed asymptotic rules.
+References: P015
+
+- H007: Deploying local feature-space alignment projections prior to worker aggregation enables federated outlier-aware clustering frameworks to handle severe feature-space skew and per-device behavioral drift without exceeding communication overhead limits.
+Rationale: Practical federated deployments suffer from feature-space heterogeneity and behavioral drift, which degrade single-anchor static thresholds and global medoid alignments.
+Testable prediction: A federated K-means framework with lightweight local feature alignment will achieve an average anomaly detection F1-score above 0.85 under severe feature-space skew, whereas unaligned AF-BKM will drop below 0.60, while increasing communication payload by less than 10%.
+References: P017
+
+- H008: Quantizing model parameters to fixed-point 16-bit representations in lightweight federated K-means architectures restricts physical edge energy consumption below 5 milliJoules per inference packet while maintaining classification accuracy within 1% of floating-point implementations.
+Rationale: Resource-constrained IoT edge devices are sensitive to energy consumption and memory constraints, but existing evaluations report only desktop CPU timing and serialization sizes.
+Testable prediction: On physical microcontroller edge hardware, quantized lightweight federated K-means will consume less than 5 mJ per classification cycle with peak RAM usage under 32 KB.
+References: P017
+
+- H009: Integrating adversarial training with min-max robust aggregation across trust gates, worker weights, and commissioning anchors establishes provable worst-case performance bounds against joint multi-vector adversary models in federated clustering.
+Rationale: Advanced adversaries can coordinate across multiple attack vectors simultaneously to subvert detection systems without triggering simple anomaly thresholds, and current evaluations lack worst-case guarantees.
+Testable prediction: A federated clustering architecture incorporating min-max robust aggregation will maintain an anomaly detection recall rate above 80% under coordinated multi-vector attacks, compared to a complete collapse below 20% for standard aggregation pipelines.
+References: P017
+
+- H010: Replacing hard IQR outlier trimming with adaptive density-based soft-weighting prior to ADASYN-Gaussian augmentation prevents distortion of minority class boundaries and improves downstream multi-target classification F1 scores on severely imbalanced categorical datasets.
+Rationale: Hard IQR outlier removal combined with ADASYN-Gaussian augmentation can distort minority class boundaries and introduce synthetic noise on multi-class categorical domains.
+Testable prediction: An integrated soft-weighting density trimming pipeline will achieve a micro-F1 classification score exceeding 0.95 on severely imbalanced multi-class categorical datasets, outperforming hard IQR removal by at least 4%.
+References: P016

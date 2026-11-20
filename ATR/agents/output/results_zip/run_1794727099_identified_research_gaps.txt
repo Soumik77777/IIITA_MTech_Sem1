@@ -1,0 +1,9 @@
+- G001: Evaluation of cluster-specific versus global adaptive distance thresholds for outlier rejection during centroid updates in trimmed k-means variants [Papers: P006 (VI. CONCLUSION, Page 5)]
+
+- G002: Optimization of trade-offs across clustering accuracy, precision, and recall when varying the distance threshold multiplier parameter q [Papers: P007 (I. INTRODUCTION, Page 1)]
+
+- G003: Integration of automated stream-based drift detection, robust covariance estimators, and adaptive anchor refresh mechanisms in federated robust centroid updating [Papers: P017 (7.4. Future Work, Page 22)]
+
+- G004: Universal breakdown point limitations and restricted robustness bounds under arbitrary vs. well-structured contamination models [Papers: P002 (5. Conclusions, Page 16); P005 (3.2 Unbiased proximal maps: the case of non-convex f_lambda, 3.3 Restricted robustness of robust k-means for well-clustered data, Page 5)]
+
+- G005: Lack of fully parametric closed-form distributions for pseudo-isolation and nonparametric outlier scores in objective-based clustering [Papers: P015 (Section 8 Discussion, Page 18)]

@@ -1,0 +1,15 @@
+- G001: Lack of exact limiting distributions and asymptotic convergence rates for empirical trimmed k-means estimators [Papers: P002 (Section 3)]
+
+- G002: Characterization of universal breakdown points for robust and trimmed k-means under non-spherical or complex cluster structures [Papers: P002 (Section 5); P005 (3.3)]
+
+- G003: Elimination of polynomial FPT dependencies on the number of outliers in exact approximation reduction frameworks [Papers: P013 (Section 5)]
+
+- G004: Adaptive cluster-number estimation integrated into continuous-relaxation and robust trimmed k-means frameworks [Papers: P009 (3. Robust trimmed k-means, 6. Conclusions and future work)]
+
+- G005: Extension of robust outlier-aware k-means update rules to handle non-convex and highly complex high-dimensional manifolds without reliance on linear dimensionality reduction [Papers: P011 (3.1 Data Set, 4 Summary)]
+
+- G006: Replacement of non-robust sample mean and covariance estimators with robust alternatives like minimum-covariance-determinant (MCD) in federated and auto-thresholding k-means architectures [Papers: P017 (Section 6.7, Section 7.4)]
+
+- G007: Integration of qualitative, domain-specific employment and career progression features into robust clustering workflows [Papers: P016 (4. CONCLUSION)]
+
+- G008: Management of feature-space skew, behavioral drift, and non-IID conditions in real-world federated IoT intrusion detection deployments [Papers: P017 (Section 7, Section 7.4)]

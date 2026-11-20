@@ -1,0 +1,19 @@
+- G001: Lack of principled, data-driven automation for tuning contamination and minimum-membership parameters in robust trimmed k-means variants [Papers: P009 (3.2. Robust trimmed k-means, 6. Conclusions and future work)]
+
+- G002: Vulnerability of federated robust baseline k-means architectures to poisoned initial commissioning windows and lack of streaming concept-drift adaptation [Papers: P017 (Section 6.7, Section 7, Section 7.4)]
+
+- G003: Absence of automated data-driven optimization for neighborhood ranks in nonparametric pseudo-isolation outlier frameworks [Papers: P015 (Section 3.1 Methodological background)]
+
+- G004: Lack of theoretical guarantees and tractable algorithmic formulations for extending robust trimmed k-means frameworks to non-spherical and varying-radius cluster geometries [Papers: P002 (Section 3, Section 4); P003 (4. MIXTURES OF ELLIPTICAL DISTRIBUTIONS)]
+
+- G005: Computational intractability and lack of deterministic global optimization guarantees in robust alternating minimization clustering variants [Papers: P002 (Section 1, Section 4)]
+
+- G006: Exponential parameter dependency on outlier count in FPT approximation algorithms for metric clustering with outliers [Papers: P013 (Section 5)]
+
+- G007: Lack of evaluation regarding the sensitivity and optimal choice of tuning coefficients in standard-deviation-based distance thresholds across high-dimensional and non-convex datasets [Papers: P006 (Section V, Section VI); P007 (Section I, Section III)]
+
+- G008: Absence of empirical validation and complexity scaling analyses for integrating adapted robust outlier removal rules into alternative partitioning algorithms such as fuzzy c-means and k-medoids [Papers: P010 (7. Conclusion and future work)]
+
+- G009: Lack of unified, universal generalized K-means algorithms capable of simultaneously handling mixed data types, high dimensionality, and arbitrary cluster shapes without domain-specific customization [Papers: P012 (Section 6)]
+
+- G010: Lack of physical on-device energy consumption and real-world pilot evaluations for lightweight federated robust clustering protocols [Papers: P017 (Section 7, Section 7.4)]

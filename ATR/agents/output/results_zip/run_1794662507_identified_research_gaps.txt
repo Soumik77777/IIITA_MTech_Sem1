@@ -1,0 +1,13 @@
+- G001: Characterization of Breakdown Point Behavior Across Diverse Cluster Configurations and Contamination Types [Papers: P002 (Section 5); P005 (Section 3.2)]
+
+- G002: Convergence Guarantees and Global Optimality for Non-Standard and Regularized Trimmed K-Means Objectives [Papers: P001 (2.3); P005 (Section 3.2); P014 (Section IV-D, Section IV-E)]
+
+- G003: Lack of cluster-specific or adaptive anomaly thresholds in heuristic trimmed k-means variants [Papers: P006 (Section VI)]
+
+- G004: Absence of principled, automated parameter estimation for trimming proportions and multi-membership constraints [Papers: P009 (3.2. Robust trimmed k-means, 4. Experiments, 6. Conclusions and future work); P017 (Section 7, Section 7.4)]
+
+- G005: Lack of streaming concept-drift adaptation and robust dynamic anchor refresh policies for federated baseline k-means architectures handling temporal distribution shifts. [Papers: P017 (Section 7, Section 7.4)]
+
+- G006: Vulnerability of federated robust aggregation to dirty commissioning windows and non-robust covariance estimators under anchor contamination. [Papers: P017 (Section 6.7, Section 7.4)]
+
+- G007: Evaluation of Trimmed K-Means and Outlier-Robust Clustering under Non-Gaussian and Complex Multi-Membership Data Structures in Real-World Domains [Papers: P009 (4. Experiments, 6. Conclusions and future work); P016 (3.3. MTC process, 4. CONCLUSION)]
