@@ -4,6 +4,14 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
+
+from ADA.Algo.ADA_algorithms_all import *
+import inspect
+
+def print_function(func):
+    print(inspect.getsource(func))
+
+    
 def load_dataset(path, x_cols, y_cols):
     df = pd.read_csv(path)
     X = df[x_cols]
